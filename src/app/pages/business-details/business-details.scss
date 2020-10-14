@@ -1,0 +1,48 @@
+.checkbox-container {
+    border-bottom: unset;
+    border-radius: unset;
+    margin-bottom: unset;
+
+    ion-label {
+        font-size: 15px !important;
+    }
+    &--special{
+        --padding-start: 0px !important;;
+    }
+}
+.item-native{
+    padding-left: 0;
+}
+
+.item-group-flex {
+    display: flex;
+    flex-wrap: wrap;
+
+    .ion-label--title {
+        width: 100%;
+        color: #718096;
+        font-weight: bold;
+        margin: 8px 0;
+    }
+}
+
+.group-flex {
+    display: flex;
+    ion-item:nth-child(1) {
+        width: 130px;
+        border-radius: 5px 0 0 0;
+    }
+    ion-item:nth-child(2) {
+        width: 100%;
+        border-radius: 0 5px 0 0;
+    }
+}
+
+
+.add-image-background {
+    position: relative;
+    background-image: url("/assets/img/background-place.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}

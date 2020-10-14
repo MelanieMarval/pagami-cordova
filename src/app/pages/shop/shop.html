@@ -1,0 +1,99 @@
+<ion-content>
+
+    <ion-header class="header-image">
+        <ion-toolbar class="background-transparent">
+            <ion-buttons slot="start">
+                <ion-back-button defaultHref="/app/tabs/map/search"></ion-back-button>
+            </ion-buttons>
+        </ion-toolbar>
+
+        <ion-img [src]="place.photoUrl" alt="Background Image"></ion-img>
+
+        <div class="flyer" *ngIf="haveFlyer">
+            <ion-button class="flyer-button ion-no-padding" routerLink="/app/shop/flyer">
+                <ion-icon name="newspaper" slot="icon-only" size="small"></ion-icon>
+            </ion-button>
+        </div>
+
+        <div class="header-image--info">
+            <ion-item lines="none" class="info-category">
+                <ion-icon slot="start" [src]="'assets/category-icons/'+place.category?.icon+'.svg'"></ion-icon>
+                &nbsp;&nbsp;
+                <ion-label>{{place.category?.name | uppercase}}</ion-label>
+            </ion-item>
+            <div class="info-title">
+                <ion-text color="light">
+                    {{place.name}}
+                    <ion-icon *ngIf="place.status === STATUS.VERIFIED" name="shield-checkmark"
+                              color="success"></ion-icon>
+                </ion-text>
+            </div>
+            <ion-item lines="none" class="info-rating">
+                <!--            <ion-icon slot="start" name="star" color="pagami"></ion-icon>-->
+                <ion-icon slot="start" name="star-outline"></ion-icon>
+                <ion-icon slot="start" name="star-outline"></ion-icon>
+                <ion-icon slot="start" name="star-outline"></ion-icon>
+                <ion-icon slot="start" name="star-outline"></ion-icon>
+                <ion-icon slot="start" name="star-outline"></ion-icon>
+                &nbsp;
+                <ion-label class="label-flex">
+                    <div>{{0 | plural:'comentarios'}}</div>
+                    <div *ngIf="place.status === STATUS.ACCEPTED">No verificada</div>
+                    <div *ngIf="place.hours" class="place-hour">
+                        <ion-text color="success" *ngIf="isOpen">Abierto</ion-text>
+                        <ion-text color="danger" *ngIf="!isOpen">Cerrado</ion-text>
+                    </div>
+                </ion-label>
+            </ion-item>
+        </div>
+    </ion-header>
+
+    <ion-list lines="none" class="inputs-container">
+        <ion-item color="pagami-surface">
+            <ion-label position="floating">Dirección</ion-label>
+            <ion-input readonly [value]="place.location.address"></ion-input>
+            <ion-icon src="assets/icon/locate-checkmark.svg" slot="start"></ion-icon>
+        </ion-item>
+        <ion-item *ngIf="place.whatsapp" color="pagami-surface"
+                  [href]="'https://wa.me/' + (place.dialCode ? place.dialCode : '') + place.whatsapp">
+            <ion-label position="floating">WhatsApp</ion-label>
+            <ion-input readonly [value]="(place.dialCode ? place.dialCode : '') + place.whatsapp"></ion-input>
+            <ion-icon name="logo-whatsapp" slot="start"></ion-icon>
+        </ion-item>
+        <ion-item color="pagami-surface" [href]="'tel:'+place.phone">
+            <ion-label position="floating">Telefono</ion-label>
+            <ion-input readonly [value]="place.phone"></ion-input>
+            <ion-icon src="assets/icon/call.svg" slot="start"></ion-icon>
+        </ion-item>
+        <ion-item *ngIf="place.website" color="pagami-surface" (click)="browser.open(place.website)">
+            <ion-label position="floating">Pagina Web</ion-label>
+            <ion-input readonly [value]="place.website"></ion-input>
+            <ion-icon src="assets/icon/website.svg" slot="start"></ion-icon>
+        </ion-item>
+    </ion-list>
+
+    <ion-list *ngIf="place.status === STATUS.VERIFIED" class="link-buttons-container" lines="none">
+        <ion-item button [routerLink]="'/app/shop/products/' + place.id" color="pagami-surface">
+            <!--        <ion-item button (click)="alert.alertComingSoon()" color="pagami-surface">-->
+            <ion-icon name="arrow-forward" slot="end"></ion-icon>
+            <ion-label>Productos</ion-label>
+        </ion-item>
+        <ion-item button [routerLink]="'/app/shop/services/' + place.id" color="pagami-surface">
+            <!--        <ion-item button (click)="alert.alertComingSoon()" color="pagami-surface">-->
+            <ion-icon name="arrow-forward" slot="end"></ion-icon>
+            <ion-label>Servicios</ion-label>
+        </ion-item>
+    </ion-list>
+
+    <ion-footer class="footer-button footer-button--div" *ngIf="claiming">
+        <ion-button *ngIf="!isClaimed" class="button-large" expand="block" color="pagami"
+                    routerLink="/app/business-claim">
+            Reclamar esta empresa
+        </ion-button>
+        <div *ngIf="isClaimed" class="ion-text-center">
+            <ion-text color="light">Esta empresa ya ha sido reclamada por alguien mas, vuelve e intenta con otra!
+            </ion-text>
+        </div>
+    </ion-footer>
+</ion-content>
+

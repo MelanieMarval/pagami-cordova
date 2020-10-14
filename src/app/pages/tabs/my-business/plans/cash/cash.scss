@@ -1,0 +1,22 @@
+.inputs-container {
+    margin: 0;
+}
+.contain {
+    //height: 100%;
+    width: 100%;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+ion-card-header {
+    ion-card-title {
+        font-size: 20px;
+    }
+    padding: 16px;
+}
+
+p, .checkbox-container ion-label {
+    font-size: 16px !important;
+}

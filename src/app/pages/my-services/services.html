@@ -1,0 +1,48 @@
+<ion-header>
+
+    <ion-toolbar class="toolbar-simple">
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/app/tabs/my-business"></ion-back-button>
+        </ion-buttons>
+        <ion-title class="without-right">{{myBusiness.name || '...'}}</ion-title>
+<!--        <ion-buttons slot="end" class="right-button">-->
+<!--            <ion-icon name="cart"></ion-icon>-->
+<!--        </ion-buttons>-->
+    </ion-toolbar>
+
+</ion-header>
+<div class="progress-bar-container">
+    <ion-progress-bar type="indeterminate" color="pagami" *ngIf="loading"></ion-progress-bar>
+</div>
+
+
+<ion-content>
+    <ion-header class="top-searchbar">
+        <ion-searchbar placeholder="Buscar servicios" [(ngModel)]="textSearch"></ion-searchbar>
+    </ion-header>
+
+    <ion-list inset="false" lines="none" class="products">
+        <ion-label *ngIf="!services.length">No tiene servicios registrados</ion-label>
+        <ion-item button detail="false"
+                  color="pagami-surface"
+                  class="product ion-no-padding"
+                  *ngFor="let service of services | filterByName: textSearch"
+                  (click)="openService(service)">
+            <ion-avatar class="avatar-square product-image">
+                <ion-img [src]="service.photoUrl"></ion-img>
+            </ion-avatar>
+            <ion-label class="product-name">
+                {{service.name}} <br>
+                <span class="product-price">{{service.localCurrency}} ${{service.price}}</span>
+            </ion-label>
+        </ion-item>
+
+    </ion-list>
+
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed" class="fab-corner-lr">
+        <ion-fab-button color="pagami" (click)="validateCanAddService()">
+            <ion-icon name="add"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
+
+</ion-content>

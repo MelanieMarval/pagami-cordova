@@ -1,0 +1,249 @@
+<!-- IF NOT REGISTER -->
+<ion-content *ngIf="!isRegister" scroll-y="false">
+    <ion-header>
+        <ion-toolbar>
+            <ion-title>
+                Mi Empresa
+            </ion-title>
+        </ion-toolbar>
+    </ion-header>
+    <div class="progress-bar-container">
+        <ion-progress-bar type="indeterminate" color="pagami" *ngIf="loading"></ion-progress-bar>
+    </div>
+
+    <div class="no-register" *ngIf="!loading">
+        <ion-img src="assets/img/my-business-no-register.svg"></ion-img>
+        <ion-text class="ion-padding-horizontal ion-text-wrap">
+            <span *ngIf="isClaim">
+                Se paciente <br>
+                Tu empresa (<ion-label>{{claim?.placeName}}</ion-label>
+                <img [src]="claim?.placePhoto" class="size-icon-default d-inline border-white-1px" alt=""/>) aún esta en verificación <br>
+            </span>
+            <span *ngIf="!isClaim">¡Oh no! <br></span>
+            <span *ngIf="!isClaim && availableToClaim">Aún no has reclamado tu empresa</span>
+            <span *ngIf="!isClaim && !availableToClaim ">Parece que esta opción no esta habilitada para ti.</span>
+        </ion-text>
+    </div>
+</ion-content>
+<ion-footer class="footer-button" *ngIf="!isRegister && !isClaim && availableToClaim">
+    <ion-button class="button-large" (click)="searchBusiness()" expand="block" color="pagami" routerLink="/app/tabs/map/find-my-business">
+        Buscar mi empresa
+    </ion-button>
+</ion-footer>
+<!-- END NOT REGISTER -->
+
+
+<!-- IF REGISTER -->
+<!-- IF NOT EDITING -->
+<ion-content *ngIf="isRegister && !isEditing">
+
+    <ion-header class="header-image">
+        <ion-img [src]="previewUrl" alt="Background Image"></ion-img>
+
+        <div class="flyer" *ngIf="haveFlyer">
+            <ion-button class="flyer-button ion-no-padding" (click)="viewFlyer()">
+                <ion-icon name="newspaper" slot="icon-only" size="small"></ion-icon>
+            </ion-button>
+        </div>
+
+        <div class="header-image--info">
+            <ion-item lines="none" class="info-category">
+                <ion-icon slot="start" [src]="'assets/category-icons/'+place.category.icon+'.svg'"></ion-icon>
+                &nbsp;&nbsp;
+                <ion-label>{{place.category.name}}</ion-label>
+            </ion-item>
+
+
+            <div class="info-title">
+                <ion-text color="light">
+                    {{place.name}}
+                    <ion-icon name="shield-checkmark" color="success" class="icon-verified"></ion-icon>
+                </ion-text>
+                <ion-button class="button-edit ion-no-padding" color="pagami" (click)="isEditing = !isEditing" slot="icon-only">
+                    <ion-icon src="assets/icon/edit-pencil.svg" slot="icon-only"></ion-icon>
+                </ion-button>
+<!--                <ion-fab horizontal="end" vertical="center" slot="fixed">-->
+<!--                    <ion-fab-button color="pagami" size="small" (click)="isEditing = !isEditing">-->
+<!--                        <ion-icon src="assets/icon/edit-pencil.svg" color="light"></ion-icon>-->
+<!--                    </ion-fab-button>-->
+<!--                </ion-fab>-->
+            </div>
+
+            <ion-item lines="none" class="info-rating">
+                <ion-icon slot="start" name="star-outline" class="mt-0"></ion-icon>
+                <ion-icon slot="start" name="star-outline" class="mt-0"></ion-icon>
+                <ion-icon slot="start" name="star-outline" class="mt-0"></ion-icon>
+                <ion-icon slot="start" name="star-outline" class="mt-0"></ion-icon>
+                <ion-icon slot="start" name="star-outline" class="mt-0"></ion-icon>
+                &nbsp;
+                <ion-label class="mt-0">0 comentarios</ion-label>
+            </ion-item>
+        </div>
+    </ion-header>
+
+    <app-avatar-header [addClass]="true"></app-avatar-header>
+
+    <ion-list class="inputs-container">
+        <ion-item color="pagami-surface">
+            <ion-label position="floating" >Direccion</ion-label>
+            <ion-input type="tel" readonly [value]="place.location.address"></ion-input>
+            <ion-icon src="assets/icon/locate-checkmark.svg" slot="start"></ion-icon>
+        </ion-item>
+        <ion-item color="pagami-surface" *ngIf="place.whatsapp">
+            <ion-label position="floating" >WhatsApp</ion-label>
+            <ion-input type="tel" readonly [value]="place.whatsapp"></ion-input>
+            <ion-icon name="logo-whatsapp" slot="start"></ion-icon>
+        </ion-item>
+        <ion-item color="pagami-surface">
+            <ion-label position="floating">Telefono</ion-label>
+            <ion-input type="tel" readonly [value]="place.phone"></ion-input>
+            <ion-icon name="call" slot="start"></ion-icon>
+        </ion-item>
+        <ion-item color="pagami-surface">
+            <ion-label position="floating">Pagina Web</ion-label>
+            <ion-input type="url" readonly [value]="place.website"></ion-input>
+            <ion-icon src="assets/icon/website.svg" slot="start"></ion-icon>
+        </ion-item>
+    </ion-list>
+
+    <ion-list class="link-buttons-container mt-0 pt-0" lines="none">
+        <ion-item (click)="intentProvider.placeToChangeLocation = place" routerLink="/app/tabs/map/edit-business" color="pagami-surface">
+            <ion-icon name="arrow-forward" slot="end"></ion-icon>
+            <ion-label>Cambiar ubicación</ion-label>
+        </ion-item>
+        <ion-item routerLink="/app/tabs/my-business/change-category" color="pagami-surface">
+            <ion-icon name="arrow-forward" slot="end"></ion-icon>
+            <ion-label>Cambiar categoría</ion-label>
+        </ion-item>
+        <ion-item routerLink="/app/tabs/my-business/flyer" color="pagami-surface">
+            <ion-icon name="arrow-forward" slot="end"></ion-icon>
+            <ion-label>Volante Digital</ion-label>
+        </ion-item>
+        <ion-item routerLink="/app/tabs/my-business/business-hours" color="pagami-surface">
+            <ion-icon name="arrow-forward" slot="end"></ion-icon>
+            <ion-label>Mi horario</ion-label>
+        </ion-item>
+    </ion-list>
+
+<!--    *ngIf="!paymentPending && (!place.plan || place.plan.remainDays === 0)" -->
+    <div class="ion-padding-horizontal" *ngIf="!paymentPending && (!place.plan || place.plan.remainDays === 0)">
+        <ion-button class="button-small button-small--active" expand="block" color="pagami" routerLink="/app/tabs/my-business/plans">
+            Activar
+        </ion-button>
+    </div>
+
+    <div [ngClass]="{'optionsDisabled': (!place.plan || place.plan.remainDays === 0)}">
+
+        <ion-item-group class="toggles-container">
+            <ion-item lines="none" [disabled]="!place.plan || place.plan.remainDays === 0">
+                <ion-label>Habilitar Domicilio</ion-label>
+    <!--            <ion-toggle slot="end" name="orders" color="pagami" [disabled]="updating" [(ngModel)]="place.allowHome" (ngModelChange)="saveBusiness()"></ion-toggle>-->
+                <ion-toggle slot="end" name="orders" color="pagami" ></ion-toggle>
+            </ion-item>
+        </ion-item-group>
+
+        <ion-list class="link-buttons-container" lines="none">
+            <ion-item button (click)="(!place.plan || place.plan.remainDays === 0) || openUrl('/app/my-products')"
+                      color="pagami-surface" [disabled]="!place.plan || place.plan.remainDays === 0">
+                <ion-icon name="arrow-forward" slot="end"></ion-icon>
+                <ion-label>Mis Productos</ion-label>
+            </ion-item>
+           <ion-item button (click)="(!place.plan || place.plan.remainDays === 0) || openUrl('/app/my-services')"
+                     color="pagami-surface" [disabled]="!place.plan || place.plan.remainDays === 0">
+                <ion-icon name="arrow-forward" slot="end"></ion-icon>
+                <ion-label>Mis Servicios</ion-label>
+            </ion-item>
+            <ion-item button (click)="(!place.plan || place.plan.remainDays === 0) || alert.alertComingSoon()"
+                      color="pagami-surface" [disabled]="!place.plan || place.plan.remainDays === 0">
+<!--            <ion-item button (click)="(!place.plan || place.plan.remainDays === 0) || openUrl('/app/orders')"-->
+<!--                      color="pagami-surface" [disabled]="!place.plan || place.plan.remainDays === 0">-->
+                <ion-icon name="arrow-forward" slot="end"></ion-icon>
+                <ion-label>Pedidos</ion-label>
+            </ion-item>
+        </ion-list>
+
+        <div class="ion-padding-horizontal ion-text-center ion-margin-bottom" *ngIf="paymentPending">
+            <small>Tienes un pago pendiente por aceptación, espera un poco.</small>
+        </div>
+
+    </div>
+
+</ion-content>
+<!-- END NOT EDITING -->
+
+<!-- IF EDITING -->
+<ion-content *ngIf="isRegister && isEditing">
+
+    <div class="add-image">
+        <div class="add-image-background">
+            <app-image-tooltips></app-image-tooltips>
+            <ion-img [src]="previewUrl" *ngIf="previewUrl" class="img-preview"></ion-img>
+            <ion-button *ngIf="!isTest" (click)="takeImage()" class="input-file" [disabled]="updating"></ion-button>
+            <ion-input *ngIf="isTest" type="file" class="input-file" accept="image/*" name="image" (change)="chargeImage(isTest, $event)" [readonly]="updating"></ion-input>
+            <ion-fab vertical="center" horizontal="center">
+                <ion-fab-button color="pagami">
+                    <ion-icon name="camera"></ion-icon>
+                </ion-fab-button>
+            </ion-fab>
+        </div>
+    </div>
+
+    <ion-list class="inputs-container">
+        <ion-item color="pagami-surface">
+            <ion-label position="floating">Ubicacion</ion-label>
+            <ion-input type="text" name="location" [(ngModel)]="place.location.address" [readonly]="updating" required></ion-input>
+            <ion-icon src="assets/icon/locate-checkmark.svg" slot="start"></ion-icon>
+        </ion-item>
+        <ion-item color="pagami-surface">
+            <ion-label position="floating">Nombre de la empresa</ion-label>
+            <ion-input type="text" name="name" [(ngModel)]="place.name" [readonly]="updating" required></ion-input>
+            <ion-icon name="business" slot="start"></ion-icon>
+        </ion-item>
+        <ion-item color="pagami-surface">
+            <ion-label position="floating">Telefono</ion-label>
+            <ion-input type="tel" name="phone" [(ngModel)]="place.phone" maxlength="15" [readonly]="updating" required></ion-input>
+            <ion-icon name="call" slot="start"></ion-icon>
+        </ion-item>
+        <ion-item-group class="group-flex">
+            <ion-item color="pagami-surface" class="mb-0">
+                <ion-label position="floating">Código</ion-label>
+                <ion-input [(ngModel)]="place.dialCode" disabled [ngModelOptions]="{standalone: true}"></ion-input>
+            </ion-item>
+            <ion-item color="pagami-surface" class="mb-0">
+                <ion-label position="floating">Número de WhatsApp</ion-label>
+                <ion-input type="tel" [(ngModel)]="place.whatsapp" maxlength="15" [ngModelOptions]="{standalone: true}"></ion-input>
+            </ion-item>
+        </ion-item-group>
+            <div class="info-text">
+                <small>*Opcional</small>
+            </div>
+        <ion-item color="pagami-surface"  class="mb-0">
+            <ion-label position="floating">Pagina Web</ion-label>
+            <ion-input type="url" name="website" [(ngModel)]="place.website" [readonly]="updating"></ion-input>
+            <ion-icon src="assets/icon/website.svg" slot="start"></ion-icon>
+        </ion-item>
+            <div class="info-text">
+                <small>*Opcional</small>
+            </div>
+    </ion-list>
+
+    <div class="footer-button --without-pt">
+        <ion-row>
+            <ion-col size="6">
+                <ion-button [disabled]="updating" class="button-small" expand="block" color="pagami-surface"
+                            (click)="isEditing = false">
+                    Cancelar
+                </ion-button>
+            </ion-col>
+            <ion-col size="6">
+                <ion-button [disabled]="updating" class="button-small" expand="block" color="pagami"
+                            (click)="validateBusiness()">
+                    <ion-spinner *ngIf="updating" class="spinner-energized"></ion-spinner>
+                    <span *ngIf="!updating">Guardar</span>
+                </ion-button>
+            </ion-col>
+        </ion-row>
+    </div>
+
+</ion-content>
+<!-- END EDITING -->

@@ -1,0 +1,102 @@
+<ion-header>
+    <ion-toolbar class="toolbar-simple">
+        <ion-buttons slot="start">
+            <ion-button (click)="closeModal()">
+                <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title class="without-right">Datos de transferencia</ion-title>
+    </ion-toolbar>
+</ion-header>
+<div class="progress-bar-container">
+    <ion-progress-bar type="indeterminate" color="pagami" *ngIf="loading"></ion-progress-bar>
+</div>
+
+<ion-content class="">
+
+    <div class="contain">
+        <div class="ion-text-left w-100">
+
+            <ion-card-header>
+                <ion-card-title class="ion-text-center">Datos de la cuenta</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+                <p><b>Banco: </b>{{methodSelected.bankAccount}} </p>
+                <p>
+                    <b>Numero de Cuenta: </b>{{methodSelected.numberAccount}}
+                    <ion-icon name="copy" (click)="copyClipboard(methodSelected.numberAccount)"></ion-icon>
+                </p>
+                <p><b>Tipo de Cuenta: </b>{{methodSelected.typeAccount}}</p>
+                <p>
+                    <b>Monto</b>
+                    <ion-chip color="pagami">
+                        <ion-label>${{planSelected.amountCop}} COP</ion-label>
+                    </ion-chip>
+                </p>
+                <p class="ion-text-center">Unicamente transferencias</p>
+                <p class="ion-text-center">*SOLO VÁLIDO PARA COLOMBIA*</p>
+            </ion-card-content>
+
+            <ion-card-header>
+                <ion-card-title class="ion-text-center">Una vez realizado el pago, rellene el formulario para
+                    comprobar
+                </ion-card-title>
+            </ion-card-header>
+
+            <ion-list class="inputs-container">
+                <!--                    <ion-item color="pagami-surface">-->
+                <!--                        <ion-label position="floating">Número de referencia</ion-label>-->
+                <!--                        <ion-input type="text" name="number" [(ngModel)]="paymentPlan.number"-->
+                <!--                                   [readonly]="loading" required></ion-input>-->
+                <!--                    </ion-item>-->
+                <!--                    <ion-item color="pagami-surface">-->
+                <!--                        <ion-label position="floating">Banco</ion-label>-->
+                <!--                        <ion-input type="bank" name="bank" [(ngModel)]="paymentPlan.bank"></ion-input>-->
+                <!--                        <ion-icon name="podium" slot="start"></ion-icon>-->
+                <!--                    </ion-item>-->
+                <!--                    <ion-item color="pagami-surface">-->
+                <!--                        <ion-label position="floating">Fecha</ion-label>-->
+                <!--                        <ion-datetime name="date" [(ngModel)]="paymentPlan.date" displayFormat="DD/MM/YYYY"-->
+                <!--                                      [readonly]="loading" required></ion-datetime>-->
+                <!--                    </ion-item>-->
+
+                <ion-item color="pagami-surface">
+                    <ion-label position="floating">Adjuntar foto</ion-label>
+                    <ion-input *ngIf="payment" type="text" [(ngModel)]="payment.photo" [readonly]="loading"></ion-input>
+                    <input class="input-file" type="file" accept="image/*"
+                           (click)="isTest || takeImage()"
+                           (change)="!isTest || addPhoto( $event)"/>
+                    <!--                        <ion-icon name="document" slot="start"></ion-icon>-->
+                </ion-item>
+                <ion-item color="pagami-surface" class="mb-0">
+                    <ion-label position="floating">Nota</ion-label>
+                    <ion-textarea *ngIf="payment" [(ngModel)]="payment.note" [readonly]="loading"></ion-textarea>
+                </ion-item>
+                <div class="info-text">
+                    <small>*Opcional</small>
+                </div>
+            </ion-list>
+
+        </div>
+    </div>
+
+    <div class="footer-button footer-button--div">
+        <ion-row>
+            <ion-col size="6">
+                <ion-button class="button-small" expand="block" color="pagami-surface"
+                            [disabled]="loading" (click)="closeModal()">
+                    Volver
+                </ion-button>
+            </ion-col>
+            <ion-col size="6">
+                <ion-button class="button-small" expand="block" color="pagami"
+                            [disabled]="loading" (click)="validateMyPaymentPlan()">
+                    <ion-spinner *ngIf="loading" class="spinner-energized"></ion-spinner>
+                    <span *ngIf="!loading">Enviar</span>
+                </ion-button>
+            </ion-col>
+        </ion-row>
+    </div>
+
+</ion-content>
+

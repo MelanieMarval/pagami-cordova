@@ -1,0 +1,53 @@
+<ion-content>
+
+        <ion-list class="ion-padding" [ngClass]="{'h-100': !payments.length}">
+            <ion-item-group *ngIf="loading">
+                <ion-card class="card card-records" *ngFor="let dummy of [1,1,1,1]">
+                    <ion-card-header>
+                        <ion-row>
+                            <ion-col size="11">
+                                <ion-card-subtitle>
+                                    <ion-skeleton-text animated [style.width.%]="45"></ion-skeleton-text>
+                                </ion-card-subtitle>
+                            </ion-col>
+                            <ion-col size="1" class="padding-icon-link">
+                                <ion-icon name="arrow-forward" color="light" style="font-size: 20px"></ion-icon>
+                            </ion-col>
+                        </ion-row>
+                    </ion-card-header>
+
+                    <ion-card-content>
+                        <ion-card-title><ion-skeleton-text animated [style.width.%]="85"></ion-skeleton-text></ion-card-title>
+                        <ion-skeleton-text animated [style.width.%]="100"></ion-skeleton-text>
+                    </ion-card-content>
+                </ion-card>
+            </ion-item-group>
+
+            <ion-item-group *ngIf="!loading" class="">
+                <ion-card class="card card-records" *ngFor="let payment of payments"
+                          [button]="true" (click)="openDetails(payment)">
+                    <ion-card-header>
+                        <ion-row>
+                            <ion-col size="11">
+                                <ion-card-subtitle>
+                                    {{ payment.createTime | date:'d/M/y'}} · {{ payment.createTime | date:'shortTime'}}
+                                </ion-card-subtitle>
+                            </ion-col>
+                            <ion-col size="1" class="padding-icon-link">
+                                <ion-icon name="arrow-forward" color="light" style="font-size: 20px"></ion-icon>
+                            </ion-col>
+                        </ion-row>
+                    </ion-card-header>
+
+                    <ion-card-content>
+                        <ion-card-title>{{payment.type === 'cash' ? 'Efectivo' : payment.type === 'transfer' ? 'Transferencia' : 'Google Pay'}}</ion-card-title>
+                        {{payment.note}}
+                    </ion-card-content>
+                </ion-card>
+            </ion-item-group>
+
+            <app-background-empty *ngIf="!loading && !payments.length" [title]="'Todo listo'" height="90"
+                                  [text]="'No hay nada en pagos por confirmar'"></app-background-empty>
+        </ion-list>
+
+</ion-content>
