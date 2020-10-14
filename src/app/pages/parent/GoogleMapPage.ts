@@ -5,16 +5,15 @@ import { PagamiGeo } from '../../core/geolocation/pagami.geo';
 import { Place } from '../../core/api/places/place';
 import { MAP_MODE } from '../../utils/Const';
 import { PlaceUtils } from '../../utils/place.utils';
-import { Environment } from '@ionic-native/google-maps';
 import {
     GoogleMaps,
     GoogleMap,
     GoogleMapsEvent,
     Marker,
     GoogleMapsAnimation,
-    MyLocation
+    MyLocation,
+    LatLng, Environment, MarkerOptions, GoogleMapOptions, ILatLng,
 } from '@ionic-native/google-maps';
-import { LatLng } from '@ionic-native/google-maps/ngx';
 
 declare var MarkerClusterer: any;
 
@@ -36,7 +35,7 @@ export class GoogleMapPage {
 
     @ViewChild('mapCanvas', {static: true}) mapElement: ElementRef;
     map: GoogleMap;
-    currentPositionMarker: any;
+    currentPositionMarker: Marker;
     currentPositionCircle: any;
     private nearbyPlaces: any[];
     private acceptPlaces: any[];
@@ -45,7 +44,7 @@ export class GoogleMapPage {
     accuracy: number;
     currentUrl: string;
     mapReady = false;
-    newPlaceMarker: any;
+    newPlaceMarker: Marker;
     editPlaceMarker: any;
     lastPosition: any;
     isRegistering = false;
@@ -55,11 +54,7 @@ export class GoogleMapPage {
     constructor(@Inject(DOCUMENT) private doc: Document, protected geolocationService: GeolocationService) {
     }
 
-    async loadMap() {
-        Environment.setEnv({
-            API_KEY_FOR_BROWSER_RELEASE: 'AIzaSyD3t5VAdEBMdICcY9FyVcgBHlkeu72OI4s',
-            API_KEY_FOR_BROWSER_DEBUG: 'AIzaSyD3t5VAdEBMdICcY9FyVcgBHlkeu72OI4s'
-        });
+    loadMap() {
         this.mapReady = false;
         try {
             const mapEle = this.mapElement.nativeElement;
@@ -69,8 +64,9 @@ export class GoogleMapPage {
 
             // this.googleMaps.event.addListenerOnce(this.map, 'idle', () => {
             //     mapEle.classList.add('show-map');
-                this.onMapReady();
-                this.mapMoveSubscribe();
+            this.onMapReady();
+            this.mapMoveSubscribe();
+            this.map.clear();
             // });
             this.mapReady = true;
         } catch (err) {
@@ -88,18 +84,25 @@ export class GoogleMapPage {
     }
 
     onMapReady() {
-        this.map.on(GoogleMapsEvent.MAP_READY).subscribe(
+        this.map.one(GoogleMapsEvent.MAP_READY).then(
             (data) => {
                 console.log('Click MAP', data);
-            }
-        );
+                const currentZoom: number = this.map.getCameraZoom();
+                this.map.setCameraZoom(currentZoom - 1);
+            });
     }
 
     changeMapCenter(coords: PagamiGeo) {
-        const position: any = {
-            lat: coords.latitude,
-            lng: coords.longitude,
-        };
+        console.log('-> coords', coords);
+        this.map.animateCamera({
+            target: {lat: coords.latitude, lng: coords.longitude},
+            zoom: 17,
+            tilt: 1,
+            bearing: 140,
+            duration: 500,
+        }).then(() => {
+            console.log('Camera target has been changed');
+        });
         // this.map.panTo(position);
     }
 
@@ -107,72 +110,71 @@ export class GoogleMapPage {
 
     }
 
-    setupMarkerCurrentPosition(coords: PagamiGeo) {
+    async setupMarkerCurrentPosition(coords: PagamiGeo) {
         const position: any = {
             lat: coords.latitude,
             lng: coords.longitude,
         };
-        const map = this.map;
         if (this.currentPositionMarker === undefined) {
-            const icon: any = {
-                strokeColor: '#FFFFFF',
-                strokeWeight: 2,
-                fillColor: '#F6AD55',
-                fillOpacity: 1,
-                scale: 6,
-                path: 0,
-            };
-            this.currentPositionMarker = new this.googleMaps.Marker({
+            const options: MarkerOptions = {
+                icon: {
+                    strokeColor: '#FFFFFF',
+                    strokeWeight: 2,
+                    fillColor: '#F6AD55',
+                    fillOpacity: 1,
+                    scale: 6,
+                    path: 0,
+                },
                 position,
-                map,
-                crossOnDrag: false,
-                icon,
-            });
-            this.currentPositionCircle = new this.googleMaps.Circle({
-                center: position,
-                radius: /*this.accuracy*/30, // in meters
-                strokeColor: '#F6AD55',
-                strokeWeight: 0.5,
-                fillColor: '#FBD38D',
-                fillOpacity: 0.2,
-                map,
-            });
+                draggable: false,
+            };
+            this.currentPositionMarker = this.map.addMarkerSync(options);
+            console.log('-> this.currentPositionMarker', this.currentPositionMarker);
+
+            // this.currentPositionCircle = new this.googleMaps.Circle({
+            //     center: position,
+            //     radius: /*this.accuracy*/30, // in meters
+            //     strokeColor: '#F6AD55',
+            //     strokeWeight: 0.5,
+            //     fillColor: '#FBD38D',
+            //     fillOpacity: 0.2,
+            //     // map,
+            // });
         } else {
-            if (this.currentPositionMarker) {
-                this.currentPositionMarker.setPosition(position);
-            }
-            if (this.currentPositionCircle) {
-                this.currentPositionCircle.setRadius(/*coords.accuracy*/30);
-                this.currentPositionCircle.setCenter(position);
-            }
+            // if (this.currentPositionMarker) {
+            //     this.currentPositionMarker.setPosition(position);
+            // }
+            // if (this.currentPositionCircle) {
+            //     this.currentPositionCircle.setRadius(/*coords.accuracy*/30);
+            //     this.currentPositionCircle.setCenter(position);
+            // }
         }
     }
 
     addMarkerNewPlace() {
-        const map = this.map;
         if (this.currentPositionMarker) {
-            const latLng = this.currentPositionMarker.getPosition();
-            const icon = {
-                url: 'assets/marker-icons/point_marker.svg',
-                scaledSize: new this.googleMaps.Size(64, 64),
-            };
-            if (this.newPlaceMarker) {
-                this.newPlaceMarker.setMap(null);
-            }
-            this.newPlaceMarker = new this.googleMaps.Marker({
-                latLng,
+            const options: MarkerOptions = {
+                icon: {
+                    url: 'assets/marker-icons/point_marker.svg',
+                    size: {
+                        width: 64,
+                        height: 64,
+                    },
+                },
+                position: this.currentPositionMarker.getPosition(),
                 draggable: true,
-                icon,
-                map,
-            });
-            this.newPlaceMarker.setPosition(latLng);
-            this.lastPosition = latLng;
-            this.newPlaceMarker.addListener('drag', event => {
-                this.onDragPlaceEvents();
-            });
-            this.newPlaceMarker.addListener('dragend', event => {
-                this.onDragPlaceEvents();
-            });
+            };
+
+            this.newPlaceMarker = this.map.addMarkerSync(options);
+
+            this.lastPosition = this.currentPositionMarker.getPosition();
+
+            // this.newPlaceMarker.addListener('drag', event => {
+            //     this.onDragPlaceEvents();
+            // });
+            // this.newPlaceMarker.addListener('dragend', event => {
+            //     this.onDragPlaceEvents();
+            // });
         }
     }
 
@@ -180,30 +182,33 @@ export class GoogleMapPage {
         const map = this.map;
         if (this.currentPositionMarker) {
             const latLng = this.toLatLng(place.latitude, place.longitude);
-            const icon = {
-                url: 'assets/marker-icons/point_marker.svg',
-                scaledSize: new this.googleMaps.Size(64, 64),
-            };
-            if (this.editPlaceMarker) {
-                this.editPlaceMarker.setMap(null);
-            }
-            this.editPlaceMarker = new this.googleMaps.Marker({
-                latLng,
+            const options: MarkerOptions = {
+                icon: {
+                    url: 'assets/marker-icons/point_marker.svg',
+                    size: {
+                        width: 64,
+                        height: 64,
+                    },
+                },
+                position: latLng,
                 draggable: true,
-                icon,
-                map,
                 zIndex: 50,
-            });
-            this.editPlaceMarker.setPosition(latLng);
+            };
+
+            this.editPlaceMarker = this.map.addMarkerSync(options);
+
+            // if (this.editPlaceMarker) {
+            //     this.editPlaceMarker.setMap(null);
+            // }
         }
     }
 
     onDragPlaceEvents() {
-        // if (this.calculateDistance(this.newPlaceMarker.getPosition(), this.currentPositionMarker.getPosition()) > 30) {
-        //     this.newPlaceMarker.setPosition(this.lastPosition);
-        // } else {
-        //     this.lastPosition = this.newPlaceMarker.getPosition();
-        // }
+        if (this.calculateDistance(this.newPlaceMarker.getPosition(), this.currentPositionMarker.getPosition()) > 30) {
+            this.newPlaceMarker.setPosition(this.lastPosition);
+        } else {
+            this.lastPosition = this.newPlaceMarker.getPosition();
+        }
     }
 
     onClickPlace(place: Place) {
@@ -216,23 +221,29 @@ export class GoogleMapPage {
                 lat: place.latitude,
                 lng: place.longitude,
             };
-            const icon = {
-                url: PlaceUtils.getMarker(place),
-                scaledSize: new this.googleMaps.Size(30, 32),
+            const options: MarkerOptions = {
+                icon: {
+                    url: PlaceUtils.getMarker(place),
+                    size: {
+                        width: 30,
+                        height: 32,
+                    },
+                },
+                position,
+                draggable: true,
+                zIndex: 50,
             };
 
-            const marker = new this.googleMaps.Marker({
-                position,
-                icon,
+            const marker: Marker = this.map.addMarkerSync(options);
+
+            marker.on(GoogleMapsEvent.MARKER_CLICK).subscribe(() => {
+                const latlng = { lat: position.lat, lng: position.lng };
+                this.onClickPlace(place);
+                if (this.currentUrl === MAP_MODE.SEARCH) {
+                    this.map.setCameraZoom(20);
+                    this.offsetCenter(latlng, 0, 200);
+                }
             });
-            // marker.addListener('click', event => {
-            //     const latlng = new GoogleMaps.LatLng(position.lat, position.lng);
-            //     this.onClickPlace(place);
-            //     if (this.currentUrl === MAP_MODE.SEARCH) {
-            //         this.map.setZoom(20);
-            //         this.offsetCenter(latlng, 0, 200);
-            //     }
-            // });
             this.nearbyPlaces.push(marker);
         }
         this.setCluster();
@@ -255,7 +266,7 @@ export class GoogleMapPage {
     }
 
     offsetCenter(latlng, offsetx, offsety) {
-        // const scale = Math.pow(2, this.map.getZoom());
+        const scale = Math.pow(2, this.map.getCameraZoom());
         // const worldCoordinateCenter = this.map.getProjection().fromLatLngToPoint(latlng);
         // const pixelOffset = new GoogleMaps.Point((offsetx / scale) || 0, (offsety / scale) || 0);
         //
@@ -267,30 +278,24 @@ export class GoogleMapPage {
         // this.map.setCenter(newCenter);
     }
 
-    getDefaultOptions(): any {
-        return  {
+    getDefaultOptions(): GoogleMapOptions {
+        return {
             camera: {
-              target: {
-                lat: 6.286155564435256,
-                lng: -75.6074854019129
-              },
-              zoom: 18,
-              tilt: 30
-            }
+                target: {
+                    lat: 6.286155564435256,
+                    lng: -75.6074854019129,
+                },
+                zoom: 18,
+                tilt: 1,
+            },
+            gestures: {
+                tilt: false,
+            },
+            controls: {
+                zoom: false,
+            },
+            styles: removeDefaultMarkers,
         };
-        // return {
-        //     center: {
-        //         lat: 6.286155564435256,
-        //             lng: -75.6074854019129
-        //     },
-        //     zoom: 18,
-        //         minZoom: 2,
-        //         mapTypeControl: false,
-        //         zoomControl: false,
-        //         streetViewControl: false,
-        //         fullscreenControl: false,
-        //         styles: removeDefaultMarkers
-        // };
     }
 
     /**
@@ -300,25 +305,25 @@ export class GoogleMapPage {
     //     return GoogleMaps.geometry.spherical.computeDistanceBetween(front, to);
     // }
 
-    calculateDistance(point1: LatLng, point2: LatLng) {
+    calculateDistance(point1: ILatLng, point2: ILatLng) {
         // The radius of the planet earth in meters
-        // const R = 6378137;
-        // const dLat = degreesToRadians(point2.lat() - point1.lat());
-        // const dLong = degreesToRadians(point2.lng() - point1.lng());
-        // const a = Math.sin(dLat / 2)
-        //     *
-        //     Math.sin(dLat / 2)
-        //     +
-        //     Math.cos(degreesToRadians(point1.lat()))
-        //     *
-        //     Math.cos(degreesToRadians(point1.lat()))
-        //     *
-        //     Math.sin(dLong / 2)
-        //     *
-        //     Math.sin(dLong / 2);
-        //
-        // const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        // return R * c;
+        const R = 6378137;
+        const dLat = degreesToRadians(point2.lat - point1.lat);
+        const dLong = degreesToRadians(point2.lng - point1.lng);
+        const a = Math.sin(dLat / 2)
+            *
+            Math.sin(dLat / 2)
+            +
+            Math.cos(degreesToRadians(point1.lat))
+            *
+            Math.cos(degreesToRadians(point1.lat))
+            *
+            Math.sin(dLong / 2)
+            *
+            Math.sin(dLong / 2);
+
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c;
     }
 
     // @ts-ignore

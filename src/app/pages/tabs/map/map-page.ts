@@ -3,13 +3,14 @@ import { DOCUMENT } from '@angular/common';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { DrawerState } from '../../../shared/ion-bottom-drawer/drawer-state';
+// Services
 import { Place } from '../../../core/api/places/place';
 import { ApiResponse } from '../../../core/api/api.response';
 import { PlaceFilter } from '../../../core/api/places/place.filter';
-// Services
-import { GoogleMapPage } from '../../parent/GoogleMapPage';
 import { GeolocationService } from '../../../core/geolocation/geolocation.service';
 import { PlacesService } from '../../../core/api/places/places.service';
+import { PagamiGeo } from '../../../core/geolocation/pagami.geo';
+import { GoogleMapPage } from '../../parent/GoogleMapPage';
 import { MAP_MODE, PLACES } from '../../../utils/Const';
 // Providers
 import { MapProvider } from '../../../providers/map.provider';
@@ -17,7 +18,6 @@ import { AlertProvider } from '../../../providers/alert.provider';
 import { ToastProvider } from '../../../providers/toast.provider';
 import { StorageProvider } from '../../../providers/storage.provider';
 import { UserIntentProvider } from '../../../providers/user-intent.provider';
-import { PagamiGeo } from '../../../core/geolocation/pagami.geo';
 
 const DEFAULT_DRAWER_BOTTOM_HEIGHT = 104;
 const BASIC_RADIUS_KILOMETERS = 50;
@@ -28,7 +28,7 @@ const BASIC_UPDATE_METERS = 10;
     templateUrl: 'map-page.html',
     styleUrls: ['map-page.scss'],
 })
-export class MapPage extends GoogleMapPage implements OnInit, AfterViewInit {
+export class MapPage extends GoogleMapPage implements OnInit {
 
     @ViewChild('fab', {static: false, read: ElementRef}) private ionFab: ElementRef;
 
@@ -131,10 +131,10 @@ export class MapPage extends GoogleMapPage implements OnInit, AfterViewInit {
             this.storageInstance.showingPlaceDetails = false;
         }
         if (this.newPlaceMarker) {
-            this.newPlaceMarker.setMap(null);
+            // this.newPlaceMarker.setMap(null);
         }
         if (this.editPlaceMarker) {
-            this.editPlaceMarker.setMap(null);
+            // this.editPlaceMarker.setMap(null);
         }
     }
 
@@ -162,10 +162,10 @@ export class MapPage extends GoogleMapPage implements OnInit, AfterViewInit {
         this.onBottomSheetHide(true);
         this.bottomHeightChange.emit(0);
         if (this.newPlaceMarker) {
-            this.newPlaceMarker.setMap(null);
+            // this.newPlaceMarker.setMap(null);
         }
         if (this.editPlaceMarker) {
-            this.editPlaceMarker.setMap(null);
+            // this.editPlaceMarker.setMap(null);
         }
         this.enableFindMyBusiness();
     }
@@ -179,7 +179,7 @@ export class MapPage extends GoogleMapPage implements OnInit, AfterViewInit {
         this.onBottomSheetHide(true);
         this.bottomHeightChange.emit(0);
         if (this.newPlaceMarker) {
-            this.newPlaceMarker.setMap(null);
+            // this.newPlaceMarker.setMap(null);
         }
         // this.map.panTo(this.toLatLng(place.latitude, place.longitude));
         // this.map.setZoom(20);
@@ -219,9 +219,9 @@ export class MapPage extends GoogleMapPage implements OnInit, AfterViewInit {
             this.changeMapCenter(coors);
         }
         if (this.intentProvider.lastUpdatedPoint && this.intentProvider.lastUpdatedPoint.latitude) {
-            // if (this.calculateDistance(this.geoToLatLng(coors), this.geoToLatLng(this.intentProvider.lastUpdatedPoint)) > BASIC_UPDATE_METERS) {
-            //     this.getNearPlaces();
-            // }
+            if (this.calculateDistance(this.geoToLatLng(coors), this.geoToLatLng(this.intentProvider.lastUpdatedPoint)) > BASIC_UPDATE_METERS) {
+                this.getNearPlaces();
+            }
         } else {
             this.getNearPlaces();
         }
@@ -233,6 +233,7 @@ export class MapPage extends GoogleMapPage implements OnInit, AfterViewInit {
 
     async attachedPosition() {
         this.fabAttached = true;
+        console.log('-> this.currentPositionMarker', this.currentPositionMarker);
         if (this.currentPositionMarker) {
             this.changeMapCenter(await this.geolocationService.getCurrentLocation());
         }
@@ -246,18 +247,19 @@ export class MapPage extends GoogleMapPage implements OnInit, AfterViewInit {
     }
 
     // async ngAfterViewInit() {
-    async ngAfterViewInit() {
+    async ionViewWillEnter() {
         /**
          * moving floating button to initial position
          */
-        // this.renderer.setStyle(this.ionFab.nativeElement, 'transform', 'translateY(' + '-56px' + ')');
+        this.renderer.setStyle(this.ionFab.nativeElement, 'transform', 'translateY(' + '-56px' + ')');
         /**
          * load map and wait
          */
-        await this.loadMap();
+        this.loadMap();
         /**
          * subscribing to current location changes
          */
+        // TODO comentado porque se llamaba multiples veces, por reparar
         // this.geolocationService.locationChanged.subscribe(
         //     (coors: PagamiGeo) => {
         //         this.onCurrentPositionChanged(coors);
@@ -265,13 +267,13 @@ export class MapPage extends GoogleMapPage implements OnInit, AfterViewInit {
         /**
          * Enable watch location if status is disabled
          */
-        // this.geolocationService.enableLocation();
+        this.geolocationService.enableLocation();
         /**
          * set center and marker position
          */
-        // const geo: PagamiGeo = await this.geolocationService.getCurrentLocation();
-        // this.onCurrentPositionChanged(geo);
-        // this.getNearPlaces();
+        const geo: PagamiGeo = await this.geolocationService.getCurrentLocation();
+        this.onCurrentPositionChanged(geo);
+        this.getNearPlaces();
     }
 
     async ionViewWillLeave() {
@@ -284,6 +286,7 @@ export class MapPage extends GoogleMapPage implements OnInit, AfterViewInit {
         }
         this.searching = true;
         const geo: PagamiGeo = await this.geolocationService.getCurrentLocation();
+        console.log('-> geo', geo);
         const filter: PlaceFilter = {
             latitude: geo.latitude,
             longitude: geo.longitude,
@@ -301,6 +304,8 @@ export class MapPage extends GoogleMapPage implements OnInit, AfterViewInit {
                 this.intentProvider.lastUpdatedPoint = geo;
                 this.lastSearchText = filter.text;
             }
+        }, error => {
+            console.log('-> error', error);
         }).finally(() => this.searching = false);
     }
 
@@ -345,10 +350,10 @@ export class MapPage extends GoogleMapPage implements OnInit, AfterViewInit {
     async saveLocation() {
         this.saving = true;
         const latLng = this.newPlaceMarker.getPosition();
-        const location = await this.getAddress(latLng.lat(), latLng.lng());
+        const location = await this.getAddress(latLng.lat, latLng.lng);
         const place: Place = {
-            latitude: latLng.lat(),
-            longitude: latLng.lng(),
+            latitude: latLng.lat,
+            longitude: latLng.lng,
             location: {
                 addressLine: location.addressLine,
                 postalCode: location.postalCode,

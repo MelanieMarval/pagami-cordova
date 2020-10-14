@@ -5,14 +5,16 @@ import { Platform } from '@ionic/angular';
 import { StorageProvider } from './providers/storage.provider';
 import { AlertProvider } from './providers/alert.provider';
 
+import { AppMinimize } from '@ionic-native/app-minimize/ngx';
+import { SplashScreen } from '@ionic-native/splash-screen/ngx';
+import { Environment } from '@ionic-native/google-maps';
+
 import { USER } from './utils/Const';
 import { User } from './core/api/users/user';
 import { AuthService } from './core/api/auth/auth.service';
 import { GoogleAuthService } from './core/google-auth/google-auth.service';
 import { DrawerState } from './shared/ion-bottom-drawer/drawer-state';
 import { MapProvider } from './providers/map.provider';
-import { AppMinimize } from '@ionic-native/app-minimize/ngx';
-import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { VerifyAndroidPermissionsService } from './core/permissions/verify-android-permissions.service';
 import { PlatformUtils } from './utils/platform.utils';
 
@@ -71,8 +73,14 @@ export class AppComponent {
         const isLogged = await this.storageService.isLogged();
         const user = await this.storageService.getPagamiUser();
 
+        Environment.setEnv({
+            API_KEY_FOR_BROWSER_RELEASE: 'AIzaSyD3t5VAdEBMdICcY9FyVcgBHlkeu72OI4s',
+            API_KEY_FOR_BROWSER_DEBUG: 'AIzaSyD3t5VAdEBMdICcY9FyVcgBHlkeu72OI4s'
+        });
+
         const lastUserVerification = await this.storageService.getLastUserVerification();
         if (isLogged && user) {
+            await this.refreshToken();
             if (user.type && user.type === USER.TYPE.ADMIN) {
                 this.openAdminPanel();
             } else {
@@ -121,7 +129,6 @@ export class AppComponent {
     }
 
     private openHome(): Promise<boolean> {
-        console.log('home');
         return this.router.navigateByUrl('/app/tabs/map/search', {replaceUrl: true});
     }
 
@@ -138,5 +145,11 @@ export class AppComponent {
             || currentUrl === '/app/tabs/my-business'
             || currentUrl === '/app/tabs/map/register-business'
             || currentUrl === '/app/tabs/wallet';
+    }
+
+    private async refreshToken() {
+        const resToken = await this.googleAuthService.refreshSession();
+        console.log('-> resToken', resToken);
+        return resToken;
     }
 }

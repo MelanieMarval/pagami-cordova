@@ -16,6 +16,7 @@ import { BrowserTab } from '@ionic-native/browser-tab/ngx';
 import { Camera } from '@ionic-native/camera/ngx';
 import { Clipboard } from '@ionic-native/clipboard/ngx';
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
+import { GoogleMaps } from '@ionic-native/google-maps';
 import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
@@ -78,6 +79,7 @@ registerLocaleData(localeEs, 'es');
         Camera,
         Clipboard,
         GooglePlus,
+        GoogleMaps,
         LocationAccuracy,
         SplashScreen,
         StatusBar,

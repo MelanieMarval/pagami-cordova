@@ -18,9 +18,7 @@ export class GoogleAuthService {
 
     async singIn(): Promise<any> {
         const googleUser = await this.googlePlus.login({});
-        console.log('-> googleUser', googleUser);
-        return;
-        const credential = auth.GoogleAuthProvider.credential(googleUser.authentication.idToken);
+        const credential = auth.GoogleAuthProvider.credential(null, googleUser.accessToken);
         const fireCredential = await this.angularFireAuth.signInWithCredential(credential);
         await this.saveGoogleUser(googleUser);
         return await fireCredential.user.getIdToken();
@@ -56,7 +54,7 @@ export class GoogleAuthService {
                     const sessionToken = await firebaseUser.getIdToken();
                     resolve(sessionToken);
                 } else {
-                    // resolve(await this.refreshSession());
+                    resolve(await this.refreshSession());
                 }
             } catch (err) {
                 await this.wait();
@@ -66,11 +64,11 @@ export class GoogleAuthService {
         });
     }
 
-    private async refreshSession() {
-        // const response = await this.googleAuth.refresh();
-        // const credential = auth.GoogleAuthProvider.credential(response.idToken);
-        // const fireCredential = await this.angularFireAuth.signInWithCredential(credential);
-        // return await fireCredential.user.getIdToken();
+    async refreshSession() {
+        const response = await this.googlePlus.trySilentLogin({});
+        const credential = auth.GoogleAuthProvider.credential(null, response.accessToken);
+        const fireCredential = await this.angularFireAuth.signInWithCredential(credential);
+        return await fireCredential.user.getIdToken();
     }
 
 
@@ -103,7 +101,7 @@ export class GoogleAuthService {
                 ],
             });
 
-            // await toast.present();
+            await toast.present();
         });
     }
 
