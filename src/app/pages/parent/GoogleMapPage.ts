@@ -16,10 +16,8 @@ import {
     ILatLng,
     LatLng,
     MarkerOptions,
-    GoogleMapOptions, MarkerCluster,
+    GoogleMapOptions, MarkerCluster, MarkerClusterOptions,
 } from '@ionic-native/google-maps';
-
-declare var MarkerClusterer: any;
 
 const removeDefaultMarkers = [
     {
@@ -41,8 +39,8 @@ export class GoogleMapPage {
     map: GoogleMap;
     currentPositionMarker: Marker;
     currentPositionCircle: Circle;
-    private nearbyPlaces: any[];
-    private acceptPlaces: any[];
+    private nearbyPlacesOptions: any[] = [];
+    private nearbyPlaces: Place[] = [];
     private markerCluster: MarkerCluster;
     accuracy: number;
     currentUrl: string;
@@ -62,11 +60,7 @@ export class GoogleMapPage {
         try {
             const mapEle = this.mapElement.nativeElement;
             this.map = GoogleMaps.create(mapEle, this.getDefaultOptions());
-            // this.googleMaps = await this.geolocationService.getGoogleMaps();
-            // this.map = new this.googleMaps.Map(mapEle, this.getDefaultOptions());
 
-            // this.googleMaps.event.addListenerOnce(this.map, 'idle', () => {
-            //     mapEle.classList.add('show-map');
             this.onMapReady();
             this.mapMoveSubscribe();
             this.map.clear();
@@ -123,8 +117,12 @@ export class GoogleMapPage {
                 icon: {
                     url: './assets/marker-icons-png/pagami_center.png',
                     size: {
-                        width: 16,
-                        height: 16,
+                        width: 18,
+                        height: 18,
+                    },
+                    anchor: {
+                        x: 9,
+                        y: 9,
                     },
                 },
                 position,
@@ -159,9 +157,9 @@ export class GoogleMapPage {
         if (this.currentPositionMarker) {
             const options: MarkerOptions = {
                 icon: {
-                    url: 'assets/marker-icons-png/point_marker.png',
+                    url: './assets/marker-icons-png/point_marker.png',
                     size: {
-                        width: 64,
+                        // width: 64,
                         height: 64,
                     },
                 },
@@ -189,7 +187,7 @@ export class GoogleMapPage {
             const latLng = this.toLatLng(place.latitude, place.longitude);
             const options: MarkerOptions = {
                 icon: {
-                    url: 'assets/marker-icons/point_marker.svg',
+                    url: './assets/marker-icons-png/point_marker.png',
                     size: {
                         width: 64,
                         height: 64,
@@ -205,7 +203,6 @@ export class GoogleMapPage {
             }
 
             this.editPlaceMarker = this.map.addMarkerSync(options);
-
         }
     }
 
@@ -231,7 +228,7 @@ export class GoogleMapPage {
                 icon: {
                     url: PlaceUtils.getMarker(place),
                     size: {
-                        width: 30,
+                        width: 28,
                         height: 32,
                     },
                 },
@@ -240,17 +237,19 @@ export class GoogleMapPage {
                 zIndex: 50,
             };
 
-            const marker: Marker = await this.map.addMarker(options);
-
-            marker.on(GoogleMapsEvent.MARKER_CLICK).subscribe(() => {
-                const latlng = {lat: position.lat, lng: position.lng};
-                this.onClickPlace(place);
-                if (this.currentUrl === MAP_MODE.SEARCH) {
-                    this.map.setCameraZoom(20);
-                    this.offsetCenter(latlng, 0, 200);
-                }
-            });
-            this.nearbyPlaces.push(marker);
+            // const marker: Marker = await this.map.addMarker(options);
+            //
+            // marker.on(GoogleMapsEvent.MARKER_CLICK).subscribe(() => {
+            //     const latlng = {lat: position.lat, lng: position.lng};
+            //     this.onClickPlace(place);
+            //     if (this.currentUrl === MAP_MODE.SEARCH) {
+            //         this.map.setCameraZoom(20);
+            //         this.offsetCenter(latlng, 0, 200);
+            //     }
+            // });
+            this.nearbyPlacesOptions.push(options);
+            this.nearbyPlaces.push(place);
+            console.log('-> marker', options);
         }
         this.setCluster();
         if (this.isEditingBusiness && this.editPlaceMarker) {
@@ -260,15 +259,15 @@ export class GoogleMapPage {
     }
 
     clearMarkerPlaces() {
-        if (this.nearbyPlaces) {
-            for (const marker of this.nearbyPlaces) {
+        if (this.nearbyPlacesOptions) {
+            for (const marker of this.nearbyPlacesOptions) {
                 marker.setMap(null);
             }
         }
         if (this.markerCluster) {
             this.markerCluster.remove();
         }
-        this.nearbyPlaces = [];
+        this.nearbyPlacesOptions = [];
     }
 
     offsetCenter(latlng, offsetx, offsety) {
@@ -296,6 +295,7 @@ export class GoogleMapPage {
             },
             gestures: {
                 tilt: false,
+                rotate: true,
             },
             controls: {
                 zoom: false,
@@ -343,34 +343,57 @@ export class GoogleMapPage {
     }
 
     setCluster() {
-        this.markerCluster = new MarkerClusterer(this.map, this.nearbyPlaces, this.getClusterOptions());
+        this.markerCluster = this.map.addMarkerClusterSync(this.getClusterOptions());
+
+        this.markerCluster.on(GoogleMapsEvent.MARKER_CLICK).subscribe((marker) => {
+            const filter = this.nearbyPlaces.filter((place:Place) => place.latitude === marker.position.lat && marker.positionlng === place.longitude);
+            if (filter && filter.length) {
+                const placeClicked = filter[0];
+                const latlng = {lat: placeClicked.latitude, lng: placeClicked.longitude};
+                this.onClickPlace(placeClicked);
+                if (this.currentUrl === MAP_MODE.SEARCH) {
+                    // this.map.setCameraZoom(20);
+                    this.offsetCenter(latlng, 0, 200);
+                }
+            }
+            console.log('-> marker', marker);
+        });
     }
 
-    getClusterOptions(): any {
-        const clusterStyles = [
-            {
-                textColor: 'white',
-                url: './assets/map_cluster.png',
-                height: 36,
-                width: 36,
-            },
-            {
-                textColor: 'white',
-                url: './assets/map_cluster.png',
-                height: 36,
-                width: 36,
-            },
-            {
-                textColor: 'white',
-                url: './assets/map_cluster.png',
-                height: 36,
-                width: 36,
-            },
-        ];
+    getClusterOptions(): MarkerClusterOptions {
         return {
-            gridSize: 50,
-            styles: clusterStyles,
-            maxZoom: 16,
+            markers: this.nearbyPlacesOptions,
+            maxZoomLevel: 15,
+            boundsDraw: false,
+            icons: [
+                {
+                    label: {color: 'white'},
+                    min: 2,
+                    url: './assets/map_cluster.png',
+                    size: {
+                        height: 36,
+                        width: 36,
+                    },
+                },
+                {
+                    label: {color: 'white'},
+                    min: 2,
+                    url: './assets/map_cluster.png',
+                    size: {
+                        height: 36,
+                        width: 36,
+                    },
+                },
+                {
+                    label: {color: 'white'},
+                    min: 2,
+                    url: './assets/map_cluster.png',
+                    size: {
+                        height: 36,
+                        width: 36,
+                    },
+                },
+            ],
         };
     }
 }

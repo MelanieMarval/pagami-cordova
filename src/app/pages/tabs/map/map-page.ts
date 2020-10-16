@@ -131,10 +131,10 @@ export class MapPage extends GoogleMapPage implements OnInit {
             this.storageInstance.showingPlaceDetails = false;
         }
         if (this.newPlaceMarker) {
-            // this.newPlaceMarker.setMap(null);
+            this.newPlaceMarker.remove();
         }
         if (this.editPlaceMarker) {
-            // this.editPlaceMarker.setMap(null);
+            this.editPlaceMarker.remove();
         }
     }
 
@@ -147,11 +147,11 @@ export class MapPage extends GoogleMapPage implements OnInit {
         this.beforeSaveLocation = true;
         this.placeToSave = undefined;
         // this.map.panTo(this.currentPositionMarker.getPosition());
-        // this.map.setZoom(20);
+        this.map.setCameraZoom(20);
         this.addMarkerNewPlace();
         this.toast.messageSuccessAboveButton('Puedes mover un poco el marcador si lo necesitas', 3000);
         if (this.editPlaceMarker) {
-            // this.editPlaceMarker.setMap(null);
+            this.editPlaceMarker.remove();
         }
     }
 
@@ -162,10 +162,10 @@ export class MapPage extends GoogleMapPage implements OnInit {
         this.onBottomSheetHide(true);
         this.bottomHeightChange.emit(0);
         if (this.newPlaceMarker) {
-            // this.newPlaceMarker.setMap(null);
+            this.newPlaceMarker.remove();
         }
         if (this.editPlaceMarker) {
-            // this.editPlaceMarker.setMap(null);
+            this.editPlaceMarker.remove();
         }
         this.enableFindMyBusiness();
     }
@@ -179,12 +179,12 @@ export class MapPage extends GoogleMapPage implements OnInit {
         this.onBottomSheetHide(true);
         this.bottomHeightChange.emit(0);
         if (this.newPlaceMarker) {
-            // this.newPlaceMarker.setMap(null);
+            this.newPlaceMarker.remove();
         }
         // this.map.panTo(this.toLatLng(place.latitude, place.longitude));
-        // this.map.setZoom(20);
+        this.map.setCameraZoom(20);
         this.addMarkerEditPlace(place);
-        this.toast.messageSuccessAboveButton('Arrastra tu empresa a su nueva ubicación', 3000);
+        this.toast.messageSuccessAboveButton('Presiona y arrastra tu empresa a su nueva ubicación', 3000);
     }
 
     closeToMeToDefault() {
