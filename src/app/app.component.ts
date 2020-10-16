@@ -148,8 +148,6 @@ export class AppComponent {
     }
 
     private async refreshToken() {
-        const resToken = await this.googleAuthService.refreshSession();
-        console.log('-> resToken', resToken);
-        return resToken;
+        return await this.googleAuthService.refreshSession();
     }
 }

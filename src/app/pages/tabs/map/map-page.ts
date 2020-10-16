@@ -151,7 +151,7 @@ export class MapPage extends GoogleMapPage implements OnInit {
         this.addMarkerNewPlace();
         this.toast.messageSuccessAboveButton('Puedes mover un poco el marcador si lo necesitas', 3000);
         if (this.editPlaceMarker) {
-            this.editPlaceMarker.setMap(null);
+            // this.editPlaceMarker.setMap(null);
         }
     }
 
@@ -286,7 +286,6 @@ export class MapPage extends GoogleMapPage implements OnInit {
         }
         this.searching = true;
         const geo: PagamiGeo = await this.geolocationService.getCurrentLocation();
-        console.log('-> geo', geo);
         const filter: PlaceFilter = {
             latitude: geo.latitude,
             longitude: geo.longitude,
@@ -323,10 +322,10 @@ export class MapPage extends GoogleMapPage implements OnInit {
                 place.latitude,
                 place.longitude,
             );
-            // place.distance = this.calculateDistance(
-            //     this.currentPositionMarker.getPosition(),
-            //     latlng,
-            // );
+            place.distance = this.calculateDistance(
+                this.currentPositionMarker.getPosition(),
+                latlng,
+            );
         });
         places.sort((a, b) => a.distance - b.distance);
         this.nearPlaces = places;
@@ -445,11 +444,11 @@ export class MapPage extends GoogleMapPage implements OnInit {
     async saveNewLocation() {
         this.saving = true;
         const latLng = this.editPlaceMarker.getPosition();
-        const location = await this.getAddress(latLng.lat(), latLng.lng());
+        const location = await this.getAddress(latLng.lat, latLng.lng);
         const newPlaceLocation: Place = {
             id: this.intentProvider.placeToChangeLocation.id,
-            latitude: latLng.lat(),
-            longitude: latLng.lng(),
+            latitude: latLng.lat,
+            longitude: latLng.lng,
             location: {
                 address: this.intentProvider.placeToChangeLocation.location.address,
                 addressLine: location.addressLine,

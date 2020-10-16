@@ -3,7 +3,7 @@
     <name>pagami</name>
     <description>An awesome Ionic/Cordova app.</description>
     <author email="hi@ionicframework.com" href="http://ionicframework.com/">Ionic Framework Team</author>
-    <content original-src="index.html" src="http://localhost:8100" />
+    <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
@@ -107,5 +107,4 @@
     <plugin name="cordova-android-play-services-gradle-release" spec="^4.0.0">
         <variable name="play-services-location" value="17.0.0" />
     </plugin>
-    <allow-navigation href="http://localhost:8100" sessionid="c338ff65" />
 </widget>
