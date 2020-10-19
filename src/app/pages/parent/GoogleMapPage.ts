@@ -11,13 +11,12 @@ import {
     GoogleMapsEvent,
     Marker,
     Circle,
-    GoogleMapsAnimation,
-    MyLocation,
     ILatLng,
     LatLng,
     MarkerOptions,
     GoogleMapOptions, MarkerCluster, MarkerClusterOptions,
 } from '@ionic-native/google-maps';
+import { ToastProvider } from '../../providers/toast.provider';
 
 const removeDefaultMarkers = [
     {
@@ -52,7 +51,9 @@ export class GoogleMapPage {
     isFindMyBusiness = false;
     isEditingBusiness = false;
 
-    constructor(@Inject(DOCUMENT) private doc: Document, protected geolocationService: GeolocationService) {
+    constructor(@Inject(DOCUMENT) private doc: Document,
+                protected geolocationService: GeolocationService,
+                protected toast: ToastProvider) {
     }
 
     loadMap() {
@@ -85,6 +86,7 @@ export class GoogleMapPage {
             (data) => {
                 console.log('Click MAP', data);
                 const currentZoom: number = this.map.getCameraZoom();
+                console.log('-> currentZoom', currentZoom);
                 this.map.setCameraZoom(currentZoom - 1);
             });
     }
@@ -93,7 +95,7 @@ export class GoogleMapPage {
         console.log('-> coords', coords);
         this.map.animateCamera({
             target: {lat: coords.latitude, lng: coords.longitude},
-            zoom: 17,
+            zoom: 16,
             tilt: 1,
             bearing: 140,
             duration: 500,
@@ -160,7 +162,7 @@ export class GoogleMapPage {
                     url: './assets/marker-icons-png/point_marker.png',
                     size: {
                         // width: 64,
-                        height: 64,
+                        height: 58,
                     },
                 },
                 position: this.currentPositionMarker.getPosition(),
@@ -174,6 +176,10 @@ export class GoogleMapPage {
             this.newPlaceMarker.on(GoogleMapsEvent.MARKER_DRAG_START).subscribe(event => {
                 console.log('-> event Drag_Start', event);
                 this.onDragPlaceEvents();
+            });
+            this.newPlaceMarker.on(GoogleMapsEvent.MARKER_DRAG).subscribe(event => {
+                console.log('-> event Drag', event);
+                // this.onDragPlaceEvents();
             });
             this.newPlaceMarker.on(GoogleMapsEvent.MARKER_DRAG_END).subscribe(event => {
                 console.log('-> event Drag_End', event);
@@ -209,6 +215,7 @@ export class GoogleMapPage {
     onDragPlaceEvents() {
         if (this.calculateDistance(this.newPlaceMarker.getPosition(), this.currentPositionMarker.getPosition()) > 30) {
             this.newPlaceMarker.setPosition(this.lastPosition);
+            this.toast.messageSuccessAboveButton('No te salgas del espacio delimitado');
         } else {
             this.lastPosition = this.newPlaceMarker.getPosition();
         }
@@ -253,8 +260,9 @@ export class GoogleMapPage {
         }
         this.setCluster();
         if (this.isEditingBusiness && this.editPlaceMarker) {
-            // this.editPlaceMarker.setMap(null); // remove() or setVisible(false)
-            // this.editPlaceMarker.setMap(this.map);
+            // this.editPlaceMarker.setVisible(false); // remove() or setVisible(false)
+            // this.addMarkerEditPlace(this.intentProvider.placeToChangeLocation);
+            // this.editPlaceMarker.setVisible(true);
         }
     }
 
@@ -290,7 +298,7 @@ export class GoogleMapPage {
                     lat: 6.286155564435256,
                     lng: -75.6074854019129,
                 },
-                zoom: 18,
+                zoom: 16,
                 tilt: 1,
             },
             gestures: {
@@ -346,7 +354,7 @@ export class GoogleMapPage {
         this.markerCluster = this.map.addMarkerClusterSync(this.getClusterOptions());
 
         this.markerCluster.on(GoogleMapsEvent.MARKER_CLICK).subscribe((marker) => {
-            const filter = this.nearbyPlaces.filter((place:Place) => place.latitude === marker.position.lat && marker.positionlng === place.longitude);
+            const filter = this.nearbyPlaces.filter((place: Place) => place.latitude === marker.position.lat && marker.positionlng === place.longitude);
             if (filter && filter.length) {
                 const placeClicked = filter[0];
                 const latlng = {lat: placeClicked.latitude, lng: placeClicked.longitude};
@@ -396,4 +404,5 @@ export class GoogleMapPage {
             ],
         };
     }
+
 }

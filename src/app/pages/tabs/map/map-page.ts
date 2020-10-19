@@ -1,7 +1,6 @@
 import { Component, ElementRef, EventEmitter, Inject, OnInit, AfterViewInit, Renderer2, ViewChild } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { AlertController } from '@ionic/angular';
 import { DrawerState } from '../../../shared/ion-bottom-drawer/drawer-state';
 // Services
 import { Place } from '../../../core/api/places/place';
@@ -65,16 +64,15 @@ export class MapPage extends GoogleMapPage implements OnInit {
                 private router: Router,
                 private activatedRoute: ActivatedRoute,
                 private storageService: StorageProvider,
-                private toast: ToastProvider,
                 private alert: AlertProvider,
                 private intentProvider: UserIntentProvider,
                 private placesService: PlacesService,
                 private renderer: Renderer2,
                 private appService: MapProvider,
                 private storageInstance: UserIntentProvider,
-                private alertController: AlertController,
+                protected toast: ToastProvider,
                 protected geolocationService: GeolocationService) {
-        super(doc, geolocationService);
+        super(doc, geolocationService, toast);
     }
 
     ngOnInit() {
@@ -216,7 +214,7 @@ export class MapPage extends GoogleMapPage implements OnInit {
     onCurrentPositionChanged(coors: PagamiGeo) {
         this.setupMarkerCurrentPosition(coors);
         if ((this.fabAttached || this.isRegistering) && !this.isEditingBusiness) {
-            this.changeMapCenter(coors);
+            // this.changeMapCenter(coors);
         }
         if (this.intentProvider.lastUpdatedPoint && this.intentProvider.lastUpdatedPoint.latitude) {
             if (this.calculateDistance(this.geoToLatLng(coors), this.geoToLatLng(this.intentProvider.lastUpdatedPoint)) > BASIC_UPDATE_METERS) {
