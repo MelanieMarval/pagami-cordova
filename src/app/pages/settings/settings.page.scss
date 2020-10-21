@@ -1,0 +1,14 @@
+.thumbnail {
+  background: var(--ion-color-pagami-surface);
+  --border-radius: 5px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  ion-icon {
+    color: #FFF3E0;
+    //filter: invert(79%) sepia(79%) saturate(807%) hue-rotate(318deg) brightness(100%) contrast(94%);
+  }
+}

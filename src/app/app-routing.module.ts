@@ -75,8 +75,8 @@ const routes: Routes = [
                 loadChildren: () => import('./pages/business-details/business-details.module').then(m => m.BusinessDetailsModule),
             },
             {
-                path: 'profile',
-                loadChildren: () => import('./pages/profile/profile.module').then(m => m.ProfileModule),
+                path: 'settings',
+                loadChildren: () => import('./pages/settings/settings.module').then(m => m.SettingsPageModule),
             },
             {
                 path: '**',
@@ -89,7 +89,13 @@ const routes: Routes = [
         path: '**',
         redirectTo: 'tabs',
         pathMatch: 'full',
-    }
+    },
+  {
+    path: 'settings',
+    loadChildren: () => import('./pages/settings/settings.module').then( m => m.SettingsPageModule)
+  },
+
+
 ];
 
 @NgModule({

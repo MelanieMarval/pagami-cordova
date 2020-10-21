@@ -1,22 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
-import { InputFilePage } from '../parent/InputFilePage';
+import { InputFilePage } from '../../parent/InputFilePage';
 // Services
-import { GeolocationService } from '../../core/geolocation/geolocation.service';
-import { GoogleAuthService } from '../../core/google-auth/google-auth.service';
-import { AuthService } from '../../core/api/auth/auth.service';
-import { User } from '../../core/api/users/user';
+import { GeolocationService } from '../../../core/geolocation/geolocation.service';
+import { GoogleAuthService } from '../../../core/google-auth/google-auth.service';
+import { AuthService } from '../../../core/api/auth/auth.service';
+import { User } from '../../../core/api/users/user';
 // Providers
-import { ToastProvider } from '../../providers/toast.provider';
-import { StorageProvider } from '../../providers/storage.provider';
+import { ToastProvider } from '../../../providers/toast.provider';
+import { StorageProvider } from '../../../providers/storage.provider';
 
-import { FireStorage } from '../../core/fire-storage/fire.storage';
-import { ValidationUtils } from '../../utils/validation.utils';
-import { CompressImageProvider } from '../../providers/compress-image.provider';
+import { FireStorage } from '../../../core/fire-storage/fire.storage';
+import { ValidationUtils } from '../../../utils/validation.utils';
+import { CompressImageProvider } from '../../../providers/compress-image.provider';
 import { IonicSelectableComponent } from 'ionic-selectable';
-import { PlacesService } from '../../core/api/places/places.service';
-import { Country } from '../../core/api/places/country';
+import { PlacesService } from '../../../core/api/places/places.service';
+import { Country } from '../../../core/api/places/country';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 
 @Component({

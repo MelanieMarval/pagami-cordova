@@ -28,6 +28,10 @@ const routes: Routes = [
                 path: 'wallet/activity',
                 loadChildren: () => import('./activity/activity.module').then(m => m.ActivityModule)
             },
+            {
+                path: 'building',
+                loadChildren: () => import('../building/building.module').then(m => m.BuildingPageModule),
+            },
         ],
     },
 ];
