@@ -18,7 +18,12 @@ import { ToastProvider } from '../../../providers/toast.provider';
 import { StorageProvider } from '../../../providers/storage.provider';
 import { UserIntentProvider } from '../../../providers/user-intent.provider';
 
-const DEFAULT_DRAWER_BOTTOM_HEIGHT = 104;
+const DEFAULT_TABS_HEIGHT = 48;
+const DEFAULT_DRAWER_BOTTOM_HEIGHT = 30;
+const DEFAULT_DRAWER_BOTTOM_POSITION = DEFAULT_TABS_HEIGHT + DEFAULT_DRAWER_BOTTOM_HEIGHT;
+const DEFAULT_DRAWER_DOCKET_HEIGHT = 368;
+const DEFAULT_DRAWER_DOCKET_POSITION = DEFAULT_TABS_HEIGHT + DEFAULT_DRAWER_DOCKET_HEIGHT;
+const DEFAULT_DRAWER_DISTANCE_TOP = 62;
 const BASIC_RADIUS_KILOMETERS = 50;
 const BASIC_UPDATE_METERS = 10;
 
@@ -38,9 +43,9 @@ export class MapPage extends GoogleMapPage implements OnInit {
     bottomDrawer = {
         shouldBounce: true,
         disableDrag: false,
-        distanceTop: 62,
-        dockedHeight: 494,
-        minimumHeight: DEFAULT_DRAWER_BOTTOM_HEIGHT,
+        distanceTop: DEFAULT_DRAWER_DISTANCE_TOP,
+        dockedHeight: DEFAULT_DRAWER_DOCKET_POSITION,
+        minimumHeight: DEFAULT_DRAWER_BOTTOM_POSITION,
         drawerState: DrawerState.Bottom,
         contentPosition: 0,
         hidden: false,
@@ -70,6 +75,7 @@ export class MapPage extends GoogleMapPage implements OnInit {
                 private renderer: Renderer2,
                 private appService: MapProvider,
                 private storageInstance: UserIntentProvider,
+                private mapEvents: MapProvider,
                 protected toast: ToastProvider,
                 protected geolocationService: GeolocationService) {
         super(doc, geolocationService, toast);
@@ -190,9 +196,9 @@ export class MapPage extends GoogleMapPage implements OnInit {
         this.isHiddenCloseToMe = false;
         this.isSearching = false;
         this.isFindMyBusiness = false;
-        this.bottomHeightChange.emit(DEFAULT_DRAWER_BOTTOM_HEIGHT);
+        this.bottomHeightChange.emit(DEFAULT_DRAWER_BOTTOM_POSITION);
         this.renderer.setStyle(this.ionFab.nativeElement, 'transition', '0.25s ease-in-out');
-        this.renderer.setStyle(this.ionFab.nativeElement, 'transform', 'translateY(' + '-56px' + ')');
+        this.renderer.setStyle(this.ionFab.nativeElement, 'transform', `translateY(-${DEFAULT_DRAWER_BOTTOM_HEIGHT}px)`);
     }
 
     onClickPlace(place: Place) {
@@ -206,7 +212,9 @@ export class MapPage extends GoogleMapPage implements OnInit {
                 this.toast.messageInfoForMap('No puede reclamar esta empresa <br>Ya ha sido reclamada.', 2000);
             }
         } else if (this.currentUrl === MAP_MODE.SEARCH) {
+            console.log('MAP_MODE.SEARCH');
             this.fabAttached = false;
+            this.mapEvents.changeDrawerState.emit(DrawerState.Docked);
             this.bottomDrawer.drawerState = DrawerState.Docked;
         }
     }
@@ -214,7 +222,7 @@ export class MapPage extends GoogleMapPage implements OnInit {
     onCurrentPositionChanged(coors: PagamiGeo) {
         this.setupMarkerCurrentPosition(coors);
         if ((this.fabAttached || this.isRegistering) && !this.isEditingBusiness) {
-            // this.changeMapCenter(coors);
+            this.moveCamera(coors);
         }
         if (this.intentProvider.lastUpdatedPoint && this.intentProvider.lastUpdatedPoint.latitude) {
             if (this.calculateDistance(this.geoToLatLng(coors), this.geoToLatLng(this.intentProvider.lastUpdatedPoint)) > BASIC_UPDATE_METERS) {
@@ -231,25 +239,23 @@ export class MapPage extends GoogleMapPage implements OnInit {
 
     async attachedPosition() {
         this.fabAttached = true;
-        console.log('-> this.currentPositionMarker', this.currentPositionMarker);
         if (this.currentPositionMarker) {
-            this.changeMapCenter(await this.geolocationService.getCurrentLocation());
+            this.moveCamera(await this.geolocationService.getCurrentLocation(), true);
         }
     }
 
     onBottomSheetHide($event: boolean) {
         if ($event) {
             this.renderer.setStyle(this.ionFab.nativeElement, 'transition', '0.25s ease-in-out');
-            this.renderer.setStyle(this.ionFab.nativeElement, 'transform', 'translateY(' + '0px' + ')');
+            this.renderer.setStyle(this.ionFab.nativeElement, 'transform', `translateY(-${0}px)`);
         }
     }
 
-    // async ngAfterViewInit() {
     async ionViewWillEnter() {
         /**
          * moving floating button to initial position
          */
-        this.renderer.setStyle(this.ionFab.nativeElement, 'transform', 'translateY(' + '-56px' + ')');
+        this.renderer.setStyle(this.ionFab.nativeElement, 'transform', `translateY(-${DEFAULT_DRAWER_BOTTOM_HEIGHT}px)`);
         /**
          * load map and wait
          */
@@ -258,10 +264,10 @@ export class MapPage extends GoogleMapPage implements OnInit {
          * subscribing to current location changes
          */
         // TODO comentado porque se llamaba multiples veces, por reparar
-        // this.geolocationService.locationChanged.subscribe(
-        //     (coors: PagamiGeo) => {
-        //         this.onCurrentPositionChanged(coors);
-        //     });
+        this.geolocationService.locationChanged.subscribe(
+            (coors: PagamiGeo) => {
+                this.onCurrentPositionChanged(coors);
+            });
         /**
          * Enable watch location if status is disabled
          */

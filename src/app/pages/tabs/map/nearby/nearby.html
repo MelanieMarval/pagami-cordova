@@ -3,32 +3,12 @@
         <ion-row class="scrollable-draw pan-active">
             <div class="scrollable-draw-children pan-active" [ngClass]="drawerState == 2 ? 'background-transparent' : ''"></div>
         </ion-row>
-        <h2 class="ion-text-center nearby-title pan-active">
-            {{ this.searchText && this.searchText.length > 0 && this.drawerState == 2 ? 'Busqueda en tu área' : 'Destacados en tu área' }}
-        </h2>
-        <ion-row class="footer-button pan-active" [hidden]="this.searchText && this.searchText.length > 0 && this.drawerState == 2">
-            <ion-col class="6 pan-active">
-                <ion-button class="button-large btn-category pan-active" expand="block"
-                            color="{{selectedCategory === 0 ? 'pagami' : 'pagami-surface'}}"
-                            [ngClass]="{'selected-category': selectedCategory === 0}"
-                            (click)="selectedCategory = 0; emitSelectedPlaceType()">
-                    Tiendas
-                    <ion-icon src="assets/icon/check-circle-solid.svg" class="btn-category__check pan-active"></ion-icon>
-                </ion-button>
-            </ion-col>
-            <ion-col class="6">
-                <ion-button class="button-large btn-category pan-active" expand="block"
-                            color="{{selectedCategory === 1 ? 'pagami' : 'pagami-surface'}}"
-                            [ngClass]="{'selected-category': selectedCategory === 1}"
-                            (click)="selectedCategory = 1; emitSelectedPlaceType()">
-                    Servicios
-                    <ion-icon src="assets/icon/check-circle-solid.svg" class="btn-category__check pan-active"></ion-icon>
-                </ion-button>
-            </ion-col>
-        </ion-row>
+<!--        <h2 class="ion-text-center nearby-title pan-active">-->
+<!--            {{ this.searchText && this.searchText.length > 0 && this.drawerState == 2 ? 'Busqueda en tu área' : 'Destacados en tu área' }}-->
+<!--        </h2>-->
     </ion-grid>
     <ion-list [ngClass]="{'with-overflow-y': drawerState == 2 }">
-        <div class="progress-bar-container">
+        <div class="progress-bar-container ion-margin-bottom">
             <ion-progress-bar type="indeterminate" color="pagami" *ngIf="searching"></ion-progress-bar>
         </div>
         <ion-row *ngIf="selectedPlace">

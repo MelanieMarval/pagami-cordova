@@ -14,7 +14,7 @@ import { BusinessHours } from '../../../../core/api/places/business-hours';
     styleUrls: ['nearby.scss']
 })
 
-export class NearbyPage implements OnInit, OnChanges {
+export class NearbyPage implements OnInit {
 
     @Output() changePlaceType: EventEmitter<string> = new EventEmitter<string>();
     @Input() drawerState = 0;
@@ -35,12 +35,15 @@ export class NearbyPage implements OnInit, OnChanges {
     }
 
     ngOnInit() {
+        this.subscriberToChangeDrawerStateCalled();
     }
-
-    ngOnChanges(changes: SimpleChanges) {
-        if (changes.drawerState) {
-            this.mapProvide.currentNearbyStatus = changes.drawerState.currentValue;
-        }
+    
+    subscriberToChangeDrawerStateCalled() {
+        this.mapProvide.changeDrawerState.subscribe(state => {
+            console.log('drawer state changed');
+            this.mapProvide.currentNearbyStatus = state;
+            this.drawerState = state
+        });
     }
 
     savePlaceToShowDetails(place: Place) {

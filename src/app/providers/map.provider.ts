@@ -12,6 +12,8 @@ export class MapProvider {
 
     public hideNearby: EventEmitter<any> = new EventEmitter<any>();
 
+    public changeDrawerState: EventEmitter<DrawerState> = new EventEmitter<DrawerState>();
+
     private _currentNearbyStatus = DrawerState.Bottom;
 
     get currentNearbyStatus(): DrawerState {

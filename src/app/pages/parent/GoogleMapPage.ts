@@ -14,9 +14,10 @@ import {
     ILatLng,
     LatLng,
     MarkerOptions,
-    GoogleMapOptions, MarkerCluster, MarkerClusterOptions,
+    GoogleMapOptions, MarkerCluster, MarkerClusterOptions, Spherical,
 } from '@ionic-native/google-maps';
 import { ToastProvider } from '../../providers/toast.provider';
+import { MapUtils } from '../../utils/map.utils';
 
 const removeDefaultMarkers = [
     {
@@ -38,8 +39,17 @@ export class GoogleMapPage {
     map: GoogleMap;
     currentPositionMarker: Marker;
     currentPositionCircle: Circle;
-    private nearbyPlacesOptions: any[] = [];
+    /**
+     * Currently List of marker options for cluster
+     */
+    private markersForCluster: MarkerOptions[] = [];
+    /**
+     * Currently List of places to show
+     */
     private nearbyPlaces: Place[] = [];
+    /**
+     * Currently marker cluster
+     */
     private markerCluster: MarkerCluster;
     accuracy: number;
     currentUrl: string;
@@ -73,7 +83,7 @@ export class GoogleMapPage {
     }
 
     private mapMoveSubscribe() {
-        this.map.on(GoogleMapsEvent.MAP_DRAG).subscribe(() => {
+        this.map.on(GoogleMapsEvent.MAP_DRAG_START).subscribe(() => {
             this.onMapMoved();
         });
     }
@@ -84,25 +94,28 @@ export class GoogleMapPage {
     onMapReady() {
         this.map.one(GoogleMapsEvent.MAP_READY).then(
             (data) => {
-                console.log('Click MAP', data);
-                const currentZoom: number = this.map.getCameraZoom();
-                console.log('-> currentZoom', currentZoom);
-                this.map.setCameraZoom(currentZoom - 1);
+                console.log('MAP is ready');
+                // const currentZoom: number = this.map.getCameraZoom();
+                // console.log('-> currentZoom', currentZoom);
+                // this.map.setCameraZoom(currentZoom - 1);
             });
     }
 
-    changeMapCenter(coords: PagamiGeo) {
+    /**
+     * This method will change camera position from a coors
+     * @param coords: coors to center camera
+     * @param forced: if should forced zoom to change too
+     */
+    moveCamera(coords: PagamiGeo | LatLng, forced = false) {
         console.log('-> coords', coords);
         this.map.animateCamera({
-            target: {lat: coords.latitude, lng: coords.longitude},
-            zoom: 16,
+            target: (coords instanceof LatLng) ? coords : {lat: coords.latitude, lng: coords.longitude},
+            zoom: MapUtils.calculateZoomToCenter(this.map, forced),
             tilt: 1,
-            bearing: 140,
             duration: 500,
         }).then(() => {
             console.log('Camera target has been changed');
         });
-        // this.map.panTo(coords);
     }
 
     enableFindMyBusiness() {
@@ -227,10 +240,7 @@ export class GoogleMapPage {
     async setupPlacesToMap(places: Place[]) {
         this.clearMarkerPlaces();
         for (const place of places) {
-            const position: any = {
-                lat: place.latitude,
-                lng: place.longitude,
-            };
+            const position = new LatLng(place.latitude, place.longitude);
             const options: MarkerOptions = {
                 icon: {
                     url: PlaceUtils.getMarker(place),
@@ -242,6 +252,7 @@ export class GoogleMapPage {
                 position,
                 draggable: false,
                 zIndex: 50,
+                place
             };
 
             // const marker: Marker = await this.map.addMarker(options);
@@ -254,7 +265,7 @@ export class GoogleMapPage {
             //         this.offsetCenter(latlng, 0, 200);
             //     }
             // });
-            this.nearbyPlacesOptions.push(options);
+            this.markersForCluster.push(options);
             this.nearbyPlaces.push(place);
             console.log('-> marker', options);
         }
@@ -264,31 +275,36 @@ export class GoogleMapPage {
             // this.addMarkerEditPlace(this.intentProvider.placeToChangeLocation);
             // this.editPlaceMarker.setVisible(true);
         }
+        this.map.on(GoogleMapsEvent.MARKER_CLICK).subscribe(value => {
+            console.log('marker click');
+            console.log(value);
+        })
     }
 
     clearMarkerPlaces() {
-        if (this.nearbyPlacesOptions) {
-            for (const marker of this.nearbyPlacesOptions) {
-                marker.setMap(null);
-            }
-        }
-        if (this.markerCluster) {
+        // if (this.markersForCluster) {
+        //
+        //     for (const marker of this.markersForCluster) {
+        //         marker.setMap(null);
+        //     }
+        // }
+        if (this.markerCluster && this.map) {
             this.markerCluster.remove();
         }
-        this.nearbyPlacesOptions = [];
+        this.markersForCluster = [];
     }
 
     offsetCenter(latlng, offsetx, offsety) {
         const scale = Math.pow(2, this.map.getCameraZoom());
         const worldCoordinateCenter = this.map.fromLatLngToPoint(latlng);
-        // const pixelOffset = GoogleMaps.Point((offsetx / scale) || 0, (offsety / scale) || 0);
-
+        const pixelOffset = Spherical.computeOffset(latlng, (offsetx / scale) || 0, (offsety / scale) || 0);
         // const worldCoordinateNewCenter = new GoogleMaps.Point(
         //     worldCoordinateCenter.x - pixelOffset.x,
         //     worldCoordinateCenter.y + pixelOffset.y,
         // );
         // const newCenter = this.map.fromPointToLatLng(worldCoordinateNewCenter);
-        // this.map.setCenter(newCenter);
+        // this.map.setCenter(pixelOffset);
+        this.moveCamera(pixelOffset, true)
     }
 
     getDefaultOptions(): GoogleMapOptions {
@@ -307,7 +323,7 @@ export class GoogleMapPage {
             },
             controls: {
                 zoom: false,
-                // myLocation: true,
+                mapToolbar: false,
                 myLocationButton: false,
             },
             styles: removeDefaultMarkers,
@@ -353,25 +369,26 @@ export class GoogleMapPage {
     setCluster() {
         this.markerCluster = this.map.addMarkerClusterSync(this.getClusterOptions());
 
-        this.markerCluster.on(GoogleMapsEvent.MARKER_CLICK).subscribe((marker) => {
-            const filter = this.nearbyPlaces.filter((place: Place) => place.latitude === marker.position.lat && marker.positionlng === place.longitude);
-            if (filter && filter.length) {
-                const placeClicked = filter[0];
-                const latlng = {lat: placeClicked.latitude, lng: placeClicked.longitude};
-                this.onClickPlace(placeClicked);
+        this.markerCluster.on(GoogleMapsEvent.MARKER_CLICK).subscribe(next => {
+            const latLng: LatLng = next[0];
+            const marker: Marker = next[1];
+            const place: Place = marker.get('place');
+            if (place) {
+                this.onClickPlace(place);
                 if (this.currentUrl === MAP_MODE.SEARCH) {
-                    // this.map.setCameraZoom(20);
-                    this.offsetCenter(latlng, 0, 200);
+                    // this.moveCamera(latLng, true);
+                    // this.map.panBy(0, -100);
+                    // this.offsetCenter(latLng, 0, 200);
                 }
+                console.log('-> place clicked', place);
             }
-            console.log('-> marker', marker);
         });
     }
 
     getClusterOptions(): MarkerClusterOptions {
         return {
-            markers: this.nearbyPlacesOptions,
-            maxZoomLevel: 15,
+            markers: this.markersForCluster,
+            maxZoomLevel: 16,
             boundsDraw: false,
             icons: [
                 {
