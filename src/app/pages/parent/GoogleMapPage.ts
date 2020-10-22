@@ -252,7 +252,7 @@ export class GoogleMapPage {
                 position,
                 draggable: false,
                 zIndex: 50,
-                place
+                place,
             };
 
             // const marker: Marker = await this.map.addMarker(options);
@@ -278,7 +278,7 @@ export class GoogleMapPage {
         this.map.on(GoogleMapsEvent.MARKER_CLICK).subscribe(value => {
             console.log('marker click');
             console.log(value);
-        })
+        });
     }
 
     clearMarkerPlaces() {
@@ -304,7 +304,7 @@ export class GoogleMapPage {
         // );
         // const newCenter = this.map.fromPointToLatLng(worldCoordinateNewCenter);
         // this.map.setCenter(pixelOffset);
-        this.moveCamera(pixelOffset, true)
+        this.moveCamera(pixelOffset, true);
     }
 
     getDefaultOptions(): GoogleMapOptions {

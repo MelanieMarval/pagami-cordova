@@ -47,7 +47,9 @@ ion-searchbar > div > input {
     width: 100vw;
     background: #1a202c;
 }
-
+.footer-button--div {
+    top: unset;
+}
 ion-fab {
     z-index: 10;
 }

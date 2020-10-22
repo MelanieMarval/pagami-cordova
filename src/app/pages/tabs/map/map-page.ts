@@ -17,6 +17,7 @@ import { AlertProvider } from '../../../providers/alert.provider';
 import { ToastProvider } from '../../../providers/toast.provider';
 import { StorageProvider } from '../../../providers/storage.provider';
 import { UserIntentProvider } from '../../../providers/user-intent.provider';
+import { MenuController } from '@ionic/angular';
 
 const DEFAULT_TABS_HEIGHT = 48;
 const DEFAULT_DRAWER_BOTTOM_HEIGHT = 30;
@@ -76,6 +77,7 @@ export class MapPage extends GoogleMapPage implements OnInit {
                 private appService: MapProvider,
                 private storageInstance: UserIntentProvider,
                 private mapEvents: MapProvider,
+                private menuController: MenuController,
                 protected toast: ToastProvider,
                 protected geolocationService: GeolocationService) {
         super(doc, geolocationService, toast);
@@ -498,5 +500,12 @@ export class MapPage extends GoogleMapPage implements OnInit {
     onClear() {
         this.searchText = '';
         this.getNearPlaces();
+    }
+
+    async openMenu() {
+        const response = await this.menuController.open('menu');
+        console.log('-> response', response);
+        const res = await this.menuController.getMenus();
+        console.log('-> res', res);
     }
 }
