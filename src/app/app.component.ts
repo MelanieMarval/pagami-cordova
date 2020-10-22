@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { Platform } from '@ionic/angular';
+import { NavController, Platform } from '@ionic/angular';
 
 import { StorageProvider } from './providers/storage.provider';
 import { AlertProvider } from './providers/alert.provider';
@@ -33,6 +33,7 @@ export class AppComponent {
                 private alert: AlertProvider,
                 private appMinimize: AppMinimize,
                 private splashScreen: SplashScreen,
+                private navController: NavController,
                 private verifyAndroidPermissions: VerifyAndroidPermissionsService) {
         this.initializeApp();
     }
@@ -45,9 +46,12 @@ export class AppComponent {
                 this.mapProvider.hideNearby.emit();
             } else {
                 if (this.verifyIfCanCloseApp(this.router.url)) {
-                    this.appMinimize.minimize();
-                    // IF IOS Should use another close method
-                    // App.exitApp();
+                    this.alert.alertConfirmExit().then(() => {
+                        // this.appMinimize.minimize();
+                        navigator['app'].exitApp();
+                    });
+                } else {
+                    this.navController.back();
                 }
             }
         });
