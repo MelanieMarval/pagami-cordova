@@ -9,7 +9,7 @@
             <ion-icon src="assets/icon/tabs/person.svg" class="tab-button__icon"></ion-icon>
         </ion-tab-button>
 
-        <ion-tab-button tab="map/search" class="tab-button" (click)="openNearby()" [class.tab-selected]="currentUrl === 'search'">
+        <ion-tab-button class="tab-button" (click)="openNearbySearch()">
             <ion-icon src="assets/icon/tabs/magnifying-glass.svg" class="tab-button__icon"></ion-icon>
         </ion-tab-button>
 
@@ -19,6 +19,7 @@
 
         <ion-tab-button tab="wallet" class="tab-button">
             <ion-icon src="assets/icon/tabs/wallet.svg" class="tab-button__icon"></ion-icon>
+            <ion-badge *ngIf="notifications" color="danger">{{notifications}}</ion-badge>
 <!--            <div class="p-relative">-->
 <!--                <div *ngIf="hasNotification" class="red-notification"></div>-->
 <!--            </div>-->

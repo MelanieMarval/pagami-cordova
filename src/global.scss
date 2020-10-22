@@ -21,16 +21,12 @@
 @import "~@ionic/angular/css/text-alignment.css";
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
-
 /* Animaciones */
 @import "assets/css/animated.min";
-
 /* Headers and toolbars */
 @import "assets/css/headers-toolbars";
-
 /* Inputs and forms */
 @import "assets/css/inputs";
-
 /* Cards and lists containers */
 @import "assets/css/cards";
 
@@ -53,7 +49,7 @@ textarea:-webkit-autofill:focus,
 select:-webkit-autofill,
 select:-webkit-autofill:hover,
 select:-webkit-autofill:focus {
-  border:none !important;
+  border: none !important;
   -webkit-text-fill-color: #FFFFFF !important;
   -webkit-box-shadow: 0 0 0 1000px var(--ion-background-color) inset;
   transition: background-color 5000s ease-in-out 0s;
@@ -63,12 +59,14 @@ select:-webkit-autofill:focus {
 .footer-button {
   padding: 17px;
   background: var(--ion-background-color);
+
   ion-col {
     padding: 0;
 
     &:nth-child(1) {
       padding-right: 5px;
     }
+
     &:nth-child(2) {
       padding-left: 5px;
     }
@@ -77,6 +75,7 @@ select:-webkit-autofill:focus {
   &.--without-pt {
     padding-top: 0;
   }
+
   &--div {
     position: sticky;
     background: transparent;
@@ -86,6 +85,7 @@ select:-webkit-autofill:focus {
     bottom: 0;
   }
 }
+
 .button-large, .button-small {
   height: 56px;
   width: 99%;
@@ -95,9 +95,11 @@ select:-webkit-autofill:focus {
   text-transform: unset;
   transition: ease .4s;
 }
+
 .button-small {
   height: 36px;
 }
+
 /* END button */
 /*  ***********************  */
 
@@ -110,12 +112,14 @@ select:-webkit-autofill:focus {
 .alert-wrapper {
   max-width: 90% !important;
 }
+
 /* END alerts */
 /*  ***********************  */
 
 /* ***PRODUCTS CONTAINER AND ITEMS (STANDARD DESIGN)*** */
 .products {
   margin: 20px;
+
   .product {
     --border-radius: 3px;
     margin-bottom: 20px;
@@ -124,17 +128,21 @@ select:-webkit-autofill:focus {
       height: 100%;
       width: 60px;
     }
+
     &-name {
       margin-left: 20px;
     }
+
     &-stock {
       color: var(--ion-color-pagami-text-2nd)
     }
+
     &-price, &-quantity, &-stock {
       font-size: 12px;
     }
   }
 }
+
 /* END products */
 /*  ***********************  */
 
@@ -143,14 +151,17 @@ select:-webkit-autofill:focus {
   width: 95%;
   transform: translateY(-130px) translateX(3%);
 }
+
 .toast-bottom-custom-without-tabs {
   width: 95%;
   transform: translateY(-80px) translateX(3%);
 }
+
 .toast-bottom-custom-for-map {
   width: 78%;
   transform: translateY(-50px) translateX(3%);
 }
+
 /* END toast */
 /*  ***********************  */
 
@@ -161,12 +172,15 @@ select:-webkit-autofill:focus {
   position: fixed;
   z-index: 10;
 }
+
 .md + .progress-bar-container {
   top: 56px;
 }
+
 .ios + .progress-bar-container {
   top: 44px;
 }
+
 /* END progress bar */
 /*  ***********************  */
 
@@ -188,23 +202,28 @@ ion-bottom-drawer {
 .border-white-1px {
   border: 1px solid #FFFFFF;
 }
+
 .border-none {
   border: unset !important;
 }
+
 .avatar-square {
   --border-radius: 0;
   margin: 0;
 }
+
 .button-hover-circle {
   --border-radius: 50% !important;
   width: 45px;
   height: 45px;
 }
+
 .size-icon-default {
   width: 24px;
   height: 24px;
 }
-.icon-white{
+
+.icon-white {
   filter: invert(97%) sepia(0%) saturate(7494%) hue-rotate(187deg) brightness(102%) contrast(103%);
 }
 
@@ -213,57 +232,83 @@ ion-bottom-drawer {
   right: 16px;
 }
 
+.fab-business-add {
+  right: 16px;
+  top: 74px;
+}
+
+.size-fab {
+  width: 48px;
+  height: 48px;
+}
+
 .background-transparent {
   --background: transparent !important;
   background: transparent !important;
 }
+
 .with-overflow-y {
   overflow-y: scroll !important;
 }
+
 .auto-overflow-y {
   overflow-y: auto !important;
 }
+
 .d-none {
   display: none !important;
 }
+
 .d-flex {
   display: flex;
 }
+
 .d-inline {
   display: inline !important;
 }
+
 .w-100 {
   width: 100% !important;
 }
+
 .h-100 {
   height: 100% !important;
 }
+
 .p-relative {
   position: relative;
 }
+
 .mt-0 {
   margin-top: 0 !important;
 }
+
 .mb-0 {
   margin-bottom: 0 !important;
 }
+
 .pb-0 {
   padding-bottom: 0 !important;
 }
+
 .pt-0 {
   padding-top: 0 !important;
 }
+
 .circle-shape {
   --border-radius: 50%;
 }
-.pagami-text-2nd{
+
+.pagami-text-2nd {
   color: var(--ion-color-pagami-text-2nd);
 }
+
 .btn-no-style {
   --box-shadow: unset;
   --background: transparent;
 
 }
+
 .btn-focus-circle {
   // new
   --border-radius: 50%;
@@ -282,16 +327,24 @@ ion-bottom-drawer {
 }
 
 
-.modal-fade{
+.modal-fade {
   opacity: 0;
   animation-name: fade-in-out;
   animation-duration: 6s;
 
   @keyframes fade-in-out {
-    0%   { opacity: 0;}
-    20%  { opacity: 1;}
-    80%  { opacity: 1;}
-    100% { opacity: 0;}
+    0% {
+      opacity: 0;
+    }
+    20% {
+      opacity: 1;
+    }
+    80% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
   }
 }
 
@@ -321,6 +374,7 @@ ion-item[button] {
   ion-title {
     margin-right: 77px;
   }
+
   ion-searchbar {
     --color: white;
   }
@@ -340,25 +394,32 @@ ion-item[button] {
           --background: var(--ion-background-color);
         }
       }
+
       ion-searchbar {
         margin-left: 10px;
         --background: var(--ion-color-dark);
+
         .searchbar-input {
           background: transparent;
           color: #fff;
           box-shadow: unset;
         }
+
         .searchbar-search-icon {
           color: #9d9fa6;
         }
+
         .searchbar-clear-button {
           color: #fff;
         }
       }
+
       ion-footer {
         background: var(--ion-color-dark);
+
         ion-toolbar {
           --background: var(--ion-color-dark);
+
           ion-button {
             display: inline-block !important;
             --background: var(--ion-color-warning);
@@ -377,10 +438,12 @@ ion-item[button] {
   color: white !important;
   --color: white;
 }
+
 .select-100 {
   border-radius: 4px;
   --border-width: 0;
   --background: var(--ion-color-pagami-surface);
+
   ion-select {
     max-width: 100%;
     width: 100%;
@@ -388,6 +451,7 @@ ion-item[button] {
     --padding-start: 0;
   }
 }
+
 .ellipsis {
   white-space: nowrap;
   overflow: hidden;
@@ -395,29 +459,16 @@ ion-item[button] {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 .alertProduct {
   color: red;
+
   ion-item {
     position: absolute;
     bottom: 60px;
     width: 100%;
     --inner-border-width: 0;
   }
+
   .alert-input-group {
     position: relative;
     bottom: 40px;

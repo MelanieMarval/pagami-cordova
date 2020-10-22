@@ -13,7 +13,8 @@
                     <ion-searchbar
                         #searchInput
                         (keyup.enter)="onHideKeyboard($event);"
-                        (ionInput)="onSearch($event)" (ionFocus)="onFocusSearch()"
+                        (ionInput)="onSearch($event)"
+                        (ionFocus)="onFocusSearch()"
                         (ionBlur)="onFocusExit()"
                         (ionClear)="onClear()"
                         placeholder="Busca tiendas o servicios"
@@ -45,8 +46,14 @@
     <div class="background-sheet-header" [hidden]="!bottomDrawer.showBackToolbar"></div>
 
     <ion-fab #fab class="fab-corner-lr" horizontal="end" vertical="bottom" slot="fixed" [hidden]="isRegistering || isEditingBusiness">
-        <ion-fab-button color="{{ fabAttached ? 'map':'light'}}" (click)="attachedPosition()">
+        <ion-fab-button color="{{ fabAttached ? 'map':'light'}}" (click)="attachedPosition()" class="size-fab">
             <ion-icon src="assets/icon/my_location.svg"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
+
+    <ion-fab class="fab-business-add" horizontal="end" vertical="top" slot="fixed" [hidden]="isRegistering || isEditingBusiness">
+        <ion-fab-button color="light" class="size-fab" routerLink="/app/tabs/map/register-business">
+            <ion-icon src="assets/icon/business_add.svg"></ion-icon>
         </ion-fab-button>
     </ion-fab>
 

@@ -85,6 +85,7 @@ export class MapPage extends GoogleMapPage implements OnInit {
         this.router.events.subscribe(value => {
             if (value instanceof NavigationEnd) {
                 const url = value.url.substring(value.url.lastIndexOf('/') + 1);
+                console.log('-> URL HERE', url);
                 this.selectNavigateMode(url);
                 this.currentUrl = url;
             }

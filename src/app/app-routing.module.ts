@@ -90,11 +90,6 @@ const routes: Routes = [
         redirectTo: 'tabs',
         pathMatch: 'full',
     },
-  {
-    path: 'settings',
-    loadChildren: () => import('./pages/settings/settings.module').then( m => m.SettingsPageModule)
-  },
-
 
 ];
 

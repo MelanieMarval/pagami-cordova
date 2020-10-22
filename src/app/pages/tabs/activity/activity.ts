@@ -24,7 +24,7 @@ export class ActivityPage implements OnInit {
 
     loading = true;
     error = false;
-    hasNotification = false;
+    hasNotification = 0;
     notifications: any[];
     registers: Place[];
     user: User;
@@ -57,7 +57,7 @@ export class ActivityPage implements OnInit {
         this.notifications = this.notificationsProvider.activityNotifications;
         this.hasNotification = this.notificationsProvider.hasWalletNotification;
         if (this.hasNotification) {
-            this.notificationsProvider.setNotificationState(false);
+            this.notificationsProvider.setNotificationState(this.hasNotification);
         }
     }
 

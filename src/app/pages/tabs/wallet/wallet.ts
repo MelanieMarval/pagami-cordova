@@ -18,7 +18,7 @@ export class WalletPage implements OnInit {
 
     ngOnInit(): void {
         this.empty = true;
-        this.hasNotification = this.notificationsProvider.hasWalletNotification;
+        this.hasNotification = this.notificationsProvider.hasWalletNotification > 0;
         this.notificationsProvider.walletNotification.subscribe(next => {
             this.hasNotification = next;
         });

@@ -17,10 +17,6 @@ const routes: Routes = [
                 loadChildren: () => import('./map/map.module').then(m => m.MapModule)
             },
             {
-                path: 'my-business',
-                loadChildren: () => import('./my-business/my-business.module').then(m => m.MyBusinessModule)
-            },
-            {
                 path: 'wallet',
                 loadChildren: () => import('./wallet/wallet.module').then(m => m.WalletModule)
             },

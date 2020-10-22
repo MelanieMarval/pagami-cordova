@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MapProvider } from '../../providers/map.provider';
 import { NavigationEnd, Router } from '@angular/router';
 import { NotificationsProvider } from '../../providers/notifications.provider';
+import { DrawerState } from '../../shared/ion-bottom-drawer/drawer-state';
 
 @Component({
     selector: 'app-tabs-page',
@@ -11,7 +12,7 @@ import { NotificationsProvider } from '../../providers/notifications.provider';
 export class TabsPage implements OnInit {
 
     currentUrl = '';
-    hasNotification = false;
+    notifications = 0;
 
     constructor(private appService: MapProvider,
                 private notificationsProvider: NotificationsProvider,
@@ -25,15 +26,22 @@ export class TabsPage implements OnInit {
     }
 
     ngOnInit(): void {
-        this.hasNotification = this.notificationsProvider.hasWalletNotification;
+        this.notifications = this.notificationsProvider.hasWalletNotification;
         this.notificationsProvider.walletNotification.subscribe(next => {
-            this.hasNotification = next;
+            this.notifications = next;
         });
         this.notificationsProvider.getNotifications();
     }
 
     openNearby() {
         this.appService.showNearby.emit();
+        this.appService.changeDrawerState.emit(DrawerState.Bottom);
+    }
+
+    openNearbySearch() {
+        this.router.navigateByUrl('/app/tabs/search');
+        this.appService.showNearby.emit();
+        this.appService.changeDrawerState.emit(DrawerState.Top);
     }
 
     openRegister() {

@@ -7,8 +7,8 @@ import { ApiResponse } from '../core/api/api.response';
 })
 export class NotificationsProvider {
 
-    walletNotification: EventEmitter<boolean> = new EventEmitter<boolean>();
-    hasWalletNotification = false;
+    walletNotification: EventEmitter<number> = new EventEmitter<number>();
+    hasWalletNotification = 0;
     activityNotifications: any[] = [];
 
     constructor(private notificationsService: NotificationsService) {
@@ -22,13 +22,13 @@ export class NotificationsProvider {
                     if (success.passed) {
                         const notifications: [] = success.response;
                         this.activityNotifications = notifications;
-                        this.setNotificationState(notifications.length > 0);
+                        this.setNotificationState(notifications.length);
                     }
                 }).catch(error => console.log(error));
         }, 5000);
     }
 
-    setNotificationState(state: boolean) {
+    setNotificationState(state: number) {
         if (!state && this.hasWalletNotification) {
             this.notificationsService.putReadAllAcceptedAndRejected();
         }
