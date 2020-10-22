@@ -30,7 +30,6 @@ import { IonicSelectableModule } from 'ionic-selectable';
 // Components
 import { AppComponent } from './app.component';
 // Providers
-import { MapProvider } from './providers/map.provider';
 import { UserIntentProvider } from './providers/user-intent.provider';
 import { ToastProvider } from './providers/toast.provider';
 import { AdminIntentProvider } from './providers/admin-intent.provider';
@@ -64,7 +63,6 @@ registerLocaleData(localeEs, 'es');
         IonicSelectableModule,
     ],
     providers: [
-        MapProvider,
         ToastProvider,
         UserIntentProvider,
         AdminIntentProvider,
@@ -83,7 +81,7 @@ registerLocaleData(localeEs, 'es');
         LocationAccuracy,
         SplashScreen,
         StatusBar,
-        OpenNativeSettings,
+        OpenNativeSettings
     ],
     exports: [],
     bootstrap: [AppComponent],

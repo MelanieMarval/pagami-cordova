@@ -53,6 +53,29 @@ export class AlertProvider {
             });
             await alert.present();
         });
+    }
 
+    async alertConfirmExit(): Promise<boolean> {
+        return new Promise(async (resolve) => {
+            const header = '¿Esta seguro que desea salir de la Pagami?'
+            const message = '';
+            const alert = await this.alertController.create({
+                header,
+                message,
+                buttons: [
+                    {
+                        text: 'Cancelar',
+                        role: 'cancel',
+                        cssClass: 'secondary'
+                    }, {
+                        text: 'Si, Salir',
+                        handler: () => {
+                            resolve();
+                        }
+                    }
+                ]
+            });
+            await alert.present();
+        });
     }
 }

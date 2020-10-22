@@ -21,7 +21,7 @@ import { UserIntentProvider } from '../../../providers/user-intent.provider';
 const DEFAULT_TABS_HEIGHT = 48;
 const DEFAULT_DRAWER_BOTTOM_HEIGHT = 30;
 const DEFAULT_DRAWER_BOTTOM_POSITION = DEFAULT_TABS_HEIGHT + DEFAULT_DRAWER_BOTTOM_HEIGHT;
-const DEFAULT_DRAWER_DOCKET_HEIGHT = 368;
+const DEFAULT_DRAWER_DOCKET_HEIGHT = 352;
 const DEFAULT_DRAWER_DOCKET_POSITION = DEFAULT_TABS_HEIGHT + DEFAULT_DRAWER_DOCKET_HEIGHT;
 const DEFAULT_DRAWER_DISTANCE_TOP = 62;
 const BASIC_RADIUS_KILOMETERS = 50;
@@ -100,6 +100,8 @@ export class MapPage extends GoogleMapPage implements OnInit {
         this.appService.hideNearby.subscribe(() => {
             this.focusOut();
             this.closeToMeToDefault();
+            this.mapEvents.changeDrawerState.emit(DrawerState.Bottom);
+            this.bottomDrawer.drawerState = DrawerState.Bottom;
             if (this.lastSearchText && !this.isSearching && !this.searchText) {
                 this.getNearPlaces();
             }
@@ -415,6 +417,7 @@ export class MapPage extends GoogleMapPage implements OnInit {
     onFocusSearch() {
         this.bottomDrawer.drawerState = DrawerState.Top;
         this.bottomDrawer.disableDrag = true;
+        this.mapEvents.changeDrawerState.emit(DrawerState.Top);
         this.isSearching = true;
     }
 

@@ -14,6 +14,7 @@ import { DomController, IonContent, Platform } from '@ionic/angular';
 import * as Hammer from 'hammerjs';
 
 import { DrawerState } from './drawer-state';
+import { MapProvider } from '../../providers/map.provider';
 
 @Component({
     selector: 'ion-bottom-drawer',
@@ -72,6 +73,7 @@ export class IonBottomDrawerComponent implements AfterViewInit, OnChanges {
         private _renderer: Renderer2,
         private _domCtrl: DomController,
         private _platform: Platform,
+        private mapProvide: MapProvider,
     ) {
     }
 
@@ -95,6 +97,7 @@ export class IonBottomDrawerComponent implements AfterViewInit, OnChanges {
         this.hammerContent = new Hammer(this.ionContentElementRef.nativeElement);
         this.hammer.get('pan').set({enable: true, direction: Hammer.DIRECTION_VERTICAL});
         this.hammer.on('pan panstart panend', (ev: any) => {
+            console.log(ev.type);
 
             const targetElement: Element = ev.target;
             if (!targetElement.classList.contains('pan-active') && this.state === DrawerState.Top) {
@@ -156,6 +159,11 @@ export class IonBottomDrawerComponent implements AfterViewInit, OnChanges {
         this.bottomHeightChange.subscribe(height => {
             this.changeBottomHeight(height);
         });
+
+        this.mapProvide.changeDrawerState.subscribe(state => {
+            this.state = state;
+            this._setDrawerState(state);
+        });
     }
 
     private _setDrawerCurrentTopPosition(y: number) {
@@ -164,6 +172,7 @@ export class IonBottomDrawerComponent implements AfterViewInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges) {
+        console.log("changes " + changes)
         if (changes.state) {
             this._setDrawerState(changes.state.currentValue);
             if (this.state === DrawerState.Bottom) {
