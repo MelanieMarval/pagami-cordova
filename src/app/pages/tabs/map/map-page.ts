@@ -18,6 +18,7 @@ import { ToastProvider } from '../../../providers/toast.provider';
 import { StorageProvider } from '../../../providers/storage.provider';
 import { UserIntentProvider } from '../../../providers/user-intent.provider';
 import { MenuController } from '@ionic/angular';
+import { UserUtils } from '../../../utils/user.utils';
 
 const DEFAULT_TABS_HEIGHT = 48;
 const DEFAULT_DRAWER_BOTTOM_HEIGHT = 30;
@@ -65,6 +66,7 @@ export class MapPage extends GoogleMapPage implements OnInit {
     isHiddenCloseToMe = false;
     searchText: '';
     lastSearchText = undefined;
+    private profileImage: string;
 
     constructor(@Inject(DOCUMENT) doc: Document,
                 private router: Router,
@@ -83,7 +85,9 @@ export class MapPage extends GoogleMapPage implements OnInit {
         super(doc, geolocationService, toast);
     }
 
-    ngOnInit() {
+    async ngOnInit() {
+        const user = await this.storageService.getPagamiUser();
+        this.profileImage = UserUtils.getThumbnailPhoto(user);
         this.router.events.subscribe(value => {
             if (value instanceof NavigationEnd) {
                 const url = value.url.substring(value.url.lastIndexOf('/') + 1);

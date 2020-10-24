@@ -1,10 +1,14 @@
-ion-searchbar {
+.header-map {
+
+}
+.without-search-icon {
     height: 30px;
     font-size: 16px;
     color: #718096;
+    //color: #FFFFFF;
 }
 
-ion-searchbar > div > input {
+.without-search-icon > div > input {
     padding: 0 !important;
 }
 

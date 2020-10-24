@@ -4,7 +4,7 @@ export class UserUtils {
 
     static getThumbnailPhoto(user: User) {
         if (!user.photoUrl) {
-            return undefined;
+            return 'assets/img/no-user-image.png';
         } else {
             const arrayPhoto = user.photoUrl.split('?');
             return `${arrayPhoto[0]}_64x64?${arrayPhoto[1]}`;

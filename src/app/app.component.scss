@@ -4,5 +4,12 @@
   --ion-font-family: 'Quicksand', 'Open Sans';
 }
 
+.my-custom-menu {
+  --width: 224px;
 
+  .logo {
+    margin: 0 auto;
+    max-width: 128px;
+  }
+}
 
