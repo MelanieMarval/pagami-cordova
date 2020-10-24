@@ -169,3 +169,23 @@ ion-searchbar > div > input {
 
 /* END searchbar*/
 /*  ***********************  */
+
+/* new design */
+.header-map {
+    .searchbar-new {
+        --border-radius: 50px;
+        input {
+            padding: 6px 6px 6px 36px !important;;
+            box-shadow: var(--box-shadow) !important;
+            background: white !important;
+        }
+        ion-icon {
+            left: 8px;
+        }
+    }
+    .avatar {
+        width: 36px;
+        height: 36px;
+        margin-right: 16px;
+    }
+}

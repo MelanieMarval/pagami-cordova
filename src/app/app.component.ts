@@ -17,6 +17,7 @@ import { DrawerState } from './shared/ion-bottom-drawer/drawer-state';
 import { MapProvider } from './providers/map.provider';
 import { VerifyAndroidPermissionsService } from './core/permissions/verify-android-permissions.service';
 import { PlatformUtils } from './utils/platform.utils';
+import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 @Component({
     selector: 'app-root',
@@ -34,6 +35,7 @@ export class AppComponent {
                 private appMinimize: AppMinimize,
                 private splashScreen: SplashScreen,
                 private navController: NavController,
+                private statusBar: StatusBar,
                 private verifyAndroidPermissions: VerifyAndroidPermissionsService) {
         this.initializeApp();
     }
@@ -98,6 +100,7 @@ export class AppComponent {
         }
         await setTimeout(async () => {
             await this.splashScreen.hide();
+            this.statusBar.backgroundColorByHexString('#1a202c');
         }, 1000);
     }
 
