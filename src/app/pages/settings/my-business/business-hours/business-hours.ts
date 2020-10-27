@@ -346,7 +346,7 @@ export class BusinessHoursPage implements OnInit {
                     this.toast.messageSuccessWithoutTabs('Su horario ha sido eliminado correctamente');
                     this.storage.setBusinessVerifiedByUser(success.response);
                     this.intentProvider.updateMyBusiness = true;
-                    this.router.navigateByUrl('/app/tabs/my-business');
+                    this.router.navigateByUrl('/app/settings/my-business');
                 } else {
                     this.toast.messageSuccessWithoutTabs('Su horario no se ha podido eliminar, intente de nuevo');
                 }
@@ -369,7 +369,7 @@ export class BusinessHoursPage implements OnInit {
                     this.toast.messageSuccessWithoutTabs('Su horario ha sido agregado satisfactoriamente');
                     this.storage.setBusinessVerifiedByUser(success.response);
                     this.intentProvider.updateMyBusiness = true;
-                    this.router.navigateByUrl('/app/tabs/my-business');
+                    this.router.navigateByUrl('/app/settings/my-business');
                 } else {
                     this.toast.messageSuccessWithoutTabs('Su horario no se ha podido guardar, intente de nuevo');
                 }

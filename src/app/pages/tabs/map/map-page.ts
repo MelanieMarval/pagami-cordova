@@ -495,7 +495,7 @@ export class MapPage extends GoogleMapPage implements OnInit {
                         this.isEditingBusiness = false;
                         this.isSearching = false;
                         this.isFindMyBusiness = false;
-                        this.router.navigate(['/app/tabs/my-business']).then(() => {
+                        this.router.navigate(['/app/settings/my-business']).then(() => {
                             this.getNearPlaces();
                         });
                     });

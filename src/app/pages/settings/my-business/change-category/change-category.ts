@@ -70,7 +70,7 @@ export class ChangeCategoryPage implements OnInit {
                     await this.storage.setBusinessVerifiedByUser(success.response);
                     this.loading = false;
                     this.toast.messageSuccessWithoutTabs('Su empresa ha sido actualizada exitosamente!');
-                    this.router.navigateByUrl('app/tabs/my-business');
+                    this.router.navigateByUrl('app/settings/my-business');
                     this.intentProvider.updateMyBusiness = true;
                 } else {
                     this.loading = false;

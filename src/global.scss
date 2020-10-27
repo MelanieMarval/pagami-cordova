@@ -325,7 +325,9 @@ ion-bottom-drawer {
     font-size: 20px;
   }
 }
-
+.opacity-disabled {
+  opacity: 0.3;
+}
 
 .modal-fade {
   opacity: 0;

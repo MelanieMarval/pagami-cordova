@@ -8,7 +8,6 @@ import { ToastProvider } from '../../../providers/toast.provider';
 import { StorageProvider } from '../../../providers/storage.provider';
 import { UserIntentProvider } from '../../../providers/user-intent.provider';
 // Utils
-import { isNumber } from 'util';
 import { PLACES } from '../../../utils/Const';
 import { PlaceUtils } from '../../../utils/place.utils';
 import { User } from '../../../core/api/users/user';
@@ -92,7 +91,7 @@ export class ActivityPage implements OnInit {
             if (!this.registers.filter(place => place.id === this.storageInstance.placeEdited.id).length) {
                 this.getRegisters();
             } else {
-                if (isNumber(this.indexOfPlaceToEdit)) {
+                if (Number(this.indexOfPlaceToEdit)) {
                     this.registers[this.indexOfPlaceToEdit] = this.storageInstance.placeEdited;
                     this.indexOfPlaceToEdit = undefined;
                 }

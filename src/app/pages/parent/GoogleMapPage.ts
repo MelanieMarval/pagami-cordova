@@ -107,7 +107,7 @@ export class GoogleMapPage {
      * @param forced: if should forced zoom to change too
      */
     moveCamera(coords: PagamiGeo | LatLng, forced = false) {
-        console.log('-> coords', coords);
+        // console.log('-> coords', coords);
         this.map.animateCamera({
             target: (coords instanceof LatLng) ? coords : {lat: coords.latitude, lng: coords.longitude},
             zoom: MapUtils.calculateZoomToCenter(this.map, forced),
@@ -174,8 +174,8 @@ export class GoogleMapPage {
                 icon: {
                     url: './assets/marker-icons-png/point_marker.png',
                     size: {
-                        // width: 64,
-                        height: 58,
+                        width: 28,
+                        height: 64,
                     },
                 },
                 position: this.currentPositionMarker.getPosition(),
@@ -202,26 +202,26 @@ export class GoogleMapPage {
     }
 
     addMarkerEditPlace(place: Place) {
+        console.log('-> place', place);
         if (this.currentPositionMarker) {
             const latLng = this.toLatLng(place.latitude, place.longitude);
             const options: MarkerOptions = {
                 icon: {
                     url: './assets/marker-icons-png/point_marker.png',
                     size: {
-                        width: 64,
+                        width: 28,
                         height: 64,
                     },
                 },
                 position: latLng,
                 draggable: true,
-                zIndex: 50,
+                // zIndex: 50,
             };
-
             if (this.editPlaceMarker) {
                 this.editPlaceMarker.remove();
             }
-
             this.editPlaceMarker = this.map.addMarkerSync(options);
+            this.moveCamera(latLng);
         }
     }
 
@@ -255,16 +255,6 @@ export class GoogleMapPage {
                 place,
             };
 
-            // const marker: Marker = await this.map.addMarker(options);
-            //
-            // marker.on(GoogleMapsEvent.MARKER_CLICK).subscribe(() => {
-            //     const latlng = {lat: position.lat, lng: position.lng};
-            //     this.onClickPlace(place);
-            //     if (this.currentUrl === MAP_MODE.SEARCH) {
-            //         this.map.setCameraZoom(20);
-            //         this.offsetCenter(latlng, 0, 200);
-            //     }
-            // });
             this.markersForCluster.push(options);
             this.nearbyPlaces.push(place);
             console.log('-> marker', options);
@@ -282,12 +272,6 @@ export class GoogleMapPage {
     }
 
     clearMarkerPlaces() {
-        // if (this.markersForCluster) {
-        //
-        //     for (const marker of this.markersForCluster) {
-        //         marker.setMap(null);
-        //     }
-        // }
         if (this.markerCluster && this.map) {
             this.markerCluster.remove();
         }

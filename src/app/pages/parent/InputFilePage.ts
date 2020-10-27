@@ -20,33 +20,33 @@ export class InputFilePage implements AfterViewInit {
 
     async ngAfterViewInit() {
         this.googleMaps = await this.geolocationService.getGoogleMaps();
-        this.autocompleteService = new this.googleMaps.places.AutocompleteService();
+        // this.autocompleteService = new this.googleMaps.places.AutocompleteService();
     }
 
     searchPlace(e, scroll = false) {
-        if (e.value.length > 0) {
-            if (this.itemLocation.nativeElement.classList.contains('item-has-focus') === true) {
-                const config = {
-                    types: ['geocode'],
-                    input: e.value
-                };
-                this.autocompleteService.getPlacePredictions(config, (predictions, status) => {
-                    if (status === this.googleMaps.places.PlacesServiceStatus.OK && predictions) {
-                        this.places = [];
-                        predictions.forEach((prediction) => {
-                            this.places.push(prediction);
-                        });
-                    }
-                    if (scroll) {
-                        this.ionContent.scrollToBottom(200).then();
-                    }
-                });
-            } else {
-                this.places = [];
-            }
-        } else {
-            this.places = [];
-        }
+        // if (e.value.length > 0) {
+        //     if (this.itemLocation.nativeElement.classList.contains('item-has-focus') === true) {
+        //         const config = {
+        //             types: ['geocode'],
+        //             input: e.value
+        //         };
+        //         this.autocompleteService.getPlacePredictions(config, (predictions, status) => {
+        //             if (status === this.googleMaps.places.PlacesServiceStatus.OK && predictions) {
+        //                 this.places = [];
+        //                 predictions.forEach((prediction) => {
+        //                     this.places.push(prediction);
+        //                 });
+        //             }
+        //             if (scroll) {
+        //                 this.ionContent.scrollToBottom(200).then();
+        //             }
+        //         });
+        //     } else {
+        //         this.places = [];
+        //     }
+        // } else {
+        //     this.places = [];
+        // }
     }
 
     async chargeImage(isTest: boolean, file: any) {

@@ -156,7 +156,7 @@ export class FlyerPage extends InputFilePage implements OnInit {
                 if (success.passed) {
                     await this.storage.setBusinessVerifiedByUser(success.response);
                     this.intentProvider.updateMyBusiness = true;
-                    this.router.navigateByUrl('app/tab/my-business');
+                    this.router.navigateByUrl('app/settings/my-business');
                     this.toast.messageSuccessWithoutTabs('Su volante ha sido guardado exitosamente');
                 } else {
                     this.toast.messageErrorWithoutTabs('El volante no ha podido guardarse, intente nuevamente.');
@@ -195,7 +195,7 @@ export class FlyerPage extends InputFilePage implements OnInit {
                     await this.storage.setBusinessVerifiedByUser(success.response);
                     this.intentProvider.updateMyBusiness = true;
                     this.toast.messageSuccessWithoutTabs('Su volante ha sido eliminado con exito');
-                    this.router.navigateByUrl('app/tab/my-business');
+                    this.router.navigateByUrl('app/settings/my-business');
                 } else {
                     this.toast.messageErrorWithoutTabs('El volante no ha podido eliminarse, intente de nuevo.');
                 }
