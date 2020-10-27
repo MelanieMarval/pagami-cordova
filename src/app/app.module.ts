@@ -40,6 +40,7 @@ import { NotificationsProvider } from './providers/notifications.provider';
 // importar locales para cambiar a espanol el pipe date
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
+import { BackgroundEmptyModule } from './shared/background-empty/background-empty.module';
 
 registerLocaleData(localeEs, 'es');
 
@@ -61,6 +62,7 @@ registerLocaleData(localeEs, 'es');
         CoreModule,
         PipesModule,
         IonicSelectableModule,
+        BackgroundEmptyModule,
     ],
     providers: [
         ToastProvider,

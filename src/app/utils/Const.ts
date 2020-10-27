@@ -90,6 +90,7 @@ export const ORDERS = {
 
 export const MAP_MODE = {
     SEARCH: 'search',
+    SEARCHING: 'searching',
     FIND_BUSINESS: 'find-my-business',
     REGISTER_BUSINESS: 'register-business',
     EDIT_BUSINESS: 'edit-business',

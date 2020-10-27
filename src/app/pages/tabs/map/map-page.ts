@@ -17,7 +17,7 @@ import { AlertProvider } from '../../../providers/alert.provider';
 import { ToastProvider } from '../../../providers/toast.provider';
 import { StorageProvider } from '../../../providers/storage.provider';
 import { UserIntentProvider } from '../../../providers/user-intent.provider';
-import { MenuController } from '@ionic/angular';
+import { IonSearchbar, MenuController } from '@ionic/angular';
 import { UserUtils } from '../../../utils/user.utils';
 
 const DEFAULT_TABS_HEIGHT = 48;
@@ -37,6 +37,7 @@ const BASIC_UPDATE_METERS = 10;
 export class MapPage extends GoogleMapPage implements OnInit {
 
     @ViewChild('fab', {static: false, read: ElementRef}) private ionFab: ElementRef;
+    @ViewChild('searchInput') private searchInput: IonSearchbar;
 
     placeTypeSelected = PLACES.TYPE.ALL;
     searching = false;
@@ -126,6 +127,9 @@ export class MapPage extends GoogleMapPage implements OnInit {
             case MAP_MODE.SEARCH:
                 this.navigateToModeSearch();
                 break;
+            case MAP_MODE.SEARCHING:
+                this.navigateToModeSearching();
+                break;
             case MAP_MODE.EDIT_BUSINESS:
                 this.navigateToModeEditBusiness();
                 break;
@@ -149,6 +153,14 @@ export class MapPage extends GoogleMapPage implements OnInit {
         if (this.editPlaceMarker) {
             this.editPlaceMarker.remove();
         }
+    }
+
+    navigateToModeSearching() {
+        this.isRegistering = false;
+        this.isHiddenCloseToMe = false;
+        this.isFindMyBusiness = false;
+        this.onFocusSearch();
+        setTimeout(() => (this.searchInput.setFocus()), 200);
     }
 
     navigateToModeRegister() {
@@ -220,7 +232,7 @@ export class MapPage extends GoogleMapPage implements OnInit {
             } else {
                 this.toast.messageInfoForMap('No puede reclamar esta empresa <br>Ya ha sido reclamada.', 2000);
             }
-        } else if (this.currentUrl === MAP_MODE.SEARCH) {
+        } else if (this.currentUrl === MAP_MODE.SEARCH || this.currentUrl === MAP_MODE.SEARCH) {
             console.log('MAP_MODE.SEARCH');
             this.fabAttached = false;
             this.mapEvents.changeDrawerState.emit(DrawerState.Docked);

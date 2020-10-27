@@ -11,6 +11,9 @@ const routes: Routes = [
                 path: 'search',
             },
             {
+                path: 'searching',
+            },
+            {
                 path: 'register-business',
             },
             {

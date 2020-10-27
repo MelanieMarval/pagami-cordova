@@ -1,9 +1,10 @@
 <ion-content class="close-to-me-scroll">
 
-    <ion-header class="header-map" [hidden]="isRegistering">
-        <ion-toolbar [class.unset]="bottomDrawer.showBackToolbar">
+    <ion-header class="header-search-map" [hidden]="isRegistering">
+        <ion-toolbar color="light">
             <ion-buttons slot="start">
-                <ion-menu-button autoHide="false"></ion-menu-button>
+                <ion-menu-button *ngIf="!isSearching" autoHide="false"></ion-menu-button>
+                <ion-back-button *ngIf="isSearching" defaultHref="/tabs/map/search"></ion-back-button>
             </ion-buttons>
             <ion-searchbar
                 #searchInput
@@ -12,21 +13,25 @@
                 (ionFocus)="onFocusSearch()"
                 (ionBlur)="onFocusExit()"
                 (ionClear)="onClear()"
-                placeholder="Busca tiendas o servicios"
+                [placeholder]="isSearching ? 'Busca tiendas o servicios': ''"
                 color="light"
-                class="searchbar-new">
+                [ngClass]="{'search-pagami-background': !isSearching}"
+                class="without-search-icon">
             </ion-searchbar>
-            <ion-avatar slot="end" class="avatar" routerLink="/app/settings">
-                <ion-img [src]="profileImage"></ion-img>
-            </ion-avatar>
+            <ion-buttons slot="end" *ngIf="!isSearching">
+                <app-avatar-header></app-avatar-header>
+            </ion-buttons>
         </ion-toolbar>
 <!--        <ion-grid [class.unset]="bottomDrawer.showBackToolbar">-->
 <!--            <ion-row>-->
 <!--                <ion-col size="1">-->
-<!--&lt;!&ndash;                    <ion-button class="btn-no-style" (click)="alert.alertComingSoon()">&ndash;&gt;-->
-<!--                    <ion-button class="btn-no-style" (click)="openMenu()">-->
+<!--                    <ion-button *ngIf="!isSearching" class="btn-no-style" (click)="openMenu()">-->
 <!--&lt;!&ndash;                        <ion-menu-button autoHide="false"></ion-menu-button>&ndash;&gt;-->
 <!--                        <ion-icon class="card-i size-icon-default" name="menu"></ion-icon>-->
+<!--                    </ion-button>-->
+<!--&lt;!&ndash;                    <ion-back-button *ngIf="isSearching" defaultHref="/tabs/map/search"></ion-back-button>&ndash;&gt;-->
+<!--                    <ion-button class="btn-no-style" routerLink="/tabs/map/search">-->
+<!--                        <ion-icon class="card-i size-icon-default" name="arrow-back"></ion-icon>-->
 <!--                    </ion-button>-->
 <!--                </ion-col>-->
 <!--                <ion-col [size]="isSearching ? 11 : 9">-->
@@ -37,8 +42,9 @@
 <!--                        (ionFocus)="onFocusSearch()"-->
 <!--                        (ionBlur)="onFocusExit()"-->
 <!--                        (ionClear)="onClear()"-->
-<!--                        placeholder="Busca tiendas o servicios"-->
+<!--                        [placeholder]="isSearching ? 'Busca tiendas o servicios': ''"-->
 <!--                        color="light"-->
+<!--                        [ngClass]="{'search-pagami-background': !isSearching}"-->
 <!--                        class="without-search-icon">-->
 <!--                    </ion-searchbar>-->
 <!--                </ion-col>-->

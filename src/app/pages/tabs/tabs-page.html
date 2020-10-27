@@ -1,7 +1,7 @@
 <ion-tabs>
 
     <ion-tab-bar slot="bottom">
-        <ion-tab-button tab="map/search" class="tab-button" (click)="openNearby()" [class.tab-selected]="currentUrl === 'search'">
+        <ion-tab-button tab="map/search" class="tab-button" (click)="openNearby()" [class.tab-selected]="currentUrl === 'search' || currentUrl === 'searching'">
             <ion-icon src="assets/icon/tabs/near-me.svg" class="tab-button__icon"></ion-icon>
         </ion-tab-button>
 
