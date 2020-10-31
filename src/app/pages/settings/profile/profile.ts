@@ -1,23 +1,27 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AlertController } from '@ionic/angular';
-import { InputFilePage } from '../../parent/InputFilePage';
+import { AlertController, ModalController } from '@ionic/angular';
+import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 // Services
 import { GeolocationService } from '../../../core/geolocation/geolocation.service';
 import { GoogleAuthService } from '../../../core/google-auth/google-auth.service';
 import { AuthService } from '../../../core/api/auth/auth.service';
-import { User } from '../../../core/api/users/user';
+import { PlacesService } from '../../../core/api/places/places.service';
 // Providers
 import { ToastProvider } from '../../../providers/toast.provider';
 import { StorageProvider } from '../../../providers/storage.provider';
-
-import { FireStorage } from '../../../core/fire-storage/fire.storage';
-import { ValidationUtils } from '../../../utils/validation.utils';
 import { CompressImageProvider } from '../../../providers/compress-image.provider';
-import { IonicSelectableComponent } from 'ionic-selectable';
-import { PlacesService } from '../../../core/api/places/places.service';
+import { FireStorage } from '../../../core/fire-storage/fire.storage';
+// Utils
+import { InputFilePage } from '../../parent/InputFilePage';
+import { ValidationUtils } from '../../../utils/validation.utils';
+import { UserUtils } from '../../../utils/user.utils';
+import { User } from '../../../core/api/users/user';
 import { Country } from '../../../core/api/places/country';
-import { SplashScreen } from '@ionic-native/splash-screen/ngx';
+
+import { IonicSelectableComponent } from 'ionic-selectable';
+import { ModalSelectableComponent } from '../../../components/modal-selectable/modal-selectable.component';
+import { AlertProvider } from '../../../providers/alert.provider';
 
 @Component({
     selector: 'app-profile',
@@ -34,9 +38,11 @@ export class ProfilePage extends InputFilePage implements OnInit {
     country: Country;
     address: string;
     saving: any;
+    getPhoto = UserUtils.getPhoto;
 
     constructor(private router: Router,
                 private alertController: AlertController,
+                private alert: AlertProvider,
                 private toast: ToastProvider,
                 private storageService: StorageProvider,
                 private compressImage: CompressImageProvider,
@@ -45,6 +51,7 @@ export class ProfilePage extends InputFilePage implements OnInit {
                 private authService: AuthService,
                 private placesService: PlacesService,
                 private splashScreen: SplashScreen,
+                private modalController: ModalController,
                 protected geolocationService: GeolocationService) {
         super(geolocationService);
     }
@@ -54,8 +61,7 @@ export class ProfilePage extends InputFilePage implements OnInit {
         this.previewUrl = this.user.photoUrl;
         await this.placesService.getAllCountries().then(value => {
             this.countries = value;
-            this.country = this.countries.find(cc => cc.code === 'CO');
-            this.user.phoneCode = this.country.dial_code;
+            this.country = this.countries.find(cc => cc.code === this.user.location.code.toUpperCase());
         });
     }
 
@@ -66,6 +72,7 @@ export class ProfilePage extends InputFilePage implements OnInit {
         } else {
             this.isEditing = true;
             this.userEdit = Object.assign({}, this.user);
+            console.log('-> this.userEdit', this.userEdit);
             setTimeout(() => {
                 // this.locationSelected = true;
             }, 500);
@@ -151,7 +158,7 @@ export class ProfilePage extends InputFilePage implements OnInit {
                                 if (success.passed) {
                                     // tslint:disable-next-line:max-line-length
                                     this.toast.messageSuccessWithoutTabs('Su cuenta ha sido eliminada. Ya no podra acceder a la aplicacion', 3500);
-                                    this.closeSession();
+                                    this.alert.closeSession();
                                 }
                                 this.updating = false;
                             }).catch(() => {
@@ -167,50 +174,32 @@ export class ProfilePage extends InputFilePage implements OnInit {
         await alert.present();
     }
 
-    async closeSessionConfirm() {
-        const alert = await this.alertController.create({
-            header: 'Cerrar Sesión',
-            message: '¿Seguro que desea cerrar su sesión?',
-            buttons: [
-                {
-                    text: 'Cancelar',
-                    role: 'cancel',
-                    cssClass: 'alert-cancel',
-                    handler: () => {
-                        // close
-                    },
-                }, {
-                    text: 'Si, Cerrar',
-                    cssClass: 'alert-confirm',
-                    handler: () => {
-                        this.closeSession();
-                    },
-                },
-            ],
-            cssClass: 'ion-color-pagami-surface',
-        });
-
-        await alert.present();
-    }
-
-    async closeSession() {
-        this.googleAuthService.singOut()
-            .finally(async () => {
-                await this.storageService.setPagamiUser(null);
-                await this.storageService.setBusinessVerifiedByUser(null);
-                await this.storageService.setLogged(false);
-                await this.router.navigateByUrl('/tutorial');
-                window.location.reload();
-                await this.splashScreen.show();
-            });
-    }
-
-
     validateImage($event: Event) {
         if (!ValidationUtils.validateImage($event)) {
             this.toast.messageErrorWithoutTabs('Formato de imágen no válido, por favor seleccione otra.', 3000);
         } else {
             this.chargeImage(true, $event);
+        }
+    }
+
+    async openListCountries() {
+        const modal = await this.modalController.create({
+            component: ModalSelectableComponent,
+            cssClass: 'my-custom-class',
+            componentProps: {
+                items: this.countries,
+                item: this.country
+            }
+        });
+        await modal.present();
+
+        const {data} = await modal.onWillDismiss();
+        console.log('-> data', data);
+        if (data) {
+            this.country = data;
+            this.userEdit.location.code = data.code;
+            this.userEdit.location.country = data.name;
+            this.userEdit.phoneCode = data.dial_code;
         }
     }
 

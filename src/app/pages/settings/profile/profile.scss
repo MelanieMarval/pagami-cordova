@@ -31,17 +31,6 @@
     }
 }
 
-.border-radius-bottom {
-    border-bottom-right-radius: 5px;
-    border-bottom-left-radius: 5px;
-}
-
-.button-logout {
-    --border-radius: 50% !important;
-    width: 45px;
-    height: 45px;
-}
-
 /* ***Alert*** */
 .alert-wrapper {
     background: var(--ion-color-pagami-surface);
@@ -58,12 +47,14 @@ div#alert-1-msg {
 .group-flex {
     display: flex;
     ion-item:nth-child(1) {
-        width: 130px;
+        width: 87px;
         border-radius: 5px 0 0 0;
+        --inner-padding-end: 0px;
     }
     ion-item:nth-child(2) {
         width: 100%;
         border-radius: 0 5px 0 0;
+        --padding-start: 5px;
     }
 }
 

@@ -104,13 +104,17 @@ select:-webkit-autofill:focus {
 /*  ***********************  */
 
 
-/* ***ALERTS IN PROFILE *** */
+/* ***ALERTS *** */
 .sc-ion-alert-ios-h {
   --background: var(--ion-color-pagami-surface) !important;
 }
 
 .alert-wrapper {
   max-width: 90% !important;
+}
+
+.alert-button-cancel {
+  color: #616161 !important;
 }
 
 /* END alerts */

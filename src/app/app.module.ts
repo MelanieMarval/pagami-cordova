@@ -28,8 +28,10 @@ import { CoreModule } from './core/core.module';
 import { PipesModule } from './pipes/pipes.module';
 import { firebaseConfig } from '../environments/environment';
 import { IonicSelectableModule } from 'ionic-selectable';
+import { BackgroundEmptyModule } from './shared/background-empty/background-empty.module';
 // Components
 import { AppComponent } from './app.component';
+import { ModalSelectableComponent } from './components/modal-selectable/modal-selectable.component';
 // Providers
 import { UserIntentProvider } from './providers/user-intent.provider';
 import { ToastProvider } from './providers/toast.provider';
@@ -41,12 +43,11 @@ import { NotificationsProvider } from './providers/notifications.provider';
 // importar locales para cambiar a espanol el pipe date
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
-import { BackgroundEmptyModule } from './shared/background-empty/background-empty.module';
 
 registerLocaleData(localeEs, 'es');
 
 @NgModule({
-    declarations: [AppComponent],
+    declarations: [AppComponent, ModalSelectableComponent],
     entryComponents: [],
     imports: [
         BrowserModule,

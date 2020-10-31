@@ -1,0 +1,32 @@
+<ion-header>
+    <ion-toolbar color="pagami-surface" class="ion-no-border toolbar-principal">
+        <ion-title>Seleccione el banco detino</ion-title>
+        <ion-buttons slot="end">
+            <ion-button slot="icon-only" (click)="dismissModal()">
+                <ion-icon name="close"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+
+    <ion-toolbar color="pagami-surface">
+        <ion-searchbar class="searchbar" [debounce]="100" placeholder="Escribe para buscar" [(ngModel)]="textToSearch"></ion-searchbar>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-list>
+        <ion-radio-group [(ngModel)]="item">
+
+            <ion-item *ngFor="let item of items | filterByParameter: textToSearch: ['name', 'code', 'dial_code']"
+                      (click)="selectBank($event)">
+                <ion-label>({{item.code}}) {{item.name}}</ion-label>
+                <ion-radio slot="start" [value]="item"></ion-radio>
+            </ion-item>
+
+            <ion-item *ngIf="!(items | filterByParameter: textToSearch: ['name', 'code', 'dial_code']).length">
+                <ion-label class="ion-text-center">Sin resultados</ion-label>
+            </ion-item>
+
+        </ion-radio-group>
+    </ion-list>
+</ion-content>

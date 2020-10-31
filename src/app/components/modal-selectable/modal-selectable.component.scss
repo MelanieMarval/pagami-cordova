@@ -1,0 +1,14 @@
+.toolbar-principal {
+  --min-height: 54px;
+}
+
+.searchbar {
+  --border-radius: 5px;
+  --color: #FFFFFFF;
+  --background: transparent;
+  --box-shadow: unset;
+
+  & > div > input {
+    padding-left: 55px !important;
+  }
+}

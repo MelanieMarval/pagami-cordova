@@ -1,5 +1,5 @@
 <ion-header>
-    <ion-toolbar>
+    <ion-toolbar class="toolbar-simple">
         <ion-buttons slot="start">
             <ion-back-button *ngIf="!isEditing" defaultHref="/app/settings"></ion-back-button>
             <ion-button *ngIf="isEditing" (click)="editProfile()">
@@ -7,11 +7,6 @@
             </ion-button>
         </ion-buttons>
         <ion-title>Perfil</ion-title>
-        <ion-buttons slot="end">
-            <ion-button (click)="closeSessionConfirm()" [disabled]="updating" class="button-logout">
-                <ion-icon name="log-in-outline" class="toolbar-icon"></ion-icon>
-            </ion-button>
-        </ion-buttons>
     </ion-toolbar>
 </ion-header>
 <div class="progress-bar-container">
@@ -23,7 +18,7 @@
     <ion-list>
         <ion-item-group class="profile--section-1">
             <ion-avatar class="border-white-1px">
-                <ion-img [src]="user.photoUrl"></ion-img>
+                <ion-img [src]="getPhoto(this.user)"></ion-img>
             </ion-avatar>
             <h2>{{user.name}} {{user.lastname}} <ion-icon src="assets/icon/edit-pencil.svg" (click)="editProfile()" class="icon-edit"></ion-icon></h2>
             <ion-text class="text-join">Se unio el {{user.createTime | date:'d'}} de {{user.createTime | date:'MMMM y'}}</ion-text>
@@ -87,19 +82,6 @@
             <ion-input type="text" [(ngModel)]="userEdit.lastname" maxlength="30" [readonly]="updating"></ion-input>
             <ion-icon name="people" slot="start"></ion-icon>
         </ion-item>
-        <ion-item color="pagami-surface">
-            <ion-label position="floating">País</ion-label>
-            <ionic-selectable modalCssClass='ionic-selectable-documentation-configuration'
-                              [(ngModel)]="country"
-                              [items]="countries"
-                              itemValueField="code"
-                              itemTextField="name"
-                              [canSearch]="true"
-                              (onChange)="countryChange($event)"
-                              [disabled]="saving">
-            </ionic-selectable>
-            <ion-icon name="globe" slot="start"></ion-icon>
-        </ion-item>
         <ion-item-group class="group-flex">
             <ion-item color="pagami-surface">
                 <ion-label position="floating">Código</ion-label>
@@ -110,6 +92,11 @@
                 <ion-input type="tel" [(ngModel)]="userEdit.phone" maxlength="15" [readonly]="updating"></ion-input>
             </ion-item>
         </ion-item-group>
+        <ion-item color="pagami-surface">
+            <ion-label position="floating">País</ion-label>
+            <ion-input type="text"  [value]="this.user.location.country" (ionFocus)="openListCountries()"></ion-input>
+            <ion-icon name="globe" slot="start"></ion-icon>
+        </ion-item>
         <ion-item #itemLocation color="pagami-surface" class="mb-0">
             <ion-label position="floating">Ubicación</ion-label>
             <ion-input type="text" [(ngModel)]="userEdit.location.address" [readonly]="updating"></ion-input>

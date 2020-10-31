@@ -1,9 +1,14 @@
 <ion-header>
-    <ion-toolbar class="toolbar-simple">
+    <ion-toolbar class="toolbar-dual">
         <ion-buttons slot="start">
             <ion-back-button defaultHref="/app/tabs/map/search"></ion-back-button>
         </ion-buttons>
         <ion-title>Ajustes</ion-title>
+        <ion-buttons slot="end">
+            <ion-button (click)="alert.alertCloseSessionConfirm()" class="button-logout">
+                <ion-icon slot="icon-only" name="log-in-outline" class="toolbar-icon"></ion-icon>
+            </ion-button>
+        </ion-buttons>
     </ion-toolbar>
 </ion-header>
 
@@ -24,13 +29,13 @@
             </ion-label>
         </ion-item>
 
-        <ion-item lines="full" routerLink="my-business">
+        <ion-item lines="full" (click)="goToMyBusiness()">
             <ion-thumbnail slot="start" class="thumbnail">
                 <ion-icon src="assets/icon/tabs/my-business.svg" class="size-icon-default"></ion-icon>
             </ion-thumbnail>
             <ion-label>
                 <h3>Mi empresa</h3>
-                Foto, nombre, ubicacion
+                Foto, nombre, ubicación
             </ion-label>
         </ion-item>
 

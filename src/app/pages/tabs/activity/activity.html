@@ -158,7 +158,7 @@
         </ion-item-group>
     </ion-list>
 
-    <app-background-empty *ngIf="empty" [title]="'Aun no hay actividad'" height="90"
-                          [text]="'Cuando hayas registrado empresas podras ver los detalles aqui'"></app-background-empty>
+    <app-background-empty *ngIf="!registers.length" [title]="'Aún no hay actividad'" height="90"
+                          [text]="'Cuando hayas registrado empresas podrás ver los detalles aquí'"></app-background-empty>
 
 </ion-content>

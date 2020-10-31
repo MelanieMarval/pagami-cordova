@@ -4,7 +4,9 @@
         <ion-toolbar color="light">
             <ion-buttons slot="start">
                 <ion-menu-button *ngIf="!isSearching" autoHide="false"></ion-menu-button>
-                <ion-back-button *ngIf="isSearching" defaultHref="/tabs/map/search"></ion-back-button>
+                <ion-button *ngIf="isSearching" (click)="goToMap()">
+                    <ion-icon slot="icon-only" icon="arrow-back"></ion-icon>
+                </ion-button>
             </ion-buttons>
             <ion-searchbar
                 #searchInput
@@ -16,7 +18,7 @@
                 [placeholder]="isSearching ? 'Busca tiendas o servicios': ''"
                 color="light"
                 [ngClass]="{'search-pagami-background': !isSearching}"
-                class="without-search-icon">
+                class="searchbar-pagami without-search-icon">
             </ion-searchbar>
             <ion-buttons slot="end" *ngIf="!isSearching">
                 <app-avatar-header></app-avatar-header>
@@ -31,7 +33,7 @@
                     <ion-icon src="assets/icon/location-on.svg" class="size-icon-default"></ion-icon>
                 </ion-button>
             </ion-buttons>
-            <ion-searchbar placeholder="Parate frente a la empresa y guarda la ubicacion" color="pagami-surface" class="without-search-icon" disabled></ion-searchbar>
+            <ion-searchbar placeholder="Parate frente a la empresa y guarda la ubicacion" color="pagami-surface" class="searchbar-pagami without-search-icon" disabled></ion-searchbar>
         </ion-toolbar>
     </ion-header>
 
@@ -40,15 +42,12 @@
             <ion-buttons slot="start">
                 <ion-back-button defaultHref="/app/settings/my-business"></ion-back-button>
             </ion-buttons>
-            <ion-searchbar placeholder="Mueve el cursor para modificar tu ubicacion" color="pagami-surface" class="without-search-icon" disabled></ion-searchbar>
+            <ion-searchbar placeholder="Mueve el cursor para modificar tu ubicacion" color="pagami-surface" class="searchbar-pagami without-search-icon" disabled></ion-searchbar>
         </ion-toolbar>
     </ion-header>
 
 
-
     <div #mapCanvas id="map-canvas" class="map-canvas"></div>
-
-
 
 
     <div class="background-sheet-header" [hidden]="!bottomDrawer.showBackToolbar"></div>
@@ -59,8 +58,8 @@
         </ion-fab-button>
     </ion-fab>
 
-    <ion-fab class="fab-business-add" horizontal="end" vertical="top" slot="fixed" [hidden]="isRegistering || isEditingBusiness">
-        <ion-fab-button color="light" class="size-fab" routerLink="/app/tabs/map/register-business">
+    <ion-fab class="fab-business-add" horizontal="end" vertical="top" slot="fixed" [hidden]="isSearching || isRegistering || isEditingBusiness">
+        <ion-fab-button color="light" class="size-fab" (click)="goToRegisterBusiness()">
             <ion-icon src="assets/icon/business_add.svg"></ion-icon>
         </ion-fab-button>
     </ion-fab>

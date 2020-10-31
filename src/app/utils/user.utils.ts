@@ -11,4 +11,12 @@ export class UserUtils {
         }
     }
 
+    static getPhoto(user: User) {
+        if (!user.photoUrl) {
+            return 'assets/img/no-user-image.png';
+        } else {
+            return user.photoUrl;
+        }
+    }
+
 }

@@ -75,6 +75,7 @@
         <ion-label>Estoy de acuerdo con los términos y condiciones</ion-label>
     </ion-item>
     <ion-button class="button-large" expand="block" (click)="continueRegister()" [disabled]="!termsAccepted">
-        Continuar
+        <ion-spinner *ngIf="saving" class="spinner-energized"></ion-spinner>
+        <span *ngIf="!saving">Continuar</span>
     </ion-button>
 </ion-footer>

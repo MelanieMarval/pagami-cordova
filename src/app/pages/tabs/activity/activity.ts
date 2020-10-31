@@ -34,7 +34,6 @@ export class ActivityPage implements OnInit {
     placeSortData = PlaceUtils.getSortData;
     reloading: boolean;
     targetRefresh;
-    empty: any;
 
     constructor(private placesService: PlacesService,
                 private storageService: StorageProvider,

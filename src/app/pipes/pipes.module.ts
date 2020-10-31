@@ -5,6 +5,7 @@ import { PluralPipe } from './plural.pipe';
 import { FilterPlacePipe } from './filter-place.pipe';
 import { FilterByNamePipe } from './filter-by-name.pipe';
 import { FilterCategoryPipe } from './filter-category.pipe';
+import { FilterByParameter } from './filter-by-parameter.pipe';
 
 @NgModule({
     declarations: [
@@ -13,7 +14,8 @@ import { FilterCategoryPipe } from './filter-category.pipe';
         PluralPipe,
         FilterPlacePipe,
         FilterCategoryPipe,
-        FilterByNamePipe
+        FilterByNamePipe,
+        FilterByParameter
     ],
     imports: [],
     exports: [
@@ -22,6 +24,7 @@ import { FilterCategoryPipe } from './filter-category.pipe';
         PluralPipe,
         FilterPlacePipe,
         FilterByNamePipe,
+        FilterByParameter,
         FilterPlacePipe,
         FilterCategoryPipe
     ],

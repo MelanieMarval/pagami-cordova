@@ -19,7 +19,7 @@
 
 <ion-content>
     <ion-header class="top-searchbar">
-        <ion-searchbar placeholder="Buscar productos" [(ngModel)]="textSearch"></ion-searchbar>
+        <ion-searchbar class="searchbar-pagami" placeholder="Buscar productos" [(ngModel)]="textSearch"></ion-searchbar>
     </ion-header>
 
     <ion-list inset="false" lines="none" class="products" [ngClass]="{'ion-text-center': !services.length}">

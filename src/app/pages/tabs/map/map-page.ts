@@ -19,6 +19,7 @@ import { StorageProvider } from '../../../providers/storage.provider';
 import { UserIntentProvider } from '../../../providers/user-intent.provider';
 import { IonSearchbar, MenuController } from '@ionic/angular';
 import { UserUtils } from '../../../utils/user.utils';
+import { User } from '../../../core/api/users/user';
 
 const DEFAULT_TABS_HEIGHT = 48;
 const DEFAULT_DRAWER_BOTTOM_HEIGHT = 30;
@@ -140,6 +141,7 @@ export class MapPage extends GoogleMapPage implements OnInit {
         this.isRegistering = false;
         this.isFindMyBusiness = false;
         this.isEditingBusiness = false;
+        this.searchInput.value = '';
         if (this.isHiddenCloseToMe) {
             this.closeToMeToDefault();
             this.isHiddenCloseToMe = false;
@@ -436,16 +438,16 @@ export class MapPage extends GoogleMapPage implements OnInit {
     onFocusSearch() {
         this.router.navigateByUrl('/app/tabs/map/searching').then(r => {
             this.bottomDrawer.drawerState = DrawerState.Top;
-            this.bottomDrawer.disableDrag = true;
+            // this.bottomDrawer.disableDrag = true;
             this.mapEvents.changeDrawerState.emit(DrawerState.Top);
             this.isSearching = true;
         });
     }
 
     onFocusExit() {
-        this.bottomDrawer.disableDrag = false;
-        this.isSearching = false;
-        this.searchInput.value = '';
+        // this.bottomDrawer.disableDrag = false;
+        // this.isSearching = false;
+        // this.searchInput.value = '';
     }
 
     onPlaceTypeChanged(selected: string) {
@@ -461,7 +463,6 @@ export class MapPage extends GoogleMapPage implements OnInit {
     }
 
     onHideKeyboard(event) {
-        this.searchText = '';
         event.target.blur();
         this.getNearPlaces();
     }
@@ -522,11 +523,22 @@ export class MapPage extends GoogleMapPage implements OnInit {
         this.getNearPlaces();
     }
 
-    async openMenu() {
-        const response = await this.menuController.open('menu');
-        console.log('-> response', response);
-        const res = await this.menuController.getMenus();
-        console.log('-> res', res);
+    async goToRegisterBusiness() {
+        const user: User = await this.storageService.getPagamiUser();
+        if (user.phone && user.location.address) {
+            await this.router.navigateByUrl('/app/tabs/map/register-business');
+        } else {
+            this.alert.alertCompleteProfile();
+        }
     }
 
+    goToMap() {
+        this.searchText = '';
+        this.searchInput.value = '';
+        this.isSearching = false;
+        this.router.navigateByUrl('/app/tabs/map/search');
+        this.appService.showNearby.emit();
+        this.appService.changeDrawerState.emit(DrawerState.Bottom);
+        this.getNearPlaces();
+    }
 }
