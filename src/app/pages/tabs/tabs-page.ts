@@ -39,7 +39,7 @@ export class TabsPage implements OnInit {
     }
 
     openNearbySearch() {
-        this.router.navigateByUrl('/app/tabs/searching');
+        this.router.navigateByUrl('/app/tabs/map/searching');
         this.appService.showNearby.emit();
         this.appService.changeDrawerState.emit(DrawerState.Top);
     }

@@ -18,6 +18,7 @@ import { Clipboard } from '@ionic-native/clipboard/ngx';
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
 import { GoogleMaps } from '@ionic-native/google-maps';
 import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
+import { Sim } from '@ionic-native/sim/ngx';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { OpenNativeSettings } from '@ionic-native/open-native-settings/ngx';
@@ -81,6 +82,7 @@ registerLocaleData(localeEs, 'es');
         GooglePlus,
         GoogleMaps,
         LocationAccuracy,
+        Sim,
         SplashScreen,
         StatusBar,
         OpenNativeSettings

@@ -434,15 +434,18 @@ export class MapPage extends GoogleMapPage implements OnInit {
     }
 
     onFocusSearch() {
-        this.bottomDrawer.drawerState = DrawerState.Top;
-        this.bottomDrawer.disableDrag = true;
-        this.mapEvents.changeDrawerState.emit(DrawerState.Top);
-        this.isSearching = true;
+        this.router.navigateByUrl('/app/tabs/map/searching').then(r => {
+            this.bottomDrawer.drawerState = DrawerState.Top;
+            this.bottomDrawer.disableDrag = true;
+            this.mapEvents.changeDrawerState.emit(DrawerState.Top);
+            this.isSearching = true;
+        });
     }
 
     onFocusExit() {
         this.bottomDrawer.disableDrag = false;
         this.isSearching = false;
+        this.searchInput.value = '';
     }
 
     onPlaceTypeChanged(selected: string) {
@@ -458,6 +461,7 @@ export class MapPage extends GoogleMapPage implements OnInit {
     }
 
     onHideKeyboard(event) {
+        this.searchText = '';
         event.target.blur();
         this.getNearPlaces();
     }
@@ -524,4 +528,5 @@ export class MapPage extends GoogleMapPage implements OnInit {
         const res = await this.menuController.getMenus();
         console.log('-> res', res);
     }
+
 }
