@@ -51,6 +51,8 @@ export class TransferPage extends InputFilePage implements OnInit {
             type: this.methodSelected.id,
             planId: this.planSelected.id,
             placeId: this.placeId,
+            amount: this.planSelected.amountCop,
+            currency: 'COP',
         };
     }
 

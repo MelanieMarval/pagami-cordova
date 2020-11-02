@@ -10,5 +10,6 @@ export interface Payment {
     type?: string;
     currency?: string;
 
+    status?: string
     createTime?: string;
 }

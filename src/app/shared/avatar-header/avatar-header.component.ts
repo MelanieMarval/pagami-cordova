@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { User } from '../../core/api/users/user';
 import { StorageProvider } from '../../providers/storage.provider';
-import { UserUtils } from '../../utils/user.utils';
+import { PhotoUtils } from '../../utils/photo.utils';
 
 @Component({
     selector: 'app-avatar-header',
@@ -12,7 +12,7 @@ export class AvatarHeaderComponent implements OnInit {
 
     @Input() addClass = false;
     user: User = {};
-    userThumbnailPhoto = UserUtils.getThumbnailPhoto;
+    userThumbnailPhoto = PhotoUtils.getThumbnailPhoto;
     profileImage: string;
 
     constructor(private storageService: StorageProvider) {

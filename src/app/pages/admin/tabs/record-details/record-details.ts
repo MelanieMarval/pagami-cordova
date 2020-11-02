@@ -11,6 +11,8 @@ import { ToastProvider } from '../../../../providers/toast.provider';
 import { PLACES } from '../../../../utils/Const';
 import { PlaceUtils } from '../../../../utils/place.utils';
 import { BrowserProvider } from '../../../../providers/browser.provider';
+import { ApiResponse } from '../../../../core/api/api.response';
+import { PhotoUtils } from '../../../../utils/photo.utils';
 
 @Component({
     selector: 'app-admin-record-details',
@@ -24,6 +26,7 @@ export class RecordDetailsPage implements OnInit {
     isView: boolean;
     place: Place = {latitude: 0, longitude: 0};
     placeTypeSpanish = PlaceUtils.getTypeSpanish;
+    placePhoto = PhotoUtils.getPhotoPlace;
     saving = false;
     saved = false;
     rejecting = false;
@@ -42,15 +45,31 @@ export class RecordDetailsPage implements OnInit {
     }
 
     ngOnInit() {
-        if (this.intentProvider.placeToView) {
+        const param: any = this.route.snapshot.params;
+        console.log('-> param', param);
+        if (param.id !== 'details') {
             this.isView = true;
-            this.place = this.intentProvider.placeToView;
+            this.getPlaceById(param.id);
             return;
         }
         if (this.intentProvider.placeToAccept) {
             this.isView = false;
             this.place = this.intentProvider.placeToAccept;
         }
+    }
+
+    private getPlaceById(id: string) {
+        // this.loading = true;
+        this.placeService.findById(id).then((success: ApiResponse) => {
+            if (success.passed) {
+                this.place = success.response;
+            } else {
+                this.toast.messageErrorAboveButton('Error al cargar el registro. Intente nuevamente!');
+            }
+        }, error => {
+            console.log(error);
+            this.toast.messageErrorAboveButton('Error al cargar el registro, compruebe su conexión a internet!');
+        })
     }
 
     acceptPlace() {

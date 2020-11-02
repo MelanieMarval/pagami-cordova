@@ -147,8 +147,8 @@ export class RecordsPage implements OnInit, AfterViewChecked {
         this.router.navigate(['admin/tabs/records/claim']);
     }
 
-    changeTab($event: CustomEvent) {
-        this.tabView = $event.detail.value;
+    changeTab(event: CustomEvent) {
+        this.tabView = event.detail.value;
     }
 
     onRefreshToBeAccepted(event) {

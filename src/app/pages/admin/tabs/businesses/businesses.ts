@@ -68,7 +68,7 @@ export class BusinessesPage implements OnInit, AfterViewChecked {
     }
 
     getRegisters() {
-        this.placesService.getAllAvailable()
+        this.placesService.getListAllAvailable()
             .then(async (success: ApiResponse) => {
                 if (success.passed) {
                     this.registers = success.response;
@@ -101,8 +101,7 @@ export class BusinessesPage implements OnInit, AfterViewChecked {
     }
 
     goToDetails(register: Place): void {
-        this.intentProvider.placeToView = register;
-        this.router.navigate(['admin/tabs/businesses/details']);
+        this.router.navigate(['admin/tabs/businesses', register.id]);
     }
 
     getStatusSpanish(register: Place) {

@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { StorageProvider } from '../../providers/storage.provider';
 import { AlertProvider } from '../../providers/alert.provider';
 import { User } from '../../core/api/users/user';
-import { UserUtils } from '../../utils/user.utils';
+import { PhotoUtils } from '../../utils/photo.utils';
 
 @Component({
     selector: 'app-settings',
@@ -23,7 +23,7 @@ export class SettingsPage implements OnInit {
 
     async ngOnInit() {
         this.user = await this.storageService.getPagamiUser();
-        this.profileImage = UserUtils.getThumbnailPhoto(this.user);
+        this.profileImage = PhotoUtils.getThumbnailPhoto(this.user);
     }
 
     async goToMyBusiness() {

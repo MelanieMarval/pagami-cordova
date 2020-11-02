@@ -37,6 +37,10 @@ ion-card-title {
     font-weight: normal;
     color: #FFF;
 }
+.size-avatar-loading {
+    width: 64px;
+    height: 64px;
+}
 
 .footer-button {
     padding-top: 6px;
@@ -45,38 +49,22 @@ ion-card-title {
 
 /* *****STATUS CARDS***** */
 .status{
-    &--verified {
-        color: #68D391;
-    }
-    &--accepted {
+    &--pending {
         color: #FBD38D;
     }
-    &--waiting {
-        color: #999;
+    &--accepted {
+        color: #FFFFFF;
     }
     &--rejected {
         color: #E53E3E;
     }
-    &--transfer {
-        color: #63B3ED;
-    }
-    &--incomplete{
-        color: #ffbe25;
-    }
 }
 
-ion-text.status--verified {
+ion-text.status--accepted {
     color: #FFFFFF;
 
     &:before {
         content: "+";
-    }
-}
-ion-text.status--transfer {
-    color: #FFFFFF;
-
-    &:before {
-        content: "-";
     }
 }
 

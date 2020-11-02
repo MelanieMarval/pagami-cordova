@@ -15,7 +15,7 @@ import { FireStorage } from '../../../core/fire-storage/fire.storage';
 // Utils
 import { InputFilePage } from '../../parent/InputFilePage';
 import { ValidationUtils } from '../../../utils/validation.utils';
-import { UserUtils } from '../../../utils/user.utils';
+import { PhotoUtils } from '../../../utils/photo.utils';
 import { User } from '../../../core/api/users/user';
 import { Country } from '../../../core/api/places/country';
 
@@ -38,7 +38,7 @@ export class ProfilePage extends InputFilePage implements OnInit {
     country: Country;
     address: string;
     saving: any;
-    getPhoto = UserUtils.getPhoto;
+    getPhoto = PhotoUtils.getPhotoUser;
 
     constructor(private router: Router,
                 private alertController: AlertController,

@@ -87,6 +87,16 @@ ion-card-header {
     background: #2D3748;
     border-radius: 3px;
 
+    ion-card-header{
+        .total-usd {
+            font-size: 24px;
+        }
+        .total-cop {
+            margin-top: 4px;
+            color: #FFFFFF;
+        }
+    }
+
     ion-card-content {
         padding: 10px;
         font-size: 13px;

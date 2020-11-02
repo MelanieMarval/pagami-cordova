@@ -45,6 +45,27 @@ export class PaymentsService {
         return this.apiService.serverListener(request);
     }
 
+    /**
+     * Get all payments accepted and rejected
+     */
+    async getAllFinish(): Promise<ApiResponse> {
+        const options: any = await this.apiService.getOptionsHeadersTokenized();
+        const request = this.httpClient.get(`${this.URL}/all-finish`, options);
+        return this.apiService.serverListener(request);
+    }
+
+    /**
+     * Get all payments accepted
+     */
+    async getAccepted(): Promise<ApiResponse> {
+        const options: any = await this.apiService.getOptionsHeadersTokenized();
+        const request = this.httpClient.get(`${this.URL}/status/${PAYMENTS.STATUS.ACCEPTED}`, options);
+        return this.apiService.serverListener(request);
+    }
+
+    /**
+     * Get payments pending to verify
+     */
     async getPending(): Promise<ApiResponse> {
         const options: any = await this.apiService.getOptionsHeadersTokenized();
         const request = this.httpClient.get(`${this.URL}/status/${PAYMENTS.STATUS.PENDING}`, options);

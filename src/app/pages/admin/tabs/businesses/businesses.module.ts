@@ -14,7 +14,7 @@ import { BackgroundEmptyModule } from '../../../../shared/background-empty/backg
         FormsModule,
         RouterModule.forChild([
             {path: '', component: BusinessesPage},
-            {path: 'details', loadChildren: () => import('../record-details/record-details.module').then(m => m.RecordDetailsModule)},
+            {path: ':id', loadChildren: () => import('../record-details/record-details.module').then(m => m.RecordDetailsModule)},
         ]),
         PipesModule,
         BackgroundEmptyModule,

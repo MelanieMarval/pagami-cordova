@@ -148,7 +148,7 @@
 
 </ion-content>
 
-<ion-footer class="footer-button">
+<ion-footer class="footer-button" *ngIf="payment.status === STATUS.PENDING">
     <ion-row>
         <ion-col size="6">
             <ion-button class="button-small" expand="block" color="pagami-surface" (click)="openConfirm()"

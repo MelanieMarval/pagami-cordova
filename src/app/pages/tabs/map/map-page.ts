@@ -18,7 +18,7 @@ import { ToastProvider } from '../../../providers/toast.provider';
 import { StorageProvider } from '../../../providers/storage.provider';
 import { UserIntentProvider } from '../../../providers/user-intent.provider';
 import { IonSearchbar, MenuController } from '@ionic/angular';
-import { UserUtils } from '../../../utils/user.utils';
+import { PhotoUtils } from '../../../utils/photo.utils';
 import { User } from '../../../core/api/users/user';
 
 const DEFAULT_TABS_HEIGHT = 48;
@@ -89,7 +89,7 @@ export class MapPage extends GoogleMapPage implements OnInit {
 
     async ngOnInit() {
         const user = await this.storageService.getPagamiUser();
-        this.profileImage = UserUtils.getThumbnailPhoto(user);
+        this.profileImage = PhotoUtils.getThumbnailPhoto(user);
         this.router.events.subscribe(value => {
             if (value instanceof NavigationEnd) {
                 const url = value.url.substring(value.url.lastIndexOf('/') + 1);
@@ -515,7 +515,7 @@ export class MapPage extends GoogleMapPage implements OnInit {
     }
 
     clickOnNearbyBar() {
-        this.bottomDrawer.drawerState = DrawerState.Top;
+        // this.bottomDrawer.drawerState = DrawerState.Top;
     }
 
     onClear() {

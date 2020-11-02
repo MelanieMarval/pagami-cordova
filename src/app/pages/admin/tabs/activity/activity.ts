@@ -5,31 +5,34 @@ import { PlacesService } from '../../../../core/api/places/places.service';
 // Providers
 import { ToastProvider } from '../../../../providers/toast.provider';
 // Utils
-import { PLACES } from '../../../../utils/Const';
+import { PAYMENTS, PLACES } from '../../../../utils/Const';
 import { PlaceUtils } from '../../../../utils/place.utils';
 import { Place } from '../../../../core/api/places/place';
 import { AdminIntentProvider } from '../../../../providers/admin-intent.provider';
+import { PaymentsService } from '../../../../core/api/payments/payments.service';
+import { ApiResponse } from '../../../../core/api/api.response';
+import { Payment } from '../../../../core/api/payments/Payment';
+import { PhotoUtils } from '../../../../utils/photo.utils';
 
 @Component({
     selector: 'app-admin-activity',
     templateUrl: 'activity.html',
-    styleUrls: ['activity.scss']
+    styleUrls: ['activity.scss'],
 })
 export class ActivityPage implements OnInit {
 
     loading = true;
     error = false;
     empty = false;
-    registers: Place[];
-    STATUS = PLACES.STATUS;
+    payments: any[] = [];
+    STATUS = PAYMENTS.STATUS;
     indexOfPlaceToEdit: number = undefined;
-    placeThumbnailPhoto = PlaceUtils.getThumbnailPhoto;
-    placeMessageStatus = PlaceUtils.getMessageStatus;
+    thumbnailPayment = PhotoUtils.getThumbnailPayment;
+    response: any = {};
 
-    constructor(private placesService: PlacesService,
+    constructor(private paymentsService: PaymentsService,
                 private router: Router,
-                private toast: ToastProvider,
-                private intentProvider: AdminIntentProvider) {
+                private toast: ToastProvider) {
     }
 
     ngOnInit() {
@@ -38,44 +41,56 @@ export class ActivityPage implements OnInit {
                 this.verifyItemUpdated();
             }
         });
-        this.loading = false;
-        this.error = false;
-        this.empty = true;
-        // this.placesService.myRegisters().then(async (success: ApiResponse) => {
-        //         this.loading = false;
-        //         if (success.passed) {
-        //             this.registers = success.response;
-        //             this.error = false;
-        //             this.empty = this.registers.length !== 0;
-        //         } else {
-        //             this.error = true;
-        //             this.toast.messageErrorWithoutTabs('La informacion no se ha podido cargar. Intente de nuevo!', 5000);
-        //         }
-        //     });
+        this.getPayments();
+    }
+
+    getPayments() {
+        this.loading = true;
+        this.paymentsService.getAllFinish().then(async (success: ApiResponse) => {
+            this.loading = false;
+            console.log('-> success', success);
+            if (success.passed) {
+                this.payments = success.response.payments;
+                this.response = success.response;
+                this.error = false;
+                this.empty = this.payments.length === 0;
+            } else {
+                this.error = true;
+                this.toast.messageErrorWithoutTabs('La informacion no se ha podido cargar. Intente de nuevo!', 5000);
+            }
+        });
     }
 
     verifyItemUpdated() {
-        if (this.intentProvider.placeEdited && Number(this.indexOfPlaceToEdit)) {
-            this.registers[this.indexOfPlaceToEdit] = this.intentProvider.placeEdited;
-            this.intentProvider.placeEdited = undefined;
-            this.indexOfPlaceToEdit = undefined;
-        }
+        // if (this.intentProvider.placeEdited && Number(this.indexOfPlaceToEdit)) {
+        //     this.payments[this.indexOfPlaceToEdit] = this.intentProvider.placeEdited;
+        //     this.intentProvider.placeEdited = undefined;
+        //     this.indexOfPlaceToEdit = undefined;
+        // }
     }
 
-    showDetails(place: Place) {
-        if (place.status === this.STATUS.INCOMPLETE || place.status === this.STATUS.WAITING) {
-            this.indexOfPlaceToEdit = this.registers.indexOf(place);
-            this.intentProvider.placeToEdit = Object.assign({}, place);
-            this.router.navigate(['/app/business-details']).then();
-            return;
-        }
-        if (place.status === this.STATUS.ACCEPTED || place.status === this.STATUS.VERIFIED) {
-            this.intentProvider.placeToView = place;
-            this.router.navigate(['/app/shop']).then();
-        }
+    showDetails(place: Payment) {
+        // if (place.status === this.STATUS.INCOMPLETE || place.status === this.STATUS.WAITING) {
+        //     // this.indexOfPlaceToEdit = this.payments.indexOf(place);
+        //     this.intentProvider.placeToEdit = Object.assign({}, place);
+        //     this.router.navigate(['/app/business-details']).then();
+        //     return;
+        // }
+        // if (place.status === this.STATUS.ACCEPTED || place.status === this.STATUS.VERIFIED) {
+        //     this.intentProvider.placeToView = place;
+        //     this.router.navigate(['/app/shop']).then();
+        // }
     }
 
     goToProfile() {
         this.router.navigate(['/admin/profile']);
+    }
+
+    paymentTypeToSpanish(status: string) {
+        let newStatus = 'Efectivo';
+        if (status === 'transfer') {
+            newStatus = 'Transferencia';
+        }
+        return newStatus;
     }
 }

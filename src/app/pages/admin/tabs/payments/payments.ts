@@ -3,6 +3,7 @@ import { PaymentsService } from '../../../../core/api/payments/payments.service'
 import { Payment } from '../../../../core/api/payments/Payment';
 import { Router } from '@angular/router';
 import { AdminIntentProvider } from '../../../../providers/admin-intent.provider';
+import { ToastProvider } from '../../../../providers/toast.provider';
 
 @Component({
     selector: 'app-admin-payments',
@@ -17,6 +18,7 @@ export class PaymentsPage implements OnInit {
 
     constructor(private paymentsService: PaymentsService,
                 private router: Router,
+                private toast: ToastProvider,
                 private intentProvider: AdminIntentProvider) {
     }
 
@@ -40,12 +42,12 @@ export class PaymentsPage implements OnInit {
                     this.loading = false;
                     console.log('-> success', success);
                     this.payments = success.response;
+                } else {
+                    this.toast.messageErrorWithoutTabs('Ha ocurrido un error inesperado, intente de nuevo');
                 }
-            });
-    }
-
-    reload() {
-        this.getPaymentsPending();
+            }, error => {
+                this.toast.messageErrorWithoutTabs('La información no ha podido ser cargada, verifique su conexión');
+            }).finally(() => this.loading = false);
     }
 
     openDetails(payment: Payment) {
