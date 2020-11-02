@@ -23,7 +23,7 @@ export class ServicesPage implements OnInit {
                 private servicesService: ServicesService,
                 private toast: ToastProvider,
                 private route: ActivatedRoute,
-                private alert: AlertProvider,
+                public alert: AlertProvider,
                 private intentProvider: UserIntentProvider) {
     }
 

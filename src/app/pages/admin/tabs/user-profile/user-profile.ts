@@ -19,7 +19,7 @@ export class UserProfilePage implements OnInit {
     updating = false;
     TYPE = USER.TYPE;
     STATUS = USER.STATUS;
-    messages = {
+    messages: any = {
         type: {},
         status: {}
     };

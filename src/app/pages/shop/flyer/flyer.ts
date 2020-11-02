@@ -13,7 +13,7 @@ export class FlyerPage implements OnInit {
 
     loading: any;
     shop: Place;
-    flyer: Flyer = {};
+    flyer: Flyer | any = {};
 
     constructor(private intentProvider: UserIntentProvider) {
     }

@@ -27,7 +27,7 @@ export class ClaimDetailsPage implements OnInit {
     rejectReason = '';
     isAccepting: boolean;
 
-    constructor(private intentProvider: AdminIntentProvider,
+    constructor(public intentProvider: AdminIntentProvider,
                 private placeService: PlacesService,
                 private claimService: ClaimService,
                 private usersService: UsersService,

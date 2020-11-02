@@ -12,12 +12,13 @@ export class WalletPage implements OnInit {
     empty: boolean;
     hasNotification = false;
 
-    constructor(private alert: AlertProvider,
+    constructor(public alert: AlertProvider,
                 private notificationsProvider: NotificationsProvider) {
     }
 
     ngOnInit(): void {
         this.empty = true;
+        console.log('-> this.notificationsProvider.hasWalletNotification', this.notificationsProvider.hasWalletNotification);
         this.hasNotification = this.notificationsProvider.hasWalletNotification > 0;
         this.notificationsProvider.walletNotification.subscribe(next => {
             this.hasNotification = next;

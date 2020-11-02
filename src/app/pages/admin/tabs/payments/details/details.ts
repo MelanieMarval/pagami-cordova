@@ -37,7 +37,7 @@ export class DetailsPage implements OnInit {
                 private toast: ToastProvider,
                 private alert: AlertController,
                 private intentProvider: AdminIntentProvider,
-                private browserProvider: BrowserProvider) {
+                public browserProvider: BrowserProvider) {
     }
 
     ngOnInit() {
@@ -107,7 +107,7 @@ export class DetailsPage implements OnInit {
         await alert.present();
     }
 
-    private changePaymentStatus(status: string) {
+    changePaymentStatus(status: string) {
         this.updating = true;
         this.paymentsService.changeStatus(this.payment.id, status)
             .then(success => {

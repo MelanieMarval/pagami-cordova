@@ -21,7 +21,7 @@ export class ProductsPage implements OnInit, AfterViewChecked {
     constructor(private alertController: AlertController,
                 private router: Router,
                 private toast: ToastProvider,
-                private intentProvider: UserIntentProvider,
+                public intentProvider: UserIntentProvider,
                 private cdRef: ChangeDetectorRef,
                 private productsService: ProductsService) {
     }

@@ -18,8 +18,8 @@ export class NearbyPage implements OnInit {
 
     @Output() changePlaceType: EventEmitter<string> = new EventEmitter<string>();
     @Input() drawerState = 0;
-    @Input() selectedPlace: Place = undefined;
-    @Input() nearPlaces: Place[] = [];
+    @Input() selectedPlace: Place | any = undefined;
+    @Input() nearPlaces: Place[] | any[] = [];
     @Input() searching = false;
     @Input() searchText = '';
     @Output() changeDrawerState: EventEmitter<number> = new EventEmitter<number>();
@@ -37,7 +37,7 @@ export class NearbyPage implements OnInit {
     ngOnInit() {
         this.subscriberToChangeDrawerStateCalled();
     }
-    
+
     subscriberToChangeDrawerStateCalled() {
         this.mapProvide.changeDrawerState.subscribe(state => {
             console.log('drawer state changed');

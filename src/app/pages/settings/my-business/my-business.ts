@@ -42,13 +42,13 @@ export class MyBusinessPage extends InputFilePage implements OnInit, AfterViewCh
 
     constructor(private router: Router,
                 private toast: ToastProvider,
-                private alert: AlertProvider,
-                private intentProvider: UserIntentProvider,
                 private claimService: ClaimService,
                 private placesService: PlacesService,
                 private fireStorage: FireStorage,
                 private paymentsService: PaymentsService,
                 private storageService: StorageProvider,
+                public alert: AlertProvider,
+                public intentProvider: UserIntentProvider,
                 protected geolocationService: GeolocationService,
                 private camera: Camera,
                 private actionSheetController: ActionSheetController) {

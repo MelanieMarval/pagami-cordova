@@ -1,4 +1,4 @@
-import { ElementRef, Inject, ViewChild } from '@angular/core';
+import { Component, Directive, ElementRef, Inject, Injectable, ViewChild } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { GeolocationService } from '../../core/geolocation/geolocation.service';
 import { PagamiGeo } from '../../core/geolocation/pagami.geo';
@@ -33,7 +33,9 @@ function degreesToRadians(degrees) {
     return degrees * Math.PI / 180;
 }
 
-export class GoogleMapPage {
+@Injectable()
+// tslint:disable-next-line:directive-class-suffix
+export abstract class GoogleMapPage {
 
     @ViewChild('mapCanvas', {static: true}) mapElement: ElementRef;
     map: GoogleMap;
@@ -61,9 +63,9 @@ export class GoogleMapPage {
     isFindMyBusiness = false;
     isEditingBusiness = false;
 
-    constructor(@Inject(DOCUMENT) private doc: Document,
-                protected geolocationService: GeolocationService,
-                protected toast: ToastProvider) {
+    protected constructor(@Inject(DOCUMENT) private doc: Document,
+                          protected geolocationService: GeolocationService,
+                          protected toast: ToastProvider) {
     }
 
     loadMap() {

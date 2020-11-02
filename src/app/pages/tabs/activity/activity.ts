@@ -25,7 +25,7 @@ export class ActivityPage implements OnInit {
     error = false;
     hasNotification = 0;
     notifications: any[];
-    registers: Place[];
+    registers: Place[] | any = [];
     user: User;
     STATUS = PLACES.STATUS;
     indexOfPlaceToEdit: number;
@@ -55,7 +55,7 @@ export class ActivityPage implements OnInit {
         this.notifications = this.notificationsProvider.activityNotifications;
         this.hasNotification = this.notificationsProvider.hasWalletNotification;
         if (this.hasNotification) {
-            this.notificationsProvider.setNotificationState(this.hasNotification);
+            this.notificationsProvider.setNotificationState(0);
         }
     }
 

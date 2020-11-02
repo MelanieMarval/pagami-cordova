@@ -1,9 +1,10 @@
-import { AfterViewInit, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Injectable, ViewChild } from '@angular/core';
 import { GeolocationService } from '../../core/geolocation/geolocation.service';
 import { IonContent } from '@ionic/angular';
 import { CompressImageProvider } from '../../providers/compress-image.provider';
 
-export class InputFilePage implements AfterViewInit {
+@Injectable()
+export abstract class InputFilePage implements AfterViewInit {
 
     @ViewChild('ionContent', {static: false}) protected ionContent: IonContent;
     @ViewChild('itemLocation', {static: false, read: ElementRef}) protected itemLocation: ElementRef;
@@ -12,10 +13,10 @@ export class InputFilePage implements AfterViewInit {
     protected autocompleteService: any;
     protected places: any[] = [];
 
-    protected fileData: any;
-    protected previewUrl: string | ArrayBuffer;
+    fileData: any;
+    previewUrl: string | ArrayBuffer;
 
-    constructor(protected geolocationService: GeolocationService) {
+    protected constructor(protected geolocationService: GeolocationService) {
     }
 
     async ngAfterViewInit() {

@@ -13,11 +13,11 @@ import { UserUtils } from '../../utils/user.utils';
 })
 export class SettingsPage implements OnInit {
 
-    private user: User = {};
-    private profileImage: string;
+    user: User = {};
+    profileImage: string;
 
     constructor(private storageService: StorageProvider,
-                private alert: AlertProvider,
+                public alert: AlertProvider,
                 private router: Router) {
     }
 
