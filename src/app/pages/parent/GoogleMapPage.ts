@@ -183,6 +183,9 @@ export abstract class GoogleMapPage {
                 position: this.currentPositionMarker.getPosition(),
                 draggable: true,
             };
+            if (this.newPlaceMarker) {
+                this.newPlaceMarker.remove();
+            }
 
             this.newPlaceMarker = this.map.addMarkerSync(options);
 

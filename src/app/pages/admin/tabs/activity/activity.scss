@@ -38,8 +38,8 @@ ion-card-title {
     color: #FFF;
 }
 .size-avatar-loading {
-    width: 64px;
-    height: 64px;
+    width: 32px;
+    height: 32px;
 }
 
 .footer-button {
@@ -48,7 +48,7 @@ ion-card-title {
 }
 
 /* *****STATUS CARDS***** */
-.status{
+.status-icon{
     &--pending {
         color: #FBD38D;
     }

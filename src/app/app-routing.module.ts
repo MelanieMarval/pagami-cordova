@@ -71,7 +71,7 @@ const routes: Routes = [
                 loadChildren: () => import('./pages/business-claim/business-claim.module').then(m => m.BusinessClaimModule),
             },
             {
-                path: 'business-details',
+                path: 'business-payment-details',
                 loadChildren: () => import('./pages/business-details/business-details.module').then(m => m.BusinessDetailsModule),
             },
             {

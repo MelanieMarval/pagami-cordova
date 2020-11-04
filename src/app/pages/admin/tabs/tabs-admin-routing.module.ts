@@ -44,7 +44,11 @@ const routes: Routes = [
         component: UserProfilePage
     },
     {
-        path: 'records/claim/details',
+        path: 'activity/:id' || 'payments/:id',
+        loadChildren: () => import('./payment-details/details.module').then(m => m.PaymentDetailsModule)
+    },
+    {
+        path: 'records/claim/payment-details',
         loadChildren: () => import('./record-details/record-details.module').then(m => m.RecordDetailsModule)
     },
 

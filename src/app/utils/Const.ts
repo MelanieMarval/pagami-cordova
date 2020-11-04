@@ -47,8 +47,8 @@ export const PLACES = {
     },
     STATUS: {
         WAITING: 'WAITING',     // can edit
-        ACCEPTED: 'ACCEPTED',   // can view details (without buttons products or services)
-        VERIFIED: 'VERIFIED',   // can view details, (with buttons)
+        ACCEPTED: 'ACCEPTED',   // can view payment-details (without buttons products or services)
+        VERIFIED: 'VERIFIED',   // can view payment-details, (with buttons)
         REJECTED: 'REJECTED',   // disabled
         INCOMPLETE: 'INCOMPLETE', // can edit
         DISABLED: 'DISABLED',    // can not show

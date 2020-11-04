@@ -88,10 +88,10 @@ ion-card-header {
     border-radius: 3px;
 
     ion-card-header{
-        .total-usd {
+        .total-cop {
             font-size: 24px;
         }
-        .total-cop {
+        .total-usd {
             margin-top: 4px;
             color: #FFFFFF;
         }
@@ -128,7 +128,7 @@ ion-card-header {
 /*  ***********************  */
 
 /* *****STATUS CARDS***** */
-.status{
+.status-icon{
     &--verified {
          color: #68D391;
      }

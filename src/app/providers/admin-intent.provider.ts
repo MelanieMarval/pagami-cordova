@@ -3,6 +3,7 @@ import { Place } from '../core/api/places/place';
 import { User } from '../core/api/users/user';
 import { Claim } from '../core/api/claim/claim';
 import { Payment } from '../core/api/payments/Payment';
+import { PaymentToShow } from '../core/api/payments/PaymentToShow';
 
 
 @Injectable({
@@ -21,7 +22,7 @@ export class AdminIntentProvider {
     private _userToEdit: User;
     private _userToView: User;
     private _paymentToView: Payment;
-    private _paymentChanged: Payment;
+    private _paymentChanged: Payment | PaymentToShow;
     private _showNotification: boolean;
     private _needToUpdate = false;
 
@@ -117,11 +118,11 @@ export class AdminIntentProvider {
         this._paymentToView = value;
     }
 
-    get paymentChanged(): Payment {
+    get paymentChanged(): Payment | PaymentToShow {
         return this._paymentChanged;
     }
 
-    set paymentChanged(value: Payment) {
+    set paymentChanged(value: Payment | PaymentToShow) {
         this._paymentChanged = value;
     }
 

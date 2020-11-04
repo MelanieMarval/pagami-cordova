@@ -103,7 +103,7 @@ export class ActivityPage implements OnInit {
         if (place.status === this.STATUS.INCOMPLETE || place.status === this.STATUS.WAITING) {
             this.indexOfPlaceToEdit = this.registers.indexOf(place);
             this.storageInstance.placeToEdit = Object.assign({}, place);
-            this.router.navigate(['/app/business-details']);
+            this.router.navigate(['/app/business-payment-details']);
             return;
         }
         if (place.status === this.STATUS.ACCEPTED || place.status === this.STATUS.VERIFIED) {

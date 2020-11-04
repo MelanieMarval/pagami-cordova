@@ -145,7 +145,7 @@ export class BusinessDetailsPage extends InputFilePage implements OnInit {
             this.place.whatsapp = undefined;
         }
         this.storageInstance.placeToEdit = this.place;
-        this.route.navigate(['/app/business-details/select-icon']);
+        this.route.navigate(['/app/business-payment-details/select-icon']);
         this.saving = false;
     }
 

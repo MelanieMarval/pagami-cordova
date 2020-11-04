@@ -69,11 +69,12 @@ export class ActivityPage implements OnInit {
         // }
     }
 
-    showDetails(place: Payment) {
+    showDetails(payment: Payment) {
+        this.router.navigate(['/admin/tabs/activity', payment.id]);
         // if (place.status === this.STATUS.INCOMPLETE || place.status === this.STATUS.WAITING) {
         //     // this.indexOfPlaceToEdit = this.payments.indexOf(place);
         //     this.intentProvider.placeToEdit = Object.assign({}, place);
-        //     this.router.navigate(['/app/business-details']).then();
+        //     this.router.navigate(['/app/business-payment-details']).then();
         //     return;
         // }
         // if (place.status === this.STATUS.ACCEPTED || place.status === this.STATUS.VERIFIED) {

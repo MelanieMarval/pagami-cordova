@@ -28,8 +28,7 @@ export class PaymentsPage implements OnInit {
 
     ionViewWillEnter() {
         if (this.intentProvider.paymentChanged) {
-            const index = this.payments.indexOf(this.intentProvider.paymentChanged);
-            this.payments.splice(index, 1);
+            this.payments = this.payments.filter(pay => pay.id !== this.intentProvider.paymentChanged.id);
             this.intentProvider.paymentChanged = null;
         }
     }
@@ -52,6 +51,6 @@ export class PaymentsPage implements OnInit {
 
     openDetails(payment: Payment) {
         this.intentProvider.paymentToView = payment;
-        this.router.navigate(['/admin/tabs/payments/details']);
+        this.router.navigate(['/admin/tabs/payments/payment-details']);
     }
 }

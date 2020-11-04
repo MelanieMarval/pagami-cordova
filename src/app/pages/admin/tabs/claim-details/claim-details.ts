@@ -134,6 +134,6 @@ export class ClaimDetailsPage implements OnInit {
     }
 
     goToPlaceDetails() {
-        this.router.navigate(['/admin/tabs/records/details']);
+        this.router.navigate(['/admin/tabs/records/payment-details']);
     }
 }

@@ -11,7 +11,7 @@ const routes: Routes = [
         component: OrdersPage
     },
     {
-        path: 'details/:id',
+        path: 'payment-details/:id',
         component: OrderDetailsPage
     },
 

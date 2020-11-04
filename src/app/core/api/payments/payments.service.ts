@@ -72,6 +72,11 @@ export class PaymentsService {
         return this.apiService.serverListener(request);
     }
 
+    /**
+     * Get a payment with plan, place and user
+     * @param id
+     * string id generate by firebase
+     */
     async findById(id: string): Promise<ApiResponse> {
         const options: any = await this.apiService.getOptionsHeadersTokenized();
         const request = this.httpClient.get(`${this.URL}/${id}`, options);
