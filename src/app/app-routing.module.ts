@@ -36,6 +36,10 @@ const routes: Routes = [
                 path: 'profile',
                 loadChildren: () => import('./pages/admin/profile/profile.module').then(m => m.ProfileModule),
             },
+            {
+                path: 'invoice/:id',
+                loadChildren: () => import('./pages/invoice/invoice.module').then( m => m.InvoicePageModule)
+            },
         ],
     },
     {
@@ -79,6 +83,10 @@ const routes: Routes = [
                 loadChildren: () => import('./pages/settings/settings.module').then(m => m.SettingsPageModule),
             },
             {
+                path: 'invoice/:id',
+                loadChildren: () => import('./pages/invoice/invoice.module').then( m => m.InvoicePageModule)
+            },
+            {
                 path: '**',
                 redirectTo: 'tabs',
                 pathMatch: 'full',
@@ -90,6 +98,7 @@ const routes: Routes = [
         redirectTo: 'tabs',
         pathMatch: 'full',
     },
+
 
 ];
 

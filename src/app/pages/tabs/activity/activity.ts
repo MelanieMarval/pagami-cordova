@@ -13,6 +13,7 @@ import { PlaceUtils } from '../../../utils/place.utils';
 import { User } from '../../../core/api/users/user';
 import { AlertProvider } from '../../../providers/alert.provider';
 import { NotificationsProvider } from '../../../providers/notifications.provider';
+import { NotificationType } from '../../../domain/enums/notification-type.enum';
 
 @Component({
     selector: 'app-activity',
@@ -29,11 +30,10 @@ export class ActivityPage implements OnInit {
     user: User;
     STATUS = PLACES.STATUS;
     indexOfPlaceToEdit: number;
-    placeThumbnailPhoto = PlaceUtils.getThumbnailPhoto;
-    placeMessageStatus = PlaceUtils.getMessageStatus;
-    placeSortData = PlaceUtils.getSortData;
+    placeUtils = PlaceUtils;
     reloading: boolean;
     targetRefresh;
+    notificationType = NotificationType;
 
     constructor(private placesService: PlacesService,
                 private storageService: StorageProvider,
@@ -53,6 +53,7 @@ export class ActivityPage implements OnInit {
         this.getRegisters();
         this.user = await this.storageService.getPagamiUser();
         this.notifications = this.notificationsProvider.activityNotifications;
+        console.log('-> this.notifications', this.notifications);
         this.hasNotification = this.notificationsProvider.hasWalletNotification;
         if (this.hasNotification) {
             this.notificationsProvider.setNotificationState(0);
@@ -137,5 +138,17 @@ export class ActivityPage implements OnInit {
     onRefreshToBeVerified(event) {
         this.targetRefresh = event.target;
         this.getRegisters();
+    }
+
+    notificationIsAccepted(type: string): boolean {
+        return type.includes('ACCEPTED');
+    }
+
+    showNotification(notification: any) {
+        if (notification.type.includes(NotificationType.PAYMENT)) {
+            this.router.navigate(['/app/invoice', notification.paymentId])
+        } else {
+            notification.showMessage = !notification.showMessage
+        }
     }
 }

@@ -2,6 +2,7 @@ import { Place } from '../core/api/places/place';
 import { PLACES } from './Const';
 import { WeekDayHours } from '../core/api/places/week-day-hours';
 import { BusinessHours } from '../core/api/places/business-hours';
+import { NotificationType } from '../domain/enums/notification-type.enum';
 
 export class PlaceUtils {
 
@@ -31,6 +32,17 @@ export class PlaceUtils {
         }
     }
 
+    static getNotificationType(type: string) {
+        let text = 'Nueva notificación';
+        if (type.includes(NotificationType.PAYMENT)) {
+            text = type === NotificationType.PAYMENT_ACCEPTED ? 'Pago Aceptado' : 'Pago Rechazado';
+        }
+        if (type.includes(NotificationType.PLACE)) {
+            text = type === NotificationType.PLACE_ACCEPTED ? 'Empresa Aceptada' : 'Empresa Rechazada';
+        }
+        return text;
+    }
+
     static getTypeSpanish(type: string): string {
         switch (type) {
             case PLACES.TYPE.SERVICE:
@@ -42,7 +54,7 @@ export class PlaceUtils {
 
     static getMessageDistance(distance: number): string {
         if (distance === 0) {
-           return `Estas aqui.`;
+            return `Estas aqui.`;
         } else if (distance > 2000) {
             return `A ${Math.trunc(distance / 1000)} kilometros de ti.`;
         } else {

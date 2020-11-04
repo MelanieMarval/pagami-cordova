@@ -69,7 +69,7 @@
         </ion-item-group>
     </ion-list>
 
-    <ion-footer class="footer-button" *ngIf="!saved && !isView">
+    <div class="footer-button footer-button--div" *ngIf="!saved && !isView">
         <ion-row>
             <ion-col size="6">
                 <ion-button class="button-small" expand="block" color="pagami-surface" (click)="openConfirm()"
@@ -85,9 +85,9 @@
                 </ion-button>
             </ion-col>
         </ion-row>
-    </ion-footer>
+    </div>
 
-    <ion-footer class="footer-button" *ngIf="!(!saved && !isView)">
+    <div class="footer-button footer-button--div" *ngIf="!(!saved && !isView)">
         <ion-row>
             <ion-col size="12">
                 <ion-button class="button-large" expand="block" color="danger" [disabled]="deleteing" (click)="deleteBusinessConfirm()">
@@ -96,7 +96,7 @@
                 </ion-button>
             </ion-col>
         </ion-row>
-    </ion-footer>
+    </div>
 
 </ion-content>
 

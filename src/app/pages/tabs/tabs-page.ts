@@ -35,12 +35,6 @@ export class TabsPage implements OnInit {
 
     openNearby() {
         this.appService.showNearby.emit();
-        const currentStatus = this.appService.currentNearbyStatus;
-        if (currentStatus !== DrawerState.Bottom) {
-            this.appService.changeDrawerState.emit(DrawerState.Bottom);
-        } else {
-            this.appService.changeDrawerState.emit(DrawerState.Docked);
-        }
     }
 
     openNearbySearch() {

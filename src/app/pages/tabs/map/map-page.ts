@@ -81,7 +81,6 @@ export class MapPage extends GoogleMapPage implements OnInit {
                 private appService: MapProvider,
                 private storageInstance: UserIntentProvider,
                 private mapEvents: MapProvider,
-                private menuController: MenuController,
                 protected toast: ToastProvider,
                 protected geolocationService: GeolocationService) {
         super(doc, geolocationService, toast);
@@ -95,7 +94,13 @@ export class MapPage extends GoogleMapPage implements OnInit {
                 const url = value.url.substring(value.url.lastIndexOf('/') + 1);
                 console.log('-> URL HERE', url);
                 this.selectNavigateMode(url);
-                this.currentUrl = url;
+                if (this.previousUrl) {
+                    this.previousUrl = this.currentUrl;
+                    this.currentUrl = url;
+                } else {
+                    this.previousUrl = url;
+                    this.currentUrl = url;
+                }
             }
         });
         this.appService.showNearby.subscribe(() => {
@@ -141,7 +146,18 @@ export class MapPage extends GoogleMapPage implements OnInit {
         this.isRegistering = false;
         this.isFindMyBusiness = false;
         this.isEditingBusiness = false;
-        this.searchInput.value = '';
+        if (this.previousUrl === MAP_MODE.SEARCH) {
+            this.searchInput.value = '';
+            this.searchText = '';
+            this.isSearching = false;
+            this.getNearPlaces();
+            const currentStatus = this.appService.currentNearbyStatus;
+            if (currentStatus !== DrawerState.Bottom) {
+                this.appService.changeDrawerState.emit(DrawerState.Bottom);
+            } else {
+                this.appService.changeDrawerState.emit(DrawerState.Docked);
+            }
+        }
         if (this.isHiddenCloseToMe) {
             this.closeToMeToDefault();
             this.isHiddenCloseToMe = false;
@@ -433,6 +449,7 @@ export class MapPage extends GoogleMapPage implements OnInit {
         this.beforeSaveLocation = true;
         this.placeToSave = undefined;
         this.saving = false;
+        this.router.navigateByUrl('/app/business-payment-details');
     }
 
     onFocusSearch() {

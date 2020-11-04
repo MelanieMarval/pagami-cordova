@@ -148,6 +148,10 @@
 
     <div [ngClass]="{'optionsDisabled': (!place.plan || place.plan.remainDays === 0)}">
 
+        <div class="ion-padding-horizontal ion-text-center ion-margin-bottom" *ngIf="paymentPending">
+            <small>Tienes un pago pendiente por aceptación, espera un poco.</small>
+        </div>
+
         <ion-item-group class="toggles-container">
             <ion-item lines="none" [disabled]="!place.plan || place.plan.remainDays === 0">
                 <ion-label>Habilitar Domicilio</ion-label>
@@ -175,10 +179,6 @@
                 <ion-label>Pedidos</ion-label>
             </ion-item>
         </ion-list>
-
-        <div class="ion-padding-horizontal ion-text-center ion-margin-bottom" *ngIf="paymentPending">
-            <small>Tienes un pago pendiente por aceptación, espera un poco.</small>
-        </div>
 
     </div>
 

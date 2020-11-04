@@ -45,10 +45,10 @@ export class DetailsPage implements OnInit {
         if (params.id === 'details') {
             this.payment = this.intentProvider.paymentToView;
             this.getPaymentById(this.payment.id);
-            console.log('-> this.payment', this.payment);
         } else {
             this.getPaymentById(params.id);
         }
+        console.log('-> this.payment', this.payment);
     }
 
     getPaymentById(id: string) {

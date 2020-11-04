@@ -20,8 +20,8 @@ import { HttpClientModule } from '@angular/common/http';
         HttpClientModule,
         RouterModule.forChild([
             {path: '', component: RecordsPage},
-            {path: 'details', loadChildren: () => import('../record-details/record-details.module').then(m => m.RecordDetailsModule)},
-            {path: 'claim', component: ClaimDetailsPage}
+            {path: 'claim', component: ClaimDetailsPage},
+            {path: ':id', loadChildren: () => import('../record-details/record-details.module').then(m => m.RecordDetailsModule)},
         ]),
         PipesModule,
         BackgroundEmptyModule,

@@ -51,6 +51,6 @@ export class PaymentsPage implements OnInit {
 
     openDetails(payment: Payment) {
         this.intentProvider.paymentToView = payment;
-        this.router.navigate(['/admin/tabs/payments/payment-details']);
+        this.router.navigateByUrl('/admin/tabs/payments/details').then(r => console.log(r));
     }
 }

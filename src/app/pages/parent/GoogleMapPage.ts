@@ -55,6 +55,7 @@ export abstract class GoogleMapPage {
     private markerCluster: MarkerCluster;
     accuracy: number;
     currentUrl: string;
+    previousUrl: string;
     mapReady = false;
     newPlaceMarker: Marker;
     editPlaceMarker: Marker;

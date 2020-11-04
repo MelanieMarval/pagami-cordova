@@ -17,12 +17,12 @@ import { PaymentsPage } from './payments';
         CommonModule,
         HttpClientModule,
         FormsModule,
-        RouterModule.forChild([{path: '', component: PaymentsPage}]),
+        RouterModule.forChild([{path: '', component: PaymentsPage},]),
         PipesModule,
         BackgroundEmptyModule,
         SkeletonRecordsModule,
     ],
-    declarations: [PaymentsPage,]
+    declarations: [PaymentsPage],
 })
 export class PaymentsModule {
 }

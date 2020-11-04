@@ -139,7 +139,7 @@ export class RecordsPage implements OnInit, AfterViewChecked {
     showPlace(place: Place) {
         this.intentProvider.placeToView = undefined;
         this.intentProvider.placeToAccept = place;
-        this.router.navigate(['admin/tabs/records/payment-details']);
+        this.router.navigate(['admin/tabs/records/details']);
     }
 
     showClaim(claim: Claim) {

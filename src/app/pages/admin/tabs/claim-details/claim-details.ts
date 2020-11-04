@@ -40,6 +40,7 @@ export class ClaimDetailsPage implements OnInit {
     ngOnInit() {
         this.isAccepting = false;
         this.claim = this.intentProvider.claimToVerified;
+        console.log('-> this.claim', this.claim);
         this.viewUser();
         this.viewPlace();
     }
@@ -134,6 +135,6 @@ export class ClaimDetailsPage implements OnInit {
     }
 
     goToPlaceDetails() {
-        this.router.navigate(['/admin/tabs/records/payment-details']);
+        this.router.navigate(['/admin/tabs/records', this.claim.placeId]);
     }
 }

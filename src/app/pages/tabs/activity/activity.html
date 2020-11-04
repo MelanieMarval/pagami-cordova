@@ -18,8 +18,9 @@
 
         <ion-item-group *ngIf="!loading && !error && notifications.length">
             <ion-card *ngFor="let notification of notifications"
-                      class="card card-place" button
-                      (click)="notification.showMessage = !notification.showMessage">
+                      class="card card-place status-border" button
+                      [ngClass]="[!hasNotification ? '' : 'status-border status-border--'+notificationIsAccepted(notification.type)]"
+                      (click)="showNotification(notification)">
                 <ion-card-header>
                     <ion-row>
                         <ion-col size="11">
@@ -28,8 +29,8 @@
                             </ion-card-subtitle>
                         </ion-col>
                         <ion-col size="1">
-                            <ion-icon *ngIf="notification.type !== 'PAYMENT_ACCEPTED'" name="close-circle"></ion-icon>
-                            <ion-icon *ngIf="notification.type === 'PAYMENT_ACCEPTED'" name="checkmark-circle"></ion-icon>
+                            <ion-icon *ngIf="!notificationIsAccepted(notification.type)" name="close-circle"></ion-icon>
+                            <ion-icon *ngIf="notificationIsAccepted(notification.type)" name="checkmark-circle"></ion-icon>
                         </ion-col>
                     </ion-row>
                 </ion-card-header>
@@ -37,7 +38,8 @@
                 <ion-card-content>
                     <ion-row>
                         <ion-col size="12">
-                            <ion-card-title>{{notification.type === 'PAYMENT_ACCEPTED' ? 'Pago Aceptado' : 'Pago Rechazado'}}</ion-card-title>
+                            <ion-card-title>
+                                {{placeUtils.getNotificationType(notification.type)}}</ion-card-title>
                         </ion-col>
                     </ion-row>
                     <ion-row *ngIf="notification.showMessage" class="animated fadeInDown faster">
@@ -61,17 +63,15 @@
 
         <ion-item-group *ngIf="!loading && !error && registers.length">
 
-            <ion-card *ngFor="let register of placeSortData(registers)"
+            <ion-card *ngFor="let register of placeUtils.getSortData(registers)"
                       class="card card-place" button
-                      [ngClass]="[register.selectedToDelete ? 'animated fadeOut fast': '',
-                                !hasNotification ? '' : 'status-border status-border--'+register.status | lowercase]"
                       (click)="register.status !== STATUS.REJECTED ? showDetails(register) : register.showReason = !register.showReason">
                 <ion-card-header>
                     <ion-row>
                         <ion-col size="11">
                             <ion-card-subtitle>
                                 {{ register.createTime | date:'d/M/y'}} · {{ register.createTime | date:'shortTime'}} ·
-                                <span [ngClass]="'status--'+register.status | lowercase">{{placeMessageStatus(register.status)}}</span>
+                                <span [ngClass]="'status--'+register.status | lowercase">{{placeUtils.getMessageStatus(register.status)}}</span>
                             </ion-card-subtitle>
                         </ion-col>
                         <ion-col size="1" [ngClass]="{'pb-0': register.status === STATUS.INCOMPLETE}">
@@ -90,7 +90,7 @@
                     <ion-row>
                         <ion-col size="2">
                             <ion-avatar class="border-white-1px">
-                                <ion-img [src]="placeThumbnailPhoto(register)"></ion-img>
+                                <ion-img [src]="placeUtils.getThumbnailPhoto(register)"></ion-img>
                             </ion-avatar>
                         </ion-col>
                         <ion-col size="10" *ngIf="register.status === STATUS.INCOMPLETE">

@@ -164,7 +164,7 @@ export class TransferPage extends InputFilePage implements OnInit {
                 if (success.passed) {
                     this.toast.messageSuccessWithoutTabs('Su pago ha sido registrado, espere mientras es verificado');
                     this.intentProvider.updateMyBusiness = true;
-                    this.router.navigateByUrl('/app/tabs/my-business');
+                    this.router.navigateByUrl('/app/settings/my-business');
                     this.closeModal();
                 } else {
                     this.toast.messageErrorWithoutTabs('No se ha podido registrar su pago. Intente de nuevo!');
