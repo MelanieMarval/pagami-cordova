@@ -1,66 +1,150 @@
 <ion-header>
-    <ion-toolbar>
+    <ion-toolbar class="toolbar-simple">
         <ion-buttons slot="start">
-            <ion-back-button></ion-back-button>
+            <ion-button [routerLink]="urlComeBack">
+                <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+            </ion-button>
         </ion-buttons>
         <ion-title>Factura de pago</ion-title>
     </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content *ngIf="!loading">
 
-    <div>
-        <h3>Pago aceptado</h3>
-        <ion-img></ion-img>
-        <p>Asegurate de tomar una captura y guardar este comprabante</p>
+    <div class="top-indicator">
+        <h3>Pago {{invoice.status === STATUS.ACCEPTED ? 'Aceptado' : 'Rechazado'}}</h3>
+        <ion-img *ngIf="invoice.status === STATUS.ACCEPTED" src="assets/icon/logo-complete.png" class="top-indicator--img-accepted"></ion-img>
+<!--            <ion-img *ngIf="invoice.status === STATUS.ACCEPTED" src="assets/marker-icons/pagami_verificado.svg" class="top-indicator&#45;&#45;div-img"></ion-img>-->
+        <ion-img *ngIf="invoice.status === STATUS.REJECTED" src="assets/icon/payments/invoice-cancel.png" class="top-indicator--img-rejected"></ion-img>
+        <small *ngIf="invoice.status === STATUS.ACCEPTED">pagami.net (+57 313 485 4926) <br>
+            NIT: 700220137
+        </small>
     </div>
 
-    <ion-list>
+    <ion-list lines="none" class="list-invoice">
 
-        <ion-item>
-            <ion-label>
-                <h3>Id del comprobante</h3>
-                <p>EgkUCcZdgsUTEMU021n1</p>
-            </ion-label>
-        </ion-item>
-        <ion-item>
-            <ion-label>
-                <h3>Fecha de pago</h3>
-                <p>5/8/2020 7:09pm</p>
-            </ion-label>
-        </ion-item>
+        <ion-item-group>
+            <ion-item>
+                <ion-label>
+                    <h3 class="item-title">Id del comprobante</h3>
+                    <p>{{invoice.transactionId}}</p>
+                </ion-label>
+            </ion-item>
+            <ion-item>
+                <ion-label>
+                    <h3 class="item-title">Fecha de pago</h3>
+                    <p>{{ invoice.date | date:'d/M/y'}} · {{ invoice.date | date:'shortTime'}}</p>
+                </ion-label>
+            </ion-item>
+            <ion-item>
+                <ion-label>
+                    <h3 class="item-title">Nombre y Apellido</h3>
+                    <p>{{invoice.userName}} {{invoice.userLastname}}</p>
+                </ion-label>
+            </ion-item>
 
-        <ion-item>
-            <ion-label>
-                <h3>Nombre y Apellido</h3>
-                <p>Juanito Perez</p>
-            </ion-label>
-        </ion-item>
-        <ion-item>
-            <ion-label>
-                <h3>Plan comprado</h3>
-                <p>Emprendedor / 365 días</p>
-            </ion-label>
-        </ion-item>
-        <ion-item>
-            <ion-label>
-                <h3>Detalles del plan</h3>
-                <p>20 productos y 5 servicios</p>
-            </ion-label>
-        </ion-item>
+            <ion-item>
+                <ion-label>
+                    <h3 class="item-title">Plan comprado</h3>
+                    <p>{{invoice.planName}} / {{invoice.planDays}} días</p>
+                </ion-label>
+            </ion-item>
+            <ion-item>
+                <ion-label>
+                    <h3 class="item-title">Detalles del plan</h3>
+                    <p>{{invoice.planProducts}} productos y {{invoice.planServices}} servicios</p>
+                </ion-label>
+            </ion-item>
+            <ion-item>
+                <ion-label>
+                    <h3 class="item-title">Forma de pago</h3>
+                    <p>{{paymentUtil.getTypeSpanish(invoice.type)}}</p>
+                </ion-label>
+            </ion-item>
+        </ion-item-group>
 
-        <ion-item>
-            <ion-label>
-                <h3>Monto Pagado</h3>
-                <p>$40000 COP</p>
-            </ion-label>
-        </ion-item>
-        <ion-item>
-            <ion-label>
-                <h3>Forma de pago</h3>
-                <p>Trasnferencia</p>
-            </ion-label>
-        </ion-item>
+        <ion-item-group class="ion-margin-horizontal">
+            <ion-item-divider></ion-item-divider>
+            <ion-item lines="full">
+                <ion-label>
+                    <h2>Monto Pagado</h2>
+                    <ion-text [color]="invoice.status === STATUS.ACCEPTED ? 'success' : 'danger'">
+                        ${{invoice.amount}} {{invoice.currency}}
+                    </ion-text>
+                </ion-label>
+            </ion-item>
+            <small *ngIf="invoice.status === STATUS.ACCEPTED" class="pagami-text-2nd ion-margin-top">
+                <b>Nota:</b> Asegurate de tomar una captura y guardar este comprabante
+            </small>
+        </ion-item-group>
+
+    </ion-list>
+
+</ion-content>
+
+
+<ion-content *ngIf="loading">
+
+    <div class="top-indicator">
+        <h3><ion-skeleton-text [style.width.%]="50"></ion-skeleton-text></h3>
+        <div class="top-indicator--div">
+            <ion-skeleton-text class="top-indicator--div-img"></ion-skeleton-text>
+        </div>
+    </div>
+
+    <ion-list lines="none" class="list-invoice">
+
+        <ion-item-group>
+            <ion-item>
+                <ion-label>
+                    <h3 class="item-title"><ion-skeleton-text [style.width.%]="50"></ion-skeleton-text></h3>
+                    <p><ion-skeleton-text [style.width.%]="60"></ion-skeleton-text></p>
+                </ion-label>
+            </ion-item>
+            <ion-item>
+                <ion-label>
+                    <h3 class="item-title"><ion-skeleton-text [style.width.%]="50"></ion-skeleton-text></h3>
+                    <p><ion-skeleton-text [style.width.%]="60"></ion-skeleton-text></p>
+                </ion-label>
+            </ion-item>
+            <ion-item>
+                <ion-label>
+                    <h3 class="item-title"><ion-skeleton-text [style.width.%]="50"></ion-skeleton-text></h3>
+                    <p><ion-skeleton-text [style.width.%]="70"></ion-skeleton-text></p>
+                </ion-label>
+            </ion-item>
+
+            <ion-item>
+                <ion-label>
+                    <h3 class="item-title"><ion-skeleton-text [style.width.%]="50"></ion-skeleton-text></h3>
+                    <p><ion-skeleton-text [style.width.%]="90"></ion-skeleton-text></p>
+                </ion-label>
+            </ion-item>
+            <ion-item>
+                <ion-label>
+                    <h3 class="item-title"><ion-skeleton-text [style.width.%]="50"></ion-skeleton-text></h3>
+                    <p><ion-skeleton-text [style.width.%]="60"></ion-skeleton-text></p>
+                </ion-label>
+            </ion-item>
+            <ion-item>
+                <ion-label>
+                    <h3 class="item-title"><ion-skeleton-text [style.width.%]="50"></ion-skeleton-text></h3>
+                    <p><ion-skeleton-text [style.width.%]="40"></ion-skeleton-text></p>
+                </ion-label>
+            </ion-item>
+        </ion-item-group>
+
+        <ion-item-group class="ion-margin-horizontal">
+            <ion-item-divider></ion-item-divider>
+            <ion-item lines="full">
+                <ion-label>
+                    <h2><ion-skeleton-text [style.width.%]="40"></ion-skeleton-text></h2>
+                    <ion-text>
+                        <ion-skeleton-text [style.width.%]="50"></ion-skeleton-text>
+                    </ion-text>
+                </ion-label>
+            </ion-item>
+        </ion-item-group>
 
     </ion-list>
 

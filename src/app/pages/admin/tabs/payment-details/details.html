@@ -78,6 +78,11 @@
         </ion-header>
 
         <ion-list lines="none" class="inputs-container">
+
+            <ion-item class="link-invoice" lines="none" detail [routerLink]="'/admin/invoice/' + payment.id">
+                <ion-label>Ver factura</ion-label>
+            </ion-item>
+
             <ion-item-group class="ion-margin-bottom">
                 <ion-label class="group-label">Telefonos</ion-label>
                 <ion-item class="item-admin ion-no-padding">

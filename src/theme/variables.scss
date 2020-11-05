@@ -82,6 +82,9 @@
   --ion-text-color: #ffffff;
   --ion-text-color-rgb: 255,255,255;
 
+  --ion-color-pagami-text-2nd: #718096;
+  --ion-color-pagami-text-2nd-rgb: 113, 128, 150;
+
   --ion-color-step-50: #f2f2f2;
   --ion-color-step-100: #e6e6e6;
   --ion-color-step-150: #d9d9d9;
@@ -149,9 +152,6 @@
     --ion-color-shade: var(--ion-color-map-shade);
     --ion-color-tint: var(--ion-color-map-tint);
   }
-
-  --ion-color-pagami-text-2nd: #718096;
-  --ion-color-pagami-text-2nd-rgb: 113, 128, 150;
 
   --ion-color-pagami-surface: #2D3748;
   --ion-color-pagami-surface-rgb: 45,55,72;

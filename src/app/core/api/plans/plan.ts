@@ -9,7 +9,6 @@ export interface Plan {
     days: number;
     prompText: string;
 
-
     remainDays?: number;
     limitProducts?: number;
     limitServices?: number;

@@ -82,4 +82,15 @@ export class PaymentsService {
         const request = this.httpClient.get(`${this.URL}/${id}`, options);
         return this.apiService.serverListener(request);
     }
+
+    /**
+     * Get details for create a payments's invoice
+     * @param id
+     * string id of payment
+     */
+    async getInvoice(id: string): Promise<ApiResponse> {
+        const options: any = await this.apiService.getOptionsHeadersTokenized();
+        const request = this.httpClient.get(`${this.URL}/invoice/${id}`, options);
+        return this.apiService.serverListener(request);
+    }
 }

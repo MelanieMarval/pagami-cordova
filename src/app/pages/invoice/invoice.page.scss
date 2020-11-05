@@ -1,0 +1,41 @@
+.top-indicator {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 16px;
+  text-align: center;
+
+  &--img {
+    &-accepted {
+      width: 212px;
+      margin-bottom: 6px;
+    }
+
+    &-rejected {
+      width: 86px;
+      margin-bottom: -16px;
+    }
+
+    min-height: 36px;
+    margin-top: 6px;
+  }
+}
+
+.list-invoice {
+  margin: 32px 16px 16px;
+
+  ion-label {
+    text-align: center;
+    margin: 4px 0;
+
+    .item-title {
+      color: var(--ion-color-step-300);
+    }
+
+    p {
+      color: #FFFFFF;
+      font-size: 16px;
+    }
+  }
+}

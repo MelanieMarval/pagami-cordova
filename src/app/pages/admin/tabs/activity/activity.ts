@@ -58,6 +58,9 @@ export class ActivityPage implements OnInit {
                 this.error = true;
                 this.toast.messageErrorWithoutTabs('La informacion no se ha podido cargar. Intente de nuevo!', 5000);
             }
+        }, e => {
+            this.error = true;
+            this.toast.messageErrorWithoutTabs('La informacion no se ha podido cargar. Compruebe su conexion!', 5000);
         });
     }
 

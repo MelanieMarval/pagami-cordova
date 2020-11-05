@@ -18,6 +18,7 @@ import { MapProvider } from './providers/map.provider';
 import { VerifyAndroidPermissionsService } from './core/permissions/verify-android-permissions.service';
 import { PlatformUtils } from './utils/platform.utils';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { BrowserProvider } from './providers/browser.provider';
 
 @Component({
     selector: 'app-root',
@@ -36,6 +37,7 @@ export class AppComponent {
                 private splashScreen: SplashScreen,
                 private navController: NavController,
                 private statusBar: StatusBar,
+                private browser: BrowserProvider,
                 private verifyAndroidPermissions: VerifyAndroidPermissionsService) {
         this.initializeApp();
     }
