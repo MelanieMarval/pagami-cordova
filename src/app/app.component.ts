@@ -37,7 +37,7 @@ export class AppComponent {
                 private splashScreen: SplashScreen,
                 private navController: NavController,
                 private statusBar: StatusBar,
-                private browser: BrowserProvider,
+                public browser: BrowserProvider,
                 private verifyAndroidPermissions: VerifyAndroidPermissionsService) {
         this.initializeApp();
     }

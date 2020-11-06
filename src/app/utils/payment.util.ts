@@ -1,3 +1,4 @@
+import { PAYMENTS } from './Const';
 
 export class PaymentUtil {
 
@@ -11,6 +12,28 @@ export class PaymentUtil {
                 return 'Google pagos';
             default:
                 return type;
+        }
+    }
+
+    static getStatusSpanish(status: string) {
+        switch (status) {
+            case PAYMENTS.STATUS.ACCEPTED:
+                return 'Pago Aceptado';
+            case PAYMENTS.STATUS.REJECTED:
+                return 'Pago Rechazado';
+            default:
+                return 'Pago Pendiente';
+        }
+    }
+
+    static getStatusColor(status: string) {
+        switch (status) {
+            case PAYMENTS.STATUS.ACCEPTED:
+                return 'success';
+            case PAYMENTS.STATUS.REJECTED:
+                return 'danger';
+            default:
+                return 'warning';
         }
     }
 

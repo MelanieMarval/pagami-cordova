@@ -23,120 +23,20 @@
             </ion-item>
         </ion-item-group>
 
-        <app-background-empty *ngIf="empty" title="Oh oh! Esta vacío"
-                              text="Parece que aún no has realizado ninguna transacción" height="70"></app-background-empty>
+        <app-background-empty *ngIf="!payments.length" title="Oh oh! Esta vacío" height="70"
+                              text="Parece que aún no has realizado ninguna transacción"></app-background-empty>
 
-        <ion-item-group *ngIf="!empty">
-            <ion-card class="card card-place">
+        <ion-item-group *ngIf="!loading && payments.length">
+            <ion-card class="card card-place" *ngFor="let payment of payments"
+                      button (click)="viewInvoice(payment.id)">
                 <ion-card-header>
                     <ion-row>
                         <ion-col size="10">
                             <ion-card-subtitle>
-                                12/05/2019 · 3:40 pm ·
-                                <span class="status--verified">Verificado</span>
-                            </ion-card-subtitle>
-                        </ion-col>
-                        <ion-col size="2">
-                        </ion-col>
-                    </ion-row>
-                </ion-card-header>
-
-                <ion-card-content>
-                    <ion-row>
-                        <ion-col size="2">
-                            <ion-avatar class="border-white-1px">
-                                <ion-img src="assets/img/avatar-business.jpg"></ion-img>
-                            </ion-avatar>
-                        </ion-col>
-                        <ion-col size="7">
-                            <ion-card-title>White Sugar</ion-card-title>
-                        </ion-col>
-                        <ion-col size="3">
-                            <ion-text class="status--verified">
-                                $6.00 USD
-                            </ion-text>
-                        </ion-col>
-                    </ion-row>
-                </ion-card-content>
-            </ion-card>
-
-            <ion-card class="card card-place">
-                <ion-card-header>
-                    <ion-row>
-                        <ion-col size="10">
-                            <ion-card-subtitle>
-                                12/05/2019 · 3:40 pm ·
-                                <span class="status--wait-verification">En espera de verificación</span>
-                            </ion-card-subtitle>
-                        </ion-col>
-                        <ion-col size="2">
-                        </ion-col>
-                    </ion-row>
-                </ion-card-header>
-
-                <ion-card-content>
-                    <ion-row>
-                        <ion-col size="2">
-                            <ion-avatar class="border-white-1px">
-                                <ion-img src="assets/img/avatar-business.jpg"></ion-img>
-                            </ion-avatar>
-                        </ion-col>
-                        <ion-col size="7">
-                            <ion-card-title>Think Coffee</ion-card-title>
-                        </ion-col>
-                        <ion-col size="3">
-                            <ion-text class="status--wait-verification">
-                                $6.00 USD
-                            </ion-text>
-                        </ion-col>
-                    </ion-row>
-                </ion-card-content>
-            </ion-card>
-
-            <ion-card class="card card-place">
-                <ion-card-header>
-                    <ion-row>
-                        <ion-col size="10">
-                            <ion-card-subtitle>
-                                12/05/2019 · 3:40 pm ·
-                                <span class="status--rejected">Rechazado</span>
-                            </ion-card-subtitle>
-                        </ion-col>
-                        <ion-col size="2">
-                        </ion-col>
-                    </ion-row>
-                </ion-card-header>
-
-                <ion-card-content>
-                    <ion-row>
-                        <ion-col size="2">
-                            <ion-avatar class="border-white-1px">
-                                <ion-img src="assets/img/avatar-business.jpg"></ion-img>
-                            </ion-avatar>
-                        </ion-col>
-                        <ion-col size="7">
-                            <ion-card-title>
-                                <ion-text>
-                                    <h5>En mi Casita</h5>
+                                {{payment.createTime | date:'d/M/y'}} · {{payment.createTime | date:'shortTime'}} ·
+                                <ion-text [color]="paymentUtil.getStatusColor(payment.status)">
+                                    {{paymentUtil.getStatusSpanish(payment.status)}}
                                 </ion-text>
-                            </ion-card-title>
-                        </ion-col>
-                        <ion-col size="3">
-                            <ion-text class="status--rejected">
-                                $6.00 USD
-                            </ion-text>
-                        </ion-col>
-                    </ion-row>
-                </ion-card-content>
-            </ion-card>
-
-            <ion-card class="card card-place">
-                <ion-card-header>
-                    <ion-row>
-                        <ion-col size="10">
-                            <ion-card-subtitle>
-                                12/05/2019 · 3:40 pm ·
-                                <span class="status--transfer">Transferencia</span>
                             </ion-card-subtitle>
                         </ion-col>
                         <ion-col size="2">
@@ -148,21 +48,52 @@
                     <ion-row>
                         <ion-col size="2">
                             <ion-avatar class="border-white-1px">
-                                <ion-img src="assets/img/avatar-business.jpg"></ion-img>
+                                <ion-img [src]="payment.photoUrlToShow"></ion-img>
                             </ion-avatar>
                         </ion-col>
-                        <ion-col size="7">
-                            <ion-card-title>Camila Gutierrez</ion-card-title>
+                        <ion-col size="6">
+                            <ion-card-title class="ion-text-wrap">{{payment.nameToShow}}</ion-card-title>
                         </ion-col>
-                        <ion-col size="3">
-                            <ion-text class="status--transfer">
-                                $6.00 USD
+                        <ion-col size="4" class="ion-justify-content-end">
+                            <ion-text [color]="paymentUtil.getStatusColor(payment.status)">
+                                ${{payment.amount}} {{payment.currency}}
                             </ion-text>
                         </ion-col>
                     </ion-row>
                 </ion-card-content>
             </ion-card>
+        </ion-item-group>
 
+        <ion-item-group *ngIf="loading">
+            <ion-card class="card card-place" *ngFor="let dummy of ' '.repeat(5).split('')">
+                <ion-card-header>
+                    <ion-row>
+                        <ion-col size="10">
+                            <ion-card-subtitle>
+                                <ion-skeleton-text animated [style.width.%]="85"></ion-skeleton-text>
+                            </ion-card-subtitle>
+                        </ion-col>
+                        <ion-col size="2">
+                        </ion-col>
+                    </ion-row>
+                </ion-card-header>
+
+                <ion-card-content>
+                    <ion-row>
+                        <ion-col size="2">
+                            <ion-avatar class="border-white-1px">
+                                <ion-skeleton-text></ion-skeleton-text>
+                            </ion-avatar>
+                        </ion-col>
+                        <ion-col size="7">
+                            <ion-skeleton-text animated [style.width.%]="70"></ion-skeleton-text>
+                        </ion-col>
+                        <ion-col size="3">
+                            <ion-skeleton-text animated [style.width.%]="80"></ion-skeleton-text>
+                        </ion-col>
+                    </ion-row>
+                </ion-card-content>
+            </ion-card>
         </ion-item-group>
 
     </ion-list>

@@ -2,7 +2,7 @@ import { Plan } from '../plans/plan';
 import { User } from '../users/user';
 import { Place } from '../places/place';
 
-export interface PaymentToShow {
+export interface PaymentDetails {
     id?: string;
     photo?: string;
     amount?: number;

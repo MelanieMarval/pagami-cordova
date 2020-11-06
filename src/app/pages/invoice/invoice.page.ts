@@ -34,7 +34,7 @@ export class InvoicePage implements OnInit {
         if (root === 'admin') {
             this.urlComeBack = '/admin/tabs/activity';
         } else {
-            this.urlComeBack = '/app/tabs/wallet/activity';
+            this.urlComeBack = '/app/tabs/wallet';
         }
     }
 

@@ -1,5 +1,6 @@
 import { Component, ElementRef, EventEmitter, Inject, OnInit, AfterViewInit, Renderer2, ViewChild } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
+import { IonSearchbar } from '@ionic/angular';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { DrawerState } from '../../../shared/ion-bottom-drawer/drawer-state';
 // Services
@@ -17,7 +18,6 @@ import { AlertProvider } from '../../../providers/alert.provider';
 import { ToastProvider } from '../../../providers/toast.provider';
 import { StorageProvider } from '../../../providers/storage.provider';
 import { UserIntentProvider } from '../../../providers/user-intent.provider';
-import { IonSearchbar, MenuController } from '@ionic/angular';
 import { PhotoUtils } from '../../../utils/photo.utils';
 import { User } from '../../../core/api/users/user';
 
@@ -146,18 +146,6 @@ export class MapPage extends GoogleMapPage implements OnInit {
         this.isRegistering = false;
         this.isFindMyBusiness = false;
         this.isEditingBusiness = false;
-        if (this.previousUrl === MAP_MODE.SEARCH) {
-            this.searchInput.value = '';
-            this.searchText = '';
-            this.isSearching = false;
-            this.getNearPlaces();
-            const currentStatus = this.appService.currentNearbyStatus;
-            if (currentStatus !== DrawerState.Bottom) {
-                this.appService.changeDrawerState.emit(DrawerState.Bottom);
-            } else {
-                this.appService.changeDrawerState.emit(DrawerState.Docked);
-            }
-        }
         if (this.isHiddenCloseToMe) {
             this.closeToMeToDefault();
             this.isHiddenCloseToMe = false;
@@ -170,6 +158,18 @@ export class MapPage extends GoogleMapPage implements OnInit {
         }
         if (this.editPlaceMarker) {
             this.editPlaceMarker.remove();
+        }
+        if (this.previousUrl === MAP_MODE.SEARCH && this.mapReady) {
+            this.searchInput.value = '';
+            this.searchText = '';
+            this.isSearching = false;
+            this.getNearPlaces();
+            const currentStatus = this.appService.currentNearbyStatus;
+            if (currentStatus !== DrawerState.Bottom) {
+                this.appService.changeDrawerState.emit(DrawerState.Bottom);
+            } else {
+                this.appService.changeDrawerState.emit(DrawerState.Docked);
+            }
         }
     }
 
@@ -305,7 +305,9 @@ export class MapPage extends GoogleMapPage implements OnInit {
         // TODO comentado porque se llamaba multiples veces, por reparar
         this.geolocationService.locationChanged.subscribe(
             (coors: PagamiGeo) => {
-                this.onCurrentPositionChanged(coors);
+                if (this.mapReady) {
+                    this.onCurrentPositionChanged(coors);
+                }
             });
         /**
          * Enable watch location if status is disabled

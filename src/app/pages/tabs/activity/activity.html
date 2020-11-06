@@ -16,50 +16,50 @@
     </ion-refresher>
     <ion-list>
 
-        <ion-item-group *ngIf="!loading && !error && notifications.length">
-            <ion-card *ngFor="let notification of notifications"
-                      class="card card-place status-border" button
-                      [ngClass]="[!hasNotification ? '' : 'status-border status-border--'+notificationIsAccepted(notification.type)]"
-                      (click)="showNotification(notification)">
-                <ion-card-header>
-                    <ion-row>
-                        <ion-col size="11">
-                            <ion-card-subtitle>
-                                {{ notification.lastUpdate | date:'d/M/y'}} · {{ notification.lastUpdate | date:'shortTime'}}
-                            </ion-card-subtitle>
-                        </ion-col>
-                        <ion-col size="1">
-                            <ion-icon *ngIf="!notificationIsAccepted(notification.type)" name="close-circle"></ion-icon>
-                            <ion-icon *ngIf="notificationIsAccepted(notification.type)" name="checkmark-circle"></ion-icon>
-                        </ion-col>
-                    </ion-row>
-                </ion-card-header>
+<!--        <ion-item-group *ngIf="!loading && !error && notifications.length">-->
+<!--            <ion-card *ngFor="let notification of notifications"-->
+<!--                      class="card card-place status-border" button-->
+<!--                      [ngClass]="[!hasNotification ? '' : 'status-border status-border&#45;&#45;'+notificationIsAccepted(notification.type)]"-->
+<!--                      (click)="showNotification(notification)">-->
+<!--                <ion-card-header>-->
+<!--                    <ion-row>-->
+<!--                        <ion-col size="11">-->
+<!--                            <ion-card-subtitle>-->
+<!--                                {{ notification.lastUpdate | date:'d/M/y'}} · {{ notification.lastUpdate | date:'shortTime'}}-->
+<!--                            </ion-card-subtitle>-->
+<!--                        </ion-col>-->
+<!--                        <ion-col size="1">-->
+<!--                            <ion-icon *ngIf="!notificationIsAccepted(notification.type)" name="close-circle"></ion-icon>-->
+<!--                            <ion-icon *ngIf="notificationIsAccepted(notification.type)" name="checkmark-circle"></ion-icon>-->
+<!--                        </ion-col>-->
+<!--                    </ion-row>-->
+<!--                </ion-card-header>-->
 
-                <ion-card-content>
-                    <ion-row>
-                        <ion-col size="12">
-                            <ion-card-title>
-                                {{placeUtils.getNotificationType(notification.type)}}</ion-card-title>
-                        </ion-col>
-                    </ion-row>
-                    <ion-row *ngIf="notification.showMessage" class="animated fadeInDown faster">
-                        <ion-col size="12">
-                            <ion-row>
-                                <ion-col size="11">
-                                    <ion-card-subtitle>Mensaje</ion-card-subtitle>
-                                </ion-col>
-                                <ion-col size="1">
-                                    <ion-icon name="chevron-up" size="large"></ion-icon>
-                                </ion-col>
-                                <ion-col size="12">
-                                    <ion-text>{{notification.message}}</ion-text>
-                                </ion-col>
-                            </ion-row>
-                        </ion-col>
-                    </ion-row>
-                </ion-card-content>
-            </ion-card>
-        </ion-item-group>
+<!--                <ion-card-content>-->
+<!--                    <ion-row>-->
+<!--                        <ion-col size="12">-->
+<!--                            <ion-card-title>-->
+<!--                                {{placeUtils.getNotificationType(notification.type)}}</ion-card-title>-->
+<!--                        </ion-col>-->
+<!--                    </ion-row>-->
+<!--                    <ion-row *ngIf="notification.showMessage" class="animated fadeInDown faster">-->
+<!--                        <ion-col size="12">-->
+<!--                            <ion-row>-->
+<!--                                <ion-col size="11">-->
+<!--                                    <ion-card-subtitle>Mensaje</ion-card-subtitle>-->
+<!--                                </ion-col>-->
+<!--                                <ion-col size="1">-->
+<!--                                    <ion-icon name="chevron-up" size="large"></ion-icon>-->
+<!--                                </ion-col>-->
+<!--                                <ion-col size="12">-->
+<!--                                    <ion-text>{{notification.message}}</ion-text>-->
+<!--                                </ion-col>-->
+<!--                            </ion-row>-->
+<!--                        </ion-col>-->
+<!--                    </ion-row>-->
+<!--                </ion-card-content>-->
+<!--            </ion-card>-->
+<!--        </ion-item-group>-->
 
         <ion-item-group *ngIf="!loading && !error && registers.length">
 

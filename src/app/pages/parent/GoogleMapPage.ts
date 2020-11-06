@@ -77,8 +77,7 @@ export abstract class GoogleMapPage {
 
             this.onMapReady();
             this.mapMoveSubscribe();
-            this.map.clear();
-            // });
+            // this.map.clear();
             this.mapReady = true;
         } catch (err) {
             this.mapReady = false;
@@ -95,9 +94,10 @@ export abstract class GoogleMapPage {
     }
 
     onMapReady() {
-        this.map.one(GoogleMapsEvent.MAP_READY).then(
-            (data) => {
+        this.map.one(GoogleMapsEvent.MAP_READY)
+            .then((data) => {
                 console.log('MAP is ready');
+                console.log('-> data', data);
                 // const currentZoom: number = this.map.getCameraZoom();
                 // console.log('-> currentZoom', currentZoom);
                 // this.map.setCameraZoom(currentZoom - 1);

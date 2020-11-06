@@ -8,7 +8,7 @@ import { PlansService } from '../../../../core/api/plans/plans.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Place } from '../../../../core/api/places/place';
 import { PlaceUtils } from '../../../../utils/place.utils';
-import { PaymentToShow } from '../../../../core/api/payments/PaymentToShow';
+import { PaymentDetails } from '../../../../core/api/payments/PaymentDetails';
 import { BrowserProvider } from '../../../../providers/browser.provider';
 import { PAYMENTS } from '../../../../utils/Const';
 import { ToastProvider } from '../../../../providers/toast.provider';
@@ -23,7 +23,7 @@ export class DetailsPage implements OnInit {
 
     saving = false;
     saved = false;
-    payment: PaymentToShow = {};
+    payment: PaymentDetails = {};
     loading: boolean;
     updating: boolean;
     STATUS = PAYMENTS.STATUS;

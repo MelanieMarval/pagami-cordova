@@ -13,6 +13,8 @@ import { PaymentsService } from '../../../../core/api/payments/payments.service'
 import { ApiResponse } from '../../../../core/api/api.response';
 import { Payment } from '../../../../core/api/payments/Payment';
 import { PhotoUtils } from '../../../../utils/photo.utils';
+import { PaymentUtil } from '../../../../utils/payment.util';
+import { PaymentItemList } from '../../../../core/api/payments/PaymentItemList';
 
 @Component({
     selector: 'app-admin-activity',
@@ -24,9 +26,9 @@ export class ActivityPage implements OnInit {
     loading = true;
     error = false;
     empty = false;
-    payments: any[] = [];
+    payments: PaymentItemList[] = [];
     STATUS = PAYMENTS.STATUS;
-    indexOfPlaceToEdit: number = undefined;
+    paymentUtil = PaymentUtil;
     thumbnailPayment = PhotoUtils.getThumbnailPayment;
     response: any = {};
 
@@ -90,11 +92,4 @@ export class ActivityPage implements OnInit {
         this.router.navigate(['/admin/profile']);
     }
 
-    paymentTypeToSpanish(status: string) {
-        let newStatus = 'Efectivo';
-        if (status === 'transfer') {
-            newStatus = 'Transferencia';
-        }
-        return newStatus;
-    }
 }
