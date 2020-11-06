@@ -28,7 +28,15 @@
         </div>
     </div>
 
-    <form *ngIf="form" [formGroup]="form">
+    <form *ngIf="form" [formGroup]="form" class="margin-bottom-form">
+
+        <ion-item-group class="toggles-container mt-0">
+            <ion-item lines="none" class=" mt-0" [disabled]="updating">
+                <ion-label>Activar producto</ion-label>
+                <ion-toggle slot="end" color="pagami" formControlName="available"></ion-toggle>
+            </ion-item>
+        </ion-item-group>
+
         <ion-list lines="none" class="inputs-container --with-formGroup">
 
             <ion-item color="pagami-surface" [disabled]="updating">
@@ -39,6 +47,15 @@
                 <small *ngIf="form.get('name').errors?.required && form.get('name').touched">*Este campo es requerido</small>
                 <small *ngIf="form.get('name').errors?.minlength">Máximo 5 carácteres</small>
                 <small *ngIf="form.get('name').errors?.maxlength">Máximo 50 carácteres</small>
+            </div>
+
+            <ion-item color="pagami-surface" [disabled]="updating">
+                <ion-label position="floating">Cantidad disponible</ion-label>
+                <ion-input type="number" formControlName="stock"></ion-input>
+            </ion-item>
+            <div class="error-text">
+                <small *ngIf="form.get('stock').errors?.required && form.get('stock').touched">*Este campo es requerido</small>
+                <small *ngIf="form.get('stock').errors?.max">Máximo 500 unidades</small>
             </div>
 
             <ion-item-group class="group-flex">
@@ -75,33 +92,17 @@
                 <small *ngIf="form.get('price').errors?.max">Máximo 1000000 $</small>
             </div>
 
-            <ion-item color="pagami-surface" [disabled]="updating">
-                <ion-label position="floating">Cantidad disponible</ion-label>
-                <ion-input type="number" formControlName="stock"></ion-input>
-            </ion-item>
-            <div class="error-text">
-                <small *ngIf="form.get('stock').errors?.required && form.get('stock').touched">*Este campo es requerido</small>
-                <small *ngIf="form.get('stock').errors?.max">Máximo 500 unidades</small>
-            </div>
-        </ion-list>
 
-        <ion-item-group class="toggles-container mt-0">
-            <ion-item lines="none" class=" mt-0" [disabled]="updating">
-                <ion-label>Activar producto</ion-label>
-                <ion-toggle slot="end" color="pagami" formControlName="available"></ion-toggle>
-            </ion-item>
-        </ion-item-group>
-
-        <ion-list lines="none" class="inputs-container --with-formGroup">
             <ion-item color="pagami-surface" [disabled]="updating">
-                <ion-label position="floating">Notas o comentarios (opcional)</ion-label>
-                <ion-textarea rows="6" maxlength="300" formControlName="description"></ion-textarea>
+                <ion-label position="floating">Descripción</ion-label>
+                <ion-textarea rows="2" maxlength="300" formControlName="description"></ion-textarea>
             </ion-item>
             <div class="error-text">
                 <small *ngIf="form.get('description').errors?.maxlength">Máximo 300 carácteres</small>
             </div>
 
         </ion-list>
+
     </form>
 
     <ion-fab vertical="bottom" horizontal="end" slot="fixed" class="fab-corner-lr">
