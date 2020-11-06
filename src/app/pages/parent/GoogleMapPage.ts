@@ -130,7 +130,7 @@ export abstract class GoogleMapPage {
             lat: coords.latitude,
             lng: coords.longitude,
         };
-        if (this.currentPositionMarker === undefined) {
+        if (!this.currentPositionMarker) {
             const options: MarkerOptions = {
                 icon: {
                     url: './assets/marker-icons-png/pagami_center.png',
@@ -263,7 +263,6 @@ export abstract class GoogleMapPage {
 
             this.markersForCluster.push(options);
             this.nearbyPlaces.push(place);
-            console.log('-> marker', options);
         }
         this.setCluster();
         if (this.isEditingBusiness && this.editPlaceMarker) {

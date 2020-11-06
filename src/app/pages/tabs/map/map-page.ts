@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Inject, OnInit, AfterViewInit, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Inject, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { IonSearchbar } from '@ionic/angular';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
@@ -41,7 +41,9 @@ export class MapPage extends GoogleMapPage implements OnInit {
     @ViewChild('searchInput') private searchInput: IonSearchbar;
 
     placeTypeSelected = PLACES.TYPE.ALL;
-    searching = false;
+    searchingPlaces = false;
+    isSearching = false;
+    searchText: '';
 
     fabAttached = true;
     bottomDrawer = {
@@ -64,11 +66,9 @@ export class MapPage extends GoogleMapPage implements OnInit {
     nearPlaces: Place[] = [];
     searchPlaces: Place[] = [];
     findBusinessPlaces: Place[] = [];
-    isSearching = false;
     isHiddenCloseToMe = false;
-    searchText: '';
     lastSearchText = undefined;
-    private profileImage: string;
+    profileImage: string;
 
     constructor(@Inject(DOCUMENT) doc: Document,
                 private router: Router,
@@ -92,21 +92,34 @@ export class MapPage extends GoogleMapPage implements OnInit {
         this.router.events.subscribe(value => {
             if (value instanceof NavigationEnd) {
                 const url = value.url.substring(value.url.lastIndexOf('/') + 1);
-                console.log('-> URL HERE', url);
                 this.selectNavigateMode(url);
-                if (this.previousUrl) {
-                    this.previousUrl = this.currentUrl;
-                    this.currentUrl = url;
-                } else {
+                this.currentUrl = url;
+                if (!this.previousUrl) {
                     this.previousUrl = url;
-                    this.currentUrl = url;
                 }
+                console.log('-> URL HERE ON ROUTER EVENT', this.currentUrl);
+                console.log('-> URL PREVIOUS ON ROUTER EVENT', this.previousUrl);
             }
         });
         this.appService.showNearby.subscribe(() => {
+            console.log('-> URL HERE ON NEARBY EVENT', this.currentUrl);
+            console.log('-> URL PREVIOUS ON NEARBY EVENT', this.previousUrl);
+
             if (this.currentUrl === MAP_MODE.SEARCH) {
-                this.closeToMeToDefault();
+                if (this.isSearching) {
+                    this.closeToMeToDefault();
+                    this.getNearPlaces();
+                } else {
+                    if (this.bottomDrawer.drawerState !== DrawerState.Bottom) {
+                        this.closeToMeToDefault();
+                    } else {
+                        this.changeDrawerStatus(DrawerState.Docked);
+                    }
+                }
+            } else if (this.currentUrl === MAP_MODE.SEARCHING) {
+                this.changeDrawerStatus(DrawerState.Bottom);
             }
+            this.previousUrl = this.currentUrl;
         });
         this.appService.showRegister.subscribe(() => {
             // this.selectMode(this.currentUrl);
@@ -158,18 +171,6 @@ export class MapPage extends GoogleMapPage implements OnInit {
         }
         if (this.editPlaceMarker) {
             this.editPlaceMarker.remove();
-        }
-        if (this.previousUrl === MAP_MODE.SEARCH && this.mapReady) {
-            this.searchInput.value = '';
-            this.searchText = '';
-            this.isSearching = false;
-            this.getNearPlaces();
-            const currentStatus = this.appService.currentNearbyStatus;
-            if (currentStatus !== DrawerState.Bottom) {
-                this.appService.changeDrawerState.emit(DrawerState.Bottom);
-            } else {
-                this.appService.changeDrawerState.emit(DrawerState.Docked);
-            }
         }
     }
 
@@ -234,6 +235,8 @@ export class MapPage extends GoogleMapPage implements OnInit {
         this.isRegistering = false;
         this.isHiddenCloseToMe = false;
         this.isSearching = false;
+        this.searchInput.value = '';
+        this.searchText = '';
         this.isFindMyBusiness = false;
         this.bottomHeightChange.emit(DEFAULT_DRAWER_BOTTOM_POSITION);
         this.renderer.setStyle(this.ionFab.nativeElement, 'transition', '0.25s ease-in-out');
@@ -253,9 +256,13 @@ export class MapPage extends GoogleMapPage implements OnInit {
         } else if (this.currentUrl === MAP_MODE.SEARCH || this.currentUrl === MAP_MODE.SEARCH) {
             console.log('MAP_MODE.SEARCH');
             this.fabAttached = false;
-            this.mapEvents.changeDrawerState.emit(DrawerState.Docked);
-            this.bottomDrawer.drawerState = DrawerState.Docked;
+            this.changeDrawerStatus(DrawerState.Docked);
         }
+    }
+
+    changeDrawerStatus(status) {
+        this.mapEvents.changeDrawerState.emit(status);
+        this.bottomDrawer.drawerState = status;
     }
 
     onCurrentPositionChanged(coors: PagamiGeo) {
@@ -326,10 +333,10 @@ export class MapPage extends GoogleMapPage implements OnInit {
     }
 
     async getNearPlaces() {
-        if (this.searching) {
+        if (this.searchingPlaces) {
             return;
         }
-        this.searching = true;
+        this.searchingPlaces = true;
         const geo: PagamiGeo = await this.geolocationService.getCurrentLocation();
         const filter: PlaceFilter = {
             latitude: geo.latitude,
@@ -350,7 +357,7 @@ export class MapPage extends GoogleMapPage implements OnInit {
             }
         }, error => {
             console.log('-> error', error);
-        }).finally(() => this.searching = false);
+        }).finally(() => this.searchingPlaces = false);
     }
 
     async getAcceptedPlaces() {
@@ -472,7 +479,7 @@ export class MapPage extends GoogleMapPage implements OnInit {
     onPlaceTypeChanged(selected: string) {
         this.placeTypeSelected = selected;
         this.selectedPlace = undefined;
-        if (this.mapReady && !this.searching) {
+        if (this.mapReady && !this.searchingPlaces) {
             this.getNearPlaces();
         }
     }

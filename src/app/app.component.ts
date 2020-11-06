@@ -151,7 +151,7 @@ export class AppComponent {
             || currentUrl === '/admin/tabs/records'
             || currentUrl === '/admin/tabs/users'
             || currentUrl === '/app/tabs/map/search'
-            || currentUrl === '/app/tabs/map/searching'
+            // || currentUrl === '/app/tabs/map/searching'
             || currentUrl === '/app/tabs/building'
             // || currentUrl === '/app/tabs/map/register-business'
             || currentUrl === '/app/tabs/wallet';
