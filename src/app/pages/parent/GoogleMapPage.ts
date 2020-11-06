@@ -377,7 +377,7 @@ export abstract class GoogleMapPage {
     getClusterOptions(): MarkerClusterOptions {
         return {
             markers: this.markersForCluster,
-            maxZoomLevel: 16,
+            maxZoomLevel: 18,
             boundsDraw: false,
             icons: [
                 {
