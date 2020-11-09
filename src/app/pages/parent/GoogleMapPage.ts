@@ -37,7 +37,6 @@ function degreesToRadians(degrees) {
 // tslint:disable-next-line:directive-class-suffix
 export abstract class GoogleMapPage {
 
-    @ViewChild('mapCanvas', {static: true}) mapElement: ElementRef;
     map: GoogleMap;
     currentPositionMarker: Marker;
     currentPositionCircle: Circle;
@@ -69,17 +68,20 @@ export abstract class GoogleMapPage {
                           protected toast: ToastProvider) {
     }
 
-    loadMap() {
+    loadMap(mapElement: ElementRef) {
         this.mapReady = false;
         try {
-            const mapEle = this.mapElement.nativeElement;
+            const mapEle = mapElement.nativeElement;
+            console.log('-> mapEle', mapEle);
             this.map = GoogleMaps.create(mapEle, this.getDefaultOptions());
+            console.log('-> map', this.map);
 
             this.onMapReady();
             this.mapMoveSubscribe();
             // this.map.clear();
             this.mapReady = true;
         } catch (err) {
+            console.log('-> err', err);
             this.mapReady = false;
         }
     }

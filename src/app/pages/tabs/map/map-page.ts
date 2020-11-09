@@ -39,6 +39,7 @@ export class MapPage extends GoogleMapPage implements OnInit {
 
     @ViewChild('fab', {static: false, read: ElementRef}) private ionFab: ElementRef;
     @ViewChild('searchInput') private searchInput: IonSearchbar;
+    @ViewChild('mapCanvas', {static: true}) mapElement: ElementRef;
 
     placeTypeSelected = PLACES.TYPE.ALL;
     searchingPlaces = false;
@@ -97,14 +98,9 @@ export class MapPage extends GoogleMapPage implements OnInit {
                 if (!this.previousUrl) {
                     this.previousUrl = url;
                 }
-                console.log('-> URL HERE ON ROUTER EVENT', this.currentUrl);
-                console.log('-> URL PREVIOUS ON ROUTER EVENT', this.previousUrl);
             }
         });
         this.appService.showNearby.subscribe(() => {
-            console.log('-> URL HERE ON NEARBY EVENT', this.currentUrl);
-            console.log('-> URL PREVIOUS ON NEARBY EVENT', this.previousUrl);
-
             if (this.currentUrl === MAP_MODE.SEARCH) {
                 if (this.isSearching) {
                     this.closeToMeToDefault();
@@ -305,7 +301,7 @@ export class MapPage extends GoogleMapPage implements OnInit {
         /**
          * load map and wait
          */
-        this.loadMap();
+        this.loadMap(this.mapElement);
         /**
          * subscribing to current location changes
          */
@@ -323,13 +319,11 @@ export class MapPage extends GoogleMapPage implements OnInit {
         /**
          * set center and marker position
          */
-        const geo: PagamiGeo = await this.geolocationService.getCurrentLocation();
-        this.onCurrentPositionChanged(geo);
-        this.getNearPlaces();
-    }
-
-    async ionViewWillLeave() {
-        // this.stopMap();
+        if (this.mapReady) {
+            const geo: PagamiGeo = await this.geolocationService.getCurrentLocation();
+            this.onCurrentPositionChanged(geo);
+            this.getNearPlaces();
+        }
     }
 
     async getNearPlaces() {
