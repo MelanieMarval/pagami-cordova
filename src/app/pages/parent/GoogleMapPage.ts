@@ -303,7 +303,7 @@ export abstract class GoogleMapPage {
                     lat: 6.286155564435256,
                     lng: -75.6074854019129,
                 },
-                zoom: 16,
+                zoom: 18,
                 tilt: 1,
             },
             gestures: {
