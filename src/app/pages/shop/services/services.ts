@@ -6,6 +6,7 @@ import { Service } from '../../../core/api/services/service';
 import { AlertProvider } from '../../../providers/alert.provider';
 import { UserIntentProvider } from '../../../providers/user-intent.provider';
 import { ActivatedRoute } from '@angular/router';
+import { PlaceUtils } from '../../../utils/place.utils';
 
 @Component({
     selector: 'app-services',
@@ -18,6 +19,7 @@ export class ServicesPage implements OnInit {
     services: Service[] = [];
     textSearch: string;
     title = '';
+    priceService = PlaceUtils.getPriceItem;
 
     constructor(private alertController: AlertController,
                 private servicesService: ServicesService,

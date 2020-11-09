@@ -54,7 +54,7 @@ export abstract class GoogleMapPage {
      */
     private markerCluster: MarkerCluster;
     accuracy: number;
-    currentUrl: string;
+    currentUrl = MAP_MODE.SEARCH;
     previousUrl: string;
     mapReady = false;
     newPlaceMarker: Marker;
@@ -377,7 +377,7 @@ export abstract class GoogleMapPage {
     getClusterOptions(): MarkerClusterOptions {
         return {
             markers: this.markersForCluster,
-            maxZoomLevel: 18,
+            maxZoomLevel: 16,
             boundsDraw: false,
             icons: [
                 {

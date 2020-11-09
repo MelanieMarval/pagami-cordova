@@ -3,6 +3,8 @@ import { PLACES } from './Const';
 import { WeekDayHours } from '../core/api/places/week-day-hours';
 import { BusinessHours } from '../core/api/places/business-hours';
 import { NotificationType } from '../domain/enums/notification-type.enum';
+import { Product } from '../core/api/products/product';
+import { Service } from '../core/api/services/service';
 
 export class PlaceUtils {
 
@@ -29,6 +31,20 @@ export class PlaceUtils {
                 return 'Incompleto';
             default:
                 return 'Desabilitado';
+        }
+    }
+
+    static getPriceItem(item: Product | Service) {
+        console.log('-> product', item);
+        if (item.localPrice && item.price) {
+            return `$${item.localPrice} ${item.localCurrency} / $${item.price} USD`;
+        } else {
+            if (item.localPrice) {
+                return `$${item.localPrice} ${item.localCurrency}`;
+            }
+            if (item.price) {
+                return `$${item.price} USD`;
+            }
         }
     }
 

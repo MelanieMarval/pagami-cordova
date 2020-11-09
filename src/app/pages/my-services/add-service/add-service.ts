@@ -19,7 +19,7 @@ import { Currency } from '../../../core/api/currencies/currency';
 @Component({
     selector: 'app-add-service',
     templateUrl: 'add-service.html',
-    styleUrls: ['add-service.scss']
+    styleUrls: ['add-service.scss'],
 })
 export class AddServicePage extends InputFilePage implements OnInit {
 
@@ -27,10 +27,8 @@ export class AddServicePage extends InputFilePage implements OnInit {
     service: Service;
     updating = false;
     currencies: Currency[] = [];
-    currency: Currency;
     localCurrency: string;
     action: string;
-    localSelected: { currency: string, price: number };
 
     constructor(
         private http: HttpClient,
@@ -50,21 +48,13 @@ export class AddServicePage extends InputFilePage implements OnInit {
     }
 
     ngOnInit() {
-        this.currenciesService.getCurrencies()
-            .then(success => {
-                if (success.passed) {
-                    this.currencies = success.response;
-                    this.currency = this.currencies.filter(currency => currency.countryAcronym === this.intentProvider.myBusinessDetails.acronym)[0];
-                } else {
-                    return this.toast.messageErrorWithoutTabs('No se han podido cargar las monedas. Compruebe su conexion!');
-                }
-            });
+        this.getCurrencies();
         this.form = new FormGroup({
-            name: new FormControl('', [Validators.required, Validators.minLength(5), Validators.maxLength(50)]),
+            name: new FormControl('', [Validators.required, Validators.minLength(5), Validators.maxLength(80)]),
             price: new FormControl(null, [Validators.min(1), Validators.max(10000000)]),
             localPrice: new FormControl(null, [Validators.min(1), Validators.max(10000000)]),
             available: new FormControl(true),
-            description: new FormControl('', Validators.maxLength(300))
+            description: new FormControl('', Validators.maxLength(300)),
         });
         if (this.intentProvider.serviceToEdit) {
             this.action = 'edit';
@@ -73,6 +63,21 @@ export class AddServicePage extends InputFilePage implements OnInit {
             this.action = 'add';
             this.loadForm();
         }
+    }
+
+    getCurrencies() {
+        this.currenciesService.getCurrencies()
+            .then(success => {
+                if (success.passed) {
+                    this.currencies = success.response;
+                    const result: Currency = this.currencies.find(currency => currency.countryAcronym === this.intentProvider.myBusinessDetails.acronym);
+                    this.localCurrency = result ? result.code : 'COP';
+                } else {
+                    this.toast.messageErrorWithoutTabs('No se han podido cargar las monedas. Intente mas tarde!');
+                }
+            }, e => {
+                this.toast.messageErrorWithoutTabs('No se han podido cargar las monedas. Compruebe su conexion!');
+            });
     }
 
     loadForm(service?: Service) {
@@ -104,7 +109,7 @@ export class AddServicePage extends InputFilePage implements OnInit {
         if (!this.data.localPrice.value && !this.data.price.value) {
             return this.toast.messageErrorWithoutTabs('Debe colocar el precio en dolares o en su moneda local');
         }
-        if ((this.data.localPrice.value && !this.localCurrency) || (!this.data.localPrice.value && this.localCurrency)) {
+        if (this.data.localPrice.value && !this.localCurrency) {
             return this.toast.messageErrorWithoutTabs('Si coloca el precio local debe seleccionar tambien la moneda');
         }
 
@@ -165,7 +170,7 @@ export class AddServicePage extends InputFilePage implements OnInit {
                     this.updating = false;
                 }
             }).catch(error => {
-            this.toast.messageErrorWithoutTabs('Hemos tenido problemas cargando su servicio. Intente de nuevo');
+            this.toast.messageErrorWithoutTabs('Hemos tenido problemas cargando su servicio. Compruebe su conexion');
             this.updating = false;
         });
     }
@@ -184,7 +189,7 @@ export class AddServicePage extends InputFilePage implements OnInit {
                     this.updating = false;
                 }
             }).catch(error => {
-            this.toast.messageErrorWithoutTabs('Hemos tenido problemas actualizando su servicio. Intente de nuevo');
+            this.toast.messageErrorWithoutTabs('Hemos tenido problemas actualizando su servicio. Compruebe su conexion');
             this.updating = false;
         });
     }
@@ -200,11 +205,11 @@ export class AddServicePage extends InputFilePage implements OnInit {
                     this.updating = false;
                     this.route.navigate(['/app/my-services']);
                 } else {
-                    this.toast.messageErrorWithoutTabs('Hemos tenido problemas eliminando el servicio');
+                    this.toast.messageErrorWithoutTabs('Hemos tenido problemas eliminando el servicio, intente mas tarde');
                     this.updating = false;
                 }
-            }).catch(error => {
-            this.toast.messageErrorWithoutTabs('Hemos tenido problemas internos. Intente mas tarde!');
+            }, error => {
+            this.toast.messageErrorWithoutTabs('Hemos tenido problemas internos. Compruebe su conexion!');
             this.updating = false;
         });
     }
@@ -218,21 +223,18 @@ export class AddServicePage extends InputFilePage implements OnInit {
                 {
                     text: 'Cnacelar',
                     role: 'cancel',
-                    cssClass: 'alert-cancel'
+                    cssClass: 'alert-cancel',
                 }, {
                     text: 'Si, eliminar',
                     cssClass: 'alert-confirm',
                     handler: () => {
                         this.deleteService();
-                    }
-                }
-            ]
+                    },
+                },
+            ],
         });
 
         await alert.present();
     }
 
-    compareFn(e1: any, e2: any): boolean {
-        return e1 && e2 ? e1 === e2 : e1 === e2;
-    }
 }

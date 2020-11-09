@@ -6,6 +6,7 @@ import { ToastProvider } from '../../../providers/toast.provider';
 import { Product } from '../../../core/api/products/product';
 import { UserIntentProvider } from '../../../providers/user-intent.provider';
 import { AlertProvider } from '../../../providers/alert.provider';
+import { PlaceUtils } from '../../../utils/place.utils';
 
 @Component({
     selector: 'app-products',
@@ -18,6 +19,7 @@ export class ProductsPage implements OnInit {
     products: Product[] = [];
     textSearch = '';
     title = '';
+    priceProduct = PlaceUtils.getPriceItem;
 
     constructor(private alertController: AlertController,
                 private route: ActivatedRoute,

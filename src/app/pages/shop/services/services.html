@@ -33,9 +33,7 @@
             </ion-avatar>
             <ion-label class="product-name">
                 {{service.name}} <br>
-                <span class="product-price">
-                    {{service.localCurrency ? service.localCurrency +' $'+service.localPrice : 'US $'+service.price}}
-                </span>
+                <span class="product-price">{{priceService(service)}}</span>
             </ion-label>
         </ion-item>
 

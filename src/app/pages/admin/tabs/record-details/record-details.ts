@@ -46,7 +46,7 @@ export class RecordDetailsPage implements OnInit {
 
     ngOnInit() {
         const param: any = this.route.snapshot.params;
-        if (param.id) {
+        if (param.id !== 'details') {
             this.isView = true;
             this.getPlaceById(param.id);
             return;

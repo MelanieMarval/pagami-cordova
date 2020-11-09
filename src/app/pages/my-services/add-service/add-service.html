@@ -46,21 +46,15 @@
             <div class="error-text">
                 <small *ngIf="form.get('name').errors?.required && form.get('name').touched">*Este campo es requerido</small>
                 <small *ngIf="form.get('name').errors?.minlength">Máximo 5 carácteres</small>
-                <small *ngIf="form.get('name').errors?.maxlength">Máximo 50 carácteres</small>
+                <small *ngIf="form.get('name').errors?.maxlength">Máximo 80 carácteres</small>
             </div>
 
             <ion-item-group class="group-flex">
                 <ion-item color="pagami-surface" [disabled]="updating">
                     <ion-label position="floating">Moneda</ion-label>
-                    <ion-select *ngIf="action === 'add' || !localCurrency"
-                                okText="Aceptar" cancelText="Cancelar"
+                    <ion-select okText="Aceptar" cancelText="Cancelar"
                                 [(ngModel)]="localCurrency" [ngModelOptions]="{standalone: true}">
                         <ion-select-option *ngFor="let currency of currencies" [value]="currency.code">{{currency.code}}</ion-select-option>
-                    </ion-select>
-                    <ion-select *ngIf="action === 'edit' && localCurrency"
-                                okText="Aceptar" cancelText="Cancelar" disabled
-                                [(ngModel)]="localCurrency" [ngModelOptions]="{standalone: true}">
-                        <ion-select-option [value]="localCurrency">{{localCurrency}}</ion-select-option>
                     </ion-select>
                 </ion-item>
                 <ion-item color="pagami-surface" [disabled]="updating">

@@ -7,6 +7,7 @@ import { Service } from '../../core/api/services/service';
 import { ServicesService } from '../../core/api/services/services.service';
 import { Place } from '../../core/api/places/place';
 import { StorageProvider } from '../../providers/storage.provider';
+import { PlaceUtils } from '../../utils/place.utils';
 
 @Component({
     selector: 'app-services',
@@ -19,6 +20,7 @@ export class ServicePage implements OnInit {
     loading = false;
     textSearch = '';
     myBusiness: Place = {latitude: 0, longitude: 0};
+    priceService = PlaceUtils.getPriceItem;
 
     constructor(private alertController: AlertController,
                 private router: Router,

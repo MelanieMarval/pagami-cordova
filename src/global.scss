@@ -131,6 +131,7 @@ select:-webkit-autofill:focus {
     &-image {
       height: 100%;
       width: 60px;
+      max-height: 60px;
     }
 
     &-name {

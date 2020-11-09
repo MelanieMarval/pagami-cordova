@@ -5,18 +5,19 @@ import { UserIntentProvider } from '../../providers/user-intent.provider';
 import { Product } from '../../core/api/products/product';
 import { ToastProvider } from '../../providers/toast.provider';
 import { Router } from '@angular/router';
-import { PlansService } from '../../core/api/plans/plans.service';
+import { PlaceUtils } from '../../utils/place.utils';
 
 @Component({
     selector: 'app-products',
     templateUrl: 'products.html',
-    styleUrls: ['products.scss']
+    styleUrls: ['products.scss'],
 })
 export class ProductsPage implements OnInit, AfterViewChecked {
 
     products: Product[] = [];
     loading = false;
     textSearch = '';
+    priceProduct = PlaceUtils.getPriceItem;
 
     constructor(private alertController: AlertController,
                 private router: Router,
@@ -81,4 +82,5 @@ export class ProductsPage implements OnInit, AfterViewChecked {
         }
         this.router.navigateByUrl('/app/my-products/product/add');
     }
+
 }

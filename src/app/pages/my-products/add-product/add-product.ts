@@ -14,11 +14,12 @@ import { GeolocationService } from '../../../core/geolocation/geolocation.servic
 // Providers
 import { ToastProvider } from '../../../providers/toast.provider';
 import { UserIntentProvider } from '../../../providers/user-intent.provider';
+import { StorageProvider } from '../../../providers/storage.provider';
 
 @Component({
     selector: 'app-add-product',
     templateUrl: 'add-product.html',
-    styleUrls: ['add-product.scss']
+    styleUrls: ['add-product.scss'],
 })
 export class AddProductPage extends InputFilePage implements OnInit {
 
@@ -26,21 +27,20 @@ export class AddProductPage extends InputFilePage implements OnInit {
     product: Product;
     updating = false;
     currencies: Currency[] = [];
-    currency: Currency;
     localCurrency: string;
     action: string;
     localSelected: { currency: string, price: number };
 
-    constructor(
-        private http: HttpClient,
-        private alertController: AlertController,
-        private route: Router,
-        private toast: ToastProvider,
-        private fireStorage: FireStorage,
-        private intentProvider: UserIntentProvider,
-        private productsService: ProductsService,
-        private currenciesService: CurrenciesService,
-        protected geolocationService: GeolocationService) {
+    constructor(private http: HttpClient,
+                private alertController: AlertController,
+                private route: Router,
+                private toast: ToastProvider,
+                private fireStorage: FireStorage,
+                private intentProvider: UserIntentProvider,
+                private productsService: ProductsService,
+                private currenciesService: CurrenciesService,
+                private storage: StorageProvider,
+                protected geolocationService: GeolocationService) {
         super(geolocationService);
     }
 
@@ -49,22 +49,14 @@ export class AddProductPage extends InputFilePage implements OnInit {
     }
 
     ngOnInit() {
-        this.currenciesService.getCurrencies()
-            .then(success => {
-                if (success.passed) {
-                    this.currencies = success.response;
-                    this.currency = this.currencies.filter(currency => currency.countryAcronym === this.intentProvider.myBusinessDetails.acronym)[0];
-                } else {
-                    return this.toast.messageErrorWithoutTabs('No se han podido cargar las monedas. Compruebe su conexion!');
-                }
-            });
+        this.getCurrencies();
         this.form = new FormGroup({
             name: new FormControl('', [Validators.required, Validators.minLength(5), Validators.maxLength(50)]),
             price: new FormControl(null, [Validators.min(1), Validators.max(10000000)]),
             localPrice: new FormControl(null, [Validators.min(1), Validators.max(10000000)]),
             stock: new FormControl(null, [Validators.required, Validators.max(500)]),
             available: new FormControl(true),
-            description: new FormControl('', Validators.maxLength(300))
+            description: new FormControl('', Validators.maxLength(300)),
         });
         if (this.intentProvider.productToEdit) {
             this.action = 'edit';
@@ -73,6 +65,21 @@ export class AddProductPage extends InputFilePage implements OnInit {
             this.action = 'add';
             this.loadForm();
         }
+    }
+
+    async getCurrencies() {
+        this.currenciesService.getCurrencies()
+            .then(success => {
+                if (success.passed) {
+                    this.currencies = success.response;
+                    const result: Currency = this.currencies.find(currency => currency.countryAcronym === this.intentProvider.myBusinessDetails.acronym);
+                    this.localCurrency = result ? result.code : 'COP';
+                } else {
+                    this.toast.messageErrorWithoutTabs('No se han podido cargar las monedas. Intente de nuevo!');
+                }
+            }, e => {
+                this.toast.messageErrorWithoutTabs('No se han podido cargar las monedas. Compruebe su conexion!');
+            });
     }
 
     loadForm(product?: Product) {
@@ -105,7 +112,7 @@ export class AddProductPage extends InputFilePage implements OnInit {
         if (!this.data.localPrice.value && !this.data.price.value) {
             return this.toast.messageErrorWithoutTabs('Debe colocar el precio en dolares o en su moneda local');
         }
-        if ((this.data.localPrice.value && !this.localCurrency) || (!this.data.localPrice.value && this.localCurrency)) {
+        if (this.data.localPrice.value && !this.localCurrency) {
             return this.toast.messageErrorWithoutTabs('Si coloca el precio local debe seleccionar tambien la moneda');
         }
 
@@ -168,7 +175,7 @@ export class AddProductPage extends InputFilePage implements OnInit {
                     this.updating = false;
                 }
             }).catch(error => {
-            this.toast.messageErrorWithoutTabs('Hemos tenido problemas cargando su producto. Intente de nuevo');
+            this.toast.messageErrorWithoutTabs('Hemos tenido problemas cargando su producto. Compruebe su conexion');
             this.updating = false;
         });
     }
@@ -187,7 +194,7 @@ export class AddProductPage extends InputFilePage implements OnInit {
                     this.updating = false;
                 }
             }).catch(error => {
-            this.toast.messageErrorWithoutTabs('Hemos tenido problemas actualizando su producto. Intente de nuevo');
+            this.toast.messageErrorWithoutTabs('Hemos tenido problemas actualizando su producto. Compruebe su conexion');
             this.updating = false;
         });
     }
@@ -203,13 +210,13 @@ export class AddProductPage extends InputFilePage implements OnInit {
                     this.updating = false;
                     this.intentProvider.productDeleted = this.product;
                 } else {
-                    this.toast.messageErrorWithoutTabs('Hemos tenido problemas eliminando el producto');
+                    this.toast.messageErrorWithoutTabs('Hemos tenido problemas eliminando el producto, intente mas tarde');
                     this.updating = false;
                 }
-            }).catch(error => {
-            this.toast.messageErrorWithoutTabs('Hemos tenido problemas internos. Intente mas tarde!');
-            this.updating = false;
-        });
+            }, error => {
+                this.toast.messageErrorWithoutTabs('Hemos tenido problemas internos. Compruebe su conexion!');
+                this.updating = false;
+            });
     }
 
     async confirmDeleteProduct() {
@@ -221,21 +228,18 @@ export class AddProductPage extends InputFilePage implements OnInit {
                 {
                     text: 'Cnacelar',
                     role: 'cancel',
-                    cssClass: 'alert-cancel'
+                    cssClass: 'alert-cancel',
                 }, {
                     text: 'Si, eliminar',
                     cssClass: 'alert-confirm',
                     handler: () => {
                         this.deleteProduct();
-                    }
-                }
-            ]
+                    },
+                },
+            ],
         });
 
         await alert.present();
     }
 
-    compareFn(e1: any, e2: any): boolean {
-        return e1 && e2 ? e1 === e2 : e1 === e2;
-    }
 }
