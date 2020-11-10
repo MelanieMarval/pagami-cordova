@@ -50,10 +50,10 @@ export class AppComponent {
                 this.mapProvider.hideNearby.emit();
             } else {
                 if (this.verifyIfCanCloseApp(this.router.url)) {
-                    this.alert.alertConfirmExit().then(() => {
-                        // this.appMinimize.minimize();
-                        navigator['app'].exitApp();
-                    });
+                    // this.alert.alertConfirmExit().then(() => {
+                        this.appMinimize.minimize();
+                        // navigator['app'].exitApp();
+                    // });
                 } else {
                     this.navController.back();
                 }

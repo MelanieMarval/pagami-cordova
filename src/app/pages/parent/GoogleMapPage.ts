@@ -196,7 +196,7 @@ export abstract class GoogleMapPage {
 
             this.newPlaceMarker.on(GoogleMapsEvent.MARKER_DRAG_START).subscribe(event => {
                 console.log('-> event Drag_Start', event);
-                this.onDragPlaceEvents();
+                // this.onDragPlaceEvents();
             });
             this.newPlaceMarker.on(GoogleMapsEvent.MARKER_DRAG).subscribe(event => {
                 console.log('-> event Drag', event);

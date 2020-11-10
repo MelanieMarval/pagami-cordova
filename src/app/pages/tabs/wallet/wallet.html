@@ -23,7 +23,7 @@
             </ion-item>
         </ion-item-group>
 
-        <app-background-empty *ngIf="!payments.length" title="Oh oh! Esta vacío" height="70"
+        <app-background-empty *ngIf="!loading && !payments.length" title="Oh oh! Esta vacío" height="70"
                               text="Parece que aún no has realizado ninguna transacción"></app-background-empty>
 
         <ion-item-group *ngIf="!loading && payments.length">

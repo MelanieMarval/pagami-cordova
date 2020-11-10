@@ -23,7 +23,7 @@
     "@angular/platform-browser-dynamic": "~10.0.0",
     "@angular/router": "~10.0.0",
     "@ionic-native/android-permissions": "^5.28.0",
-    "@ionic-native/app-minimize": "^5.28.0",
+    "@ionic-native/app-minimize": "^5.29.0",
     "@ionic-native/browser-tab": "^5.28.0",
     "@ionic-native/camera": "^5.28.0",
     "@ionic-native/clipboard": "^5.28.0",
