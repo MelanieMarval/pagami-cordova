@@ -11,6 +11,7 @@
         <div class="progress-bar-container">
             <ion-progress-bar type="indeterminate" color="pagami" *ngIf="searching"></ion-progress-bar>
         </div>
+
         <ion-row *ngIf="selectedPlace">
             <ion-card button color="pagami-surface" (click)="savePlaceToShowDetails(selectedPlace)" class="card" routerLink="/app/shop">
                 <div class="card-img-contain">
@@ -70,6 +71,12 @@
                     </ion-card-subtitle>
                 </ion-card-header>
             </ion-card>
+        </ion-row>
+        <ion-row *ngIf="!selectedPlace && !nearPlaces.length">
+            <div class="ion-text-center w-100 ion-margin">
+                No hubo resultados para su busqueda. <br>
+                Intente con otra palabra.
+            </div>
         </ion-row>
     </ion-list>
 </div>

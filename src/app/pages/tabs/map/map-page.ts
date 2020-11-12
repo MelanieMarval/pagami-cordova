@@ -20,6 +20,7 @@ import { StorageProvider } from '../../../providers/storage.provider';
 import { UserIntentProvider } from '../../../providers/user-intent.provider';
 import { PhotoUtils } from '../../../utils/photo.utils';
 import { User } from '../../../core/api/users/user';
+import { Sim } from '@ionic-native/sim/ngx';
 
 const DEFAULT_TABS_HEIGHT = 48;
 const DEFAULT_DRAWER_BOTTOM_HEIGHT = 30;
@@ -28,7 +29,7 @@ const DEFAULT_DRAWER_DOCKET_HEIGHT = 352;
 const DEFAULT_DRAWER_DOCKET_POSITION = DEFAULT_TABS_HEIGHT + DEFAULT_DRAWER_DOCKET_HEIGHT;
 const DEFAULT_DRAWER_DISTANCE_TOP = 62;
 const BASIC_RADIUS_KILOMETERS = 50; // TODO 50
-const BASIC_UPDATE_METERS = 10;
+const BASIC_UPDATE_METERS = 50;
 
 @Component({
     selector: 'app-map-page',
@@ -70,6 +71,7 @@ export class MapPage extends GoogleMapPage implements OnInit {
     isHiddenCloseToMe = false;
     lastSearchText = undefined;
     profileImage: string;
+    private countryAcronym: string;
 
     constructor(@Inject(DOCUMENT) doc: Document,
                 private router: Router,
@@ -79,6 +81,7 @@ export class MapPage extends GoogleMapPage implements OnInit {
                 private intentProvider: UserIntentProvider,
                 private placesService: PlacesService,
                 private renderer: Renderer2,
+                private sim: Sim,
                 private appService: MapProvider,
                 private storageInstance: UserIntentProvider,
                 private mapEvents: MapProvider,
@@ -129,6 +132,19 @@ export class MapPage extends GoogleMapPage implements OnInit {
                 this.getNearPlaces();
             }
         });
+        this.getCodeCountry();
+    }
+
+    async getCodeCountry() {
+        const user: User = await this.storageService.getPagamiUser();
+        if (user.location.code) {
+            this.countryAcronym = user.location.code;
+        } else {
+            const simInfo = await this.sim.getSimInfo();
+            if (simInfo.countryCode) {
+                this.countryAcronym = simInfo.countryCode.toUpperCase();
+            }
+        }
     }
 
     selectNavigateMode(mode: string) {
@@ -267,7 +283,8 @@ export class MapPage extends GoogleMapPage implements OnInit {
             this.moveCamera(coors);
         }
         if (this.intentProvider.lastUpdatedPoint && this.intentProvider.lastUpdatedPoint.latitude) {
-            if (this.calculateDistance(this.geoToLatLng(coors), this.geoToLatLng(this.intentProvider.lastUpdatedPoint)) > BASIC_UPDATE_METERS) {
+            // tslint:disable-next-line:max-line-length
+            if (this.calculateDistance(this.geoToLatLng(coors), this.geoToLatLng(this.intentProvider.lastUpdatedPoint)) > BASIC_UPDATE_METERS && !this.isSearching) {
                 this.getNearPlaces();
             }
         } else {
@@ -337,6 +354,9 @@ export class MapPage extends GoogleMapPage implements OnInit {
             longitude: geo.longitude,
             radius: BASIC_RADIUS_KILOMETERS,
         };
+        if (this.countryAcronym) {
+            filter.countryAcronym = this.countryAcronym;
+        }
         this.searchText ? filter.text = this.searchText : delete filter.text;
         if (this.placeTypeSelected !== PLACES.TYPE.ALL) {
             filter.placeType = this.placeTypeSelected;

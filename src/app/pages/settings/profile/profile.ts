@@ -61,7 +61,11 @@ export class ProfilePage extends InputFilePage implements OnInit {
         this.previewUrl = this.user.photoUrl;
         await this.placesService.getAllCountries().then(value => {
             this.countries = value;
-            this.country = this.countries.find(cc => cc.code === this.user.location.code.toUpperCase());
+            if (this.user.location.code) {
+                this.country = this.countries.find(cc => cc.code === this.user.location.code.toUpperCase());
+            } else {
+                this.country = this.countries.find(cc => cc.name.toUpperCase() === this.user.location.country.toUpperCase());
+            }
         });
     }
 
