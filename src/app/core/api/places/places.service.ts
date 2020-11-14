@@ -5,6 +5,7 @@ import { ApiService } from '../api.service';
 import { Place } from './place';
 import { ApiResponse } from '../api.response';
 import { PLACES } from '../../../utils/Const';
+import { Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -58,7 +59,23 @@ export class PlacesService {
         const options: any = await this.apiService.getOptionsHeadersTokenized();
         options.params = new HttpParams({fromObject: filter});
         const request = this.httpClient.get(`${this.URL}/nearby/search`, options);
+        await this.sleep(5);
         return this.apiService.serverListener(request);
+    }
+
+    async getNearby2(filter: any) {
+        // return new Observable(subscriber => {
+        //     const options: any = this.apiService.getOptionsHeadersTokenized();
+        //     const request = this.httpClient.get(`${this.URL}/nearby/search`, options);
+        //     this.apiService.serverListener2(request);
+        // });
+        // options.params = new HttpParams({fromObject: filter});
+        // await this.sleep(5);
+        // return this.apiService.serverListener2(request);
+    }
+
+    sleep(s) {
+        return new Promise(resolve => setTimeout(resolve, s * 1000));
     }
 
     async getPlaceByGeocode(lat: number, lng: number): Promise<any> {

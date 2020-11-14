@@ -119,7 +119,7 @@ export abstract class GoogleMapPage {
             tilt: 1,
             duration: 500,
         }).then(() => {
-            console.log('Camera target has been changed');
+            // console.log('Camera target has been changed');
         });
     }
 
@@ -379,7 +379,7 @@ export abstract class GoogleMapPage {
     getClusterOptions(): MarkerClusterOptions {
         return {
             markers: this.markersForCluster,
-            maxZoomLevel: 16,
+            maxZoomLevel: 18,
             boundsDraw: false,
             icons: [
                 {

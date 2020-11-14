@@ -361,6 +361,26 @@ export class MapPage extends GoogleMapPage implements OnInit {
         if (this.placeTypeSelected !== PLACES.TYPE.ALL) {
             filter.placeType = this.placeTypeSelected;
         }
+        // let cancel = () => {console.log('paso al cancel')};
+        // cancel();
+        // const p = new Promise(resolve => cancel = resolve);
+        // Promise.race([
+        //     p,
+        //     this.placesService.getNearby(filter),
+        // ]).then((success: ApiResponse) => {
+        //     console.log('-> success', success);
+        //     if (success.passed) {
+        //         this.searchPlaces = success.response;
+        //         this.setupPlacesToDrawer(this.searchPlaces);
+        //         this.setupPlacesToMap(this.searchPlaces);
+        //         this.intentProvider.lastUpdatedPoint = geo;
+        //         this.lastSearchText = filter.text;
+        //     }
+        //     this.searchingPlaces = false;
+        // }, reason => {
+        //     console.log('-> error', reason);
+        //     this.searchingPlaces = false;
+        // });
         this.placesService.getNearby(filter).then((success: ApiResponse) => {
             if (success.passed) {
                 this.searchPlaces = success.response;

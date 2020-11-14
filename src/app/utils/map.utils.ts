@@ -12,10 +12,11 @@ export class MapUtils {
      */
     static calculateZoomToCenter(map: GoogleMap, change: boolean): number {
         const currentZoom: number = map.getCameraZoom();
+        // TODO estara asi hasta que se modifique
         if (currentZoom < MAP_MIN_CENTER_ZOOM_ACCEPTED && change) {
             return MAP_CENTER_ZOOM;
         } else {
-            return currentZoom;
+            return MAP_CENTER_ZOOM;
         }
     }
 }

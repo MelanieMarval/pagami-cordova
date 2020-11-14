@@ -27,6 +27,16 @@ export class ApiService {
         ).toPromise();
     }
 
+    serverListener2(request: Observable<any>) {
+        return request.pipe(
+            timeout(environment.TIMEOUT),
+            catchError(this.handleError),
+            mergeMap(res => {
+                return this.handlerResponse(res);
+            })
+        );
+    }
+
     handlerResponse(response: any): Observable<any> {
         return new Observable(observer => {
             observer.next(response);
@@ -50,7 +60,7 @@ export class ApiService {
         return header;
     }
 
-    async getOptionsHeadersTokenized(): Promise<any> {
+    getOptionsHeadersTokenized(): Promise<any> {
         return new Promise(async resolve => {
             const token = await this.googleAuthService.getToken();
             let header = new HttpHeaders();
