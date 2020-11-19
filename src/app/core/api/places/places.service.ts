@@ -5,7 +5,8 @@ import { ApiService } from '../api.service';
 import { Place } from './place';
 import { ApiResponse } from '../api.response';
 import { PLACES } from '../../../utils/Const';
-import { Observable } from 'rxjs';
+import { from, Observable } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
@@ -63,7 +64,33 @@ export class PlacesService {
         return this.apiService.serverListener(request);
     }
 
-    async getNearby2(filter: any) {
+    getNearby2(filter: any): Observable<any> {
+        return from(this.apiService.getOptionsHeadersTokenized()).pipe(
+            switchMap( options => {
+                options.params = new HttpParams({fromObject: filter});
+                const request = this.httpClient.get(`${this.URL}/nearby/search`, options);
+                return this.apiService.serverListener2(request).pipe(map((response: ApiResponse) => response));
+            })
+            // map(options => {
+            //     console.log('-> options', options);
+            //     options.params = new HttpParams({fromObject: filter});
+            //     const request = this.httpClient.get(`${this.URL}/nearby/search`, options);
+            //     return this.apiService.serverListener2(request).pipe(map((response: ApiResponse) => response));
+            // })
+        );
+        // params.subscribe()
+        // from(this.apiService.getOptionsHeadersTokenized()).subscribe(
+        //     options => {
+        //         options.params = new HttpParams({fromObject: filter});
+        //         const request = this.httpClient.get(`${this.URL}/nearby/search`, options);
+        //         response = this.apiService.serverListener2(request);
+        //     },
+        //     error => console.log('error', error),
+        //     () => {
+        //         return response;
+        //     }
+        // )
+
         // return new Observable(subscriber => {
         //     const options: any = this.apiService.getOptionsHeadersTokenized();
         //     const request = this.httpClient.get(`${this.URL}/nearby/search`, options);

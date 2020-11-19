@@ -21,6 +21,7 @@ import { UserIntentProvider } from '../../../providers/user-intent.provider';
 import { PhotoUtils } from '../../../utils/photo.utils';
 import { User } from '../../../core/api/users/user';
 import { Sim } from '@ionic-native/sim/ngx';
+import { subscribeOn, switchMap } from 'rxjs/operators';
 
 const DEFAULT_TABS_HEIGHT = 48;
 const DEFAULT_DRAWER_BOTTOM_HEIGHT = 30;
@@ -361,27 +362,9 @@ export class MapPage extends GoogleMapPage implements OnInit {
         if (this.placeTypeSelected !== PLACES.TYPE.ALL) {
             filter.placeType = this.placeTypeSelected;
         }
-        // let cancel = () => {console.log('paso al cancel')};
-        // cancel();
-        // const p = new Promise(resolve => cancel = resolve);
-        // Promise.race([
-        //     p,
-        //     this.placesService.getNearby(filter),
-        // ]).then((success: ApiResponse) => {
-        //     console.log('-> success', success);
-        //     if (success.passed) {
-        //         this.searchPlaces = success.response;
-        //         this.setupPlacesToDrawer(this.searchPlaces);
-        //         this.setupPlacesToMap(this.searchPlaces);
-        //         this.intentProvider.lastUpdatedPoint = geo;
-        //         this.lastSearchText = filter.text;
-        //     }
-        //     this.searchingPlaces = false;
-        // }, reason => {
-        //     console.log('-> error', reason);
-        //     this.searchingPlaces = false;
-        // });
-        this.placesService.getNearby(filter).then((success: ApiResponse) => {
+
+        this.placesService.getNearby2(filter).subscribe((success: ApiResponse) => {
+            console.log('-> success', success);
             if (success.passed) {
                 this.searchPlaces = success.response;
                 this.setupPlacesToDrawer(this.searchPlaces);
@@ -389,9 +372,22 @@ export class MapPage extends GoogleMapPage implements OnInit {
                 this.intentProvider.lastUpdatedPoint = geo;
                 this.lastSearchText = filter.text;
             }
-        }, error => {
-            console.log('-> error', error);
-        }).finally(() => this.searchingPlaces = false);
+            this.searchingPlaces = false;
+        }, reason => {
+            console.log('-> error', reason);
+            this.searchingPlaces = false;
+        });
+        // this.placesService.getNearby(filter).then((success: ApiResponse) => {
+        //     if (success.passed) {
+        //         this.searchPlaces = success.response;
+        //         this.setupPlacesToDrawer(this.searchPlaces);
+        //         this.setupPlacesToMap(this.searchPlaces);
+        //         this.intentProvider.lastUpdatedPoint = geo;
+        //         this.lastSearchText = filter.text;
+        //     }
+        // }, error => {
+        //     console.log('-> error', error);
+        // }).finally(() => this.searchingPlaces = false);
     }
 
     async getAcceptedPlaces() {

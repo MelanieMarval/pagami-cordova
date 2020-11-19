@@ -72,13 +72,11 @@ export abstract class GoogleMapPage {
         this.mapReady = false;
         try {
             const mapEle = mapElement.nativeElement;
-            console.log('-> mapEle', mapEle);
             this.map = GoogleMaps.create(mapEle, this.getDefaultOptions());
-            console.log('-> map', this.map);
 
             this.onMapReady();
             this.mapMoveSubscribe();
-            // this.map.clear();
+            this.map.clear();
             this.mapReady = true;
         } catch (err) {
             console.log('-> err', err);
