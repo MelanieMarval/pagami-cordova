@@ -22,6 +22,7 @@ import { PhotoUtils } from '../../../utils/photo.utils';
 import { User } from '../../../core/api/users/user';
 import { Sim } from '@ionic-native/sim/ngx';
 import { subscribeOn, switchMap } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
 
 const DEFAULT_TABS_HEIGHT = 48;
 const DEFAULT_DRAWER_BOTTOM_HEIGHT = 30;
@@ -73,6 +74,8 @@ export class MapPage extends GoogleMapPage implements OnInit {
     lastSearchText = undefined;
     profileImage: string;
     private countryAcronym: string;
+
+    subscribePlaces: Observable<any> = new Subject();
 
     constructor(@Inject(DOCUMENT) doc: Document,
                 private router: Router,
@@ -345,10 +348,10 @@ export class MapPage extends GoogleMapPage implements OnInit {
     }
 
     async getNearPlaces() {
-        if (this.searchingPlaces) {
-            return;
-        }
-        this.searchingPlaces = true;
+        // if (this.searchingPlaces) {
+        //     return;
+        // }
+        // this.searchingPlaces = true;
         const geo: PagamiGeo = await this.geolocationService.getCurrentLocation();
         const filter: PlaceFilter = {
             latitude: geo.latitude,
@@ -362,7 +365,9 @@ export class MapPage extends GoogleMapPage implements OnInit {
         if (this.placeTypeSelected !== PLACES.TYPE.ALL) {
             filter.placeType = this.placeTypeSelected;
         }
+        console.log('consulta');
 
+        // this.subscribePlaces = this.placesService.getNearby2(filter);
         this.placesService.getNearby2(filter).subscribe((success: ApiResponse) => {
             console.log('-> success', success);
             if (success.passed) {
@@ -376,7 +381,7 @@ export class MapPage extends GoogleMapPage implements OnInit {
         }, reason => {
             console.log('-> error', reason);
             this.searchingPlaces = false;
-        });
+        }, () => console.log('complete'));
         // this.placesService.getNearby(filter).then((success: ApiResponse) => {
         //     if (success.passed) {
         //         this.searchPlaces = success.response;
