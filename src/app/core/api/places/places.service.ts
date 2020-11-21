@@ -5,8 +5,8 @@ import { ApiService } from '../api.service';
 import { Place } from './place';
 import { ApiResponse } from '../api.response';
 import { PLACES } from '../../../utils/Const';
-import { from, Observable } from 'rxjs';
-import { debounce, map, switchMap } from 'rxjs/operators';
+import { from, Observable, Subject } from 'rxjs';
+import { debounce, debounceTime, distinctUntilChanged, map, switchMap, takeUntil } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
@@ -15,6 +15,7 @@ export class PlacesService {
 
     private URL = `${environment.API_URL}/places`;
     private httpClient: HttpClient;
+    // private ngUnsubscribe: Subject<void> = new Subject<void>();
 
     constructor(private apiService: ApiService) {
         this.httpClient = apiService.httpClient;
@@ -66,10 +67,12 @@ export class PlacesService {
 
     getNearby2(filter: any): Observable<any> {
         return from(this.apiService.getOptionsHeadersTokenized()).pipe(
+            debounceTime(800),
+            distinctUntilChanged(),
             switchMap( options => {
                 options.params = new HttpParams({fromObject: filter});
                 const request = this.httpClient.get(`${this.URL}/nearby/search`, options);
-                return this.apiService.serverListener2(request).pipe(map((response: ApiResponse) => response));
+                return this.apiService.serverListener2(request).pipe(response => response);
             })
             // map(options => {
             //     console.log('-> options', options);

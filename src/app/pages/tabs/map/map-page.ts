@@ -368,6 +368,7 @@ export class MapPage extends GoogleMapPage implements OnInit {
         console.log('consulta');
 
         // this.subscribePlaces = this.placesService.getNearby2(filter);
+        // this.subscribePlaces = any;
         this.placesService.getNearby2(filter).subscribe((success: ApiResponse) => {
             console.log('-> success', success);
             if (success.passed) {

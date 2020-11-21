@@ -2,7 +2,7 @@ import { Injectable} from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { GoogleAuthService } from '../google-auth/google-auth.service';
-import { catchError, mergeMap, timeout } from 'rxjs/operators';
+import { catchError, map, mergeMap, switchMap, timeout } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
