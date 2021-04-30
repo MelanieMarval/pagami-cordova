@@ -15,6 +15,7 @@ import { PaymentsService } from '../../../../../core/api/payments/payments.servi
 import { UserIntentProvider } from '../../../../../providers/user-intent.provider';
 import { PlatformUtils } from '../../../../../utils/platform.utils';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
+import { CompressImageProvider } from '../../../../../providers/compress-image.provider';
 
 @Component({
     selector: 'page-transfer',
@@ -41,8 +42,9 @@ export class TransferPage extends InputFilePage implements OnInit {
                 private actionSheetController: ActionSheetController,
                 private fireStorage: FireStorage,
                 private intentProvider: UserIntentProvider,
+                protected compressImage: CompressImageProvider,
                 protected geolocationService: GeolocationService) {
-        super(geolocationService);
+        super(geolocationService, compressImage);
     }
 
     async ngOnInit() {

@@ -13,10 +13,11 @@ export abstract class InputFilePage implements AfterViewInit {
     protected autocompleteService: any;
     protected places: any[] = [];
 
-    fileData: any;
+    fileData: Blob | File;
     previewUrl: string | ArrayBuffer;
 
-    protected constructor(protected geolocationService: GeolocationService) {
+    protected constructor(protected geolocationService: GeolocationService,
+                          protected compressImage: CompressImageProvider) {
     }
 
     async ngAfterViewInit() {
@@ -51,13 +52,9 @@ export abstract class InputFilePage implements AfterViewInit {
     }
 
     async chargeImage(isTest: boolean, file: any) {
-        const imageBlob = await CompressImageProvider.handleImageUpload(isTest, file);
-        const reader = new FileReader();
-        reader.readAsDataURL(imageBlob);
-        reader.onloadend = () => {
-            this.fileData = imageBlob;
-            this.previewUrl = reader.result;
-        };
+        const image = await this.compressImage.compressImage(isTest, file);
+        this.fileData = image.fileData;
+        this.previewUrl = image.previewUrl;
     }
 
     // preview() {

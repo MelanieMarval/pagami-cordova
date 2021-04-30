@@ -19,6 +19,7 @@ import { InputFilePage } from '../../parent/InputFilePage';
 import { ValidationUtils } from '../../../utils/validation.utils';
 import { PlatformUtils } from '../../../utils/platform.utils';
 import { FireStorage } from '../../../core/fire-storage/fire.storage';
+import { CompressImageProvider } from '../../../providers/compress-image.provider';
 
 @Component({
     selector: 'app-my-business',
@@ -49,10 +50,11 @@ export class MyBusinessPage extends InputFilePage implements OnInit, AfterViewCh
                 private storageService: StorageProvider,
                 public alert: AlertProvider,
                 public intentProvider: UserIntentProvider,
+                protected compressImage: CompressImageProvider,
                 protected geolocationService: GeolocationService,
                 private camera: Camera,
                 private actionSheetController: ActionSheetController) {
-        super(geolocationService);
+        super(geolocationService, compressImage);
     }
 
     async ngOnInit() {

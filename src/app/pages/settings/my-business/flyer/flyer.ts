@@ -14,6 +14,7 @@ import { Flyer } from '../../../../core/api/places/flyer';
 import { FireStorage } from '../../../../core/fire-storage/fire.storage';
 import { StorageProvider } from '../../../../providers/storage.provider';
 import { UserIntentProvider } from '../../../../providers/user-intent.provider';
+import { CompressImageProvider } from '../../../../providers/compress-image.provider';
 
 @Component({
     selector: 'page-flyer',
@@ -40,8 +41,9 @@ export class FlyerPage extends InputFilePage implements OnInit {
                 private router: Router,
                 private camera: Camera,
                 private intentProvider: UserIntentProvider,
+                protected compressImage: CompressImageProvider,
                 protected geolocationService: GeolocationService) {
-        super(geolocationService);
+        super(geolocationService, compressImage);
     }
 
     async ngOnInit() {

@@ -15,6 +15,7 @@ import { GeolocationService } from '../../../core/geolocation/geolocation.servic
 import { ToastProvider } from '../../../providers/toast.provider';
 import { UserIntentProvider } from '../../../providers/user-intent.provider';
 import { StorageProvider } from '../../../providers/storage.provider';
+import { CompressImageProvider } from '../../../providers/compress-image.provider';
 
 @Component({
     selector: 'app-add-product',
@@ -39,9 +40,9 @@ export class AddProductPage extends InputFilePage implements OnInit {
                 private intentProvider: UserIntentProvider,
                 private productsService: ProductsService,
                 private currenciesService: CurrenciesService,
-                private storage: StorageProvider,
+                protected compressImage: CompressImageProvider,
                 protected geolocationService: GeolocationService) {
-        super(geolocationService);
+        super(geolocationService, compressImage);
     }
 
     get data() {

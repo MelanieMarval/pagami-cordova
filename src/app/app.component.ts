@@ -81,10 +81,12 @@ export class AppComponent {
         const isLogged = await this.storageService.isLogged();
         const user = await this.storageService.getPagamiUser();
 
-        Environment.setEnv({
-            API_KEY_FOR_BROWSER_RELEASE: 'AIzaSyD3t5VAdEBMdICcY9FyVcgBHlkeu72OI4s',
-            API_KEY_FOR_BROWSER_DEBUG: 'AIzaSyD3t5VAdEBMdICcY9FyVcgBHlkeu72OI4s'
-        });
+        if (!PlatformUtils.isTest()) {
+            Environment.setEnv({
+                API_KEY_FOR_BROWSER_RELEASE: 'AIzaSyD3t5VAdEBMdICcY9FyVcgBHlkeu72OI4s',
+                API_KEY_FOR_BROWSER_DEBUG: 'AIzaSyD3t5VAdEBMdICcY9FyVcgBHlkeu72OI4s'
+            });
+        }
 
         const lastUserVerification = await this.storageService.getLastUserVerification();
         if (isLogged && user) {

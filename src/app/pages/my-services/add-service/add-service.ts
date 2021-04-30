@@ -15,6 +15,7 @@ import { UserIntentProvider } from '../../../providers/user-intent.provider';
 // Interfaces
 import { Service } from '../../../core/api/services/service';
 import { Currency } from '../../../core/api/currencies/currency';
+import { CompressImageProvider } from '../../../providers/compress-image.provider';
 
 @Component({
     selector: 'app-add-service',
@@ -39,8 +40,9 @@ export class AddServicePage extends InputFilePage implements OnInit {
         private intentProvider: UserIntentProvider,
         private servicesService: ServicesService,
         private currenciesService: CurrenciesService,
+        protected compressImage: CompressImageProvider,
         protected geolocationService: GeolocationService) {
-        super(geolocationService);
+        super(geolocationService, compressImage);
     }
 
     get data() {

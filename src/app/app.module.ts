@@ -39,6 +39,7 @@ import { AdminIntentProvider } from './providers/admin-intent.provider';
 import { BrowserProvider } from './providers/browser.provider';
 import { CompressImageProvider } from './providers/compress-image.provider';
 import { NotificationsProvider } from './providers/notifications.provider';
+import { NgxImageCompressorModule } from 'ngx-image-compressor';
 
 // importar locales para cambiar a espanol el pipe date
 import { registerLocaleData } from '@angular/common';
@@ -65,6 +66,7 @@ registerLocaleData(localeEs, 'es');
         PipesModule,
         IonicSelectableModule,
         BackgroundEmptyModule,
+        NgxImageCompressorModule
     ],
     providers: [
         ToastProvider,

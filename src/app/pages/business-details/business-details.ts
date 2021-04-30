@@ -15,6 +15,7 @@ import { Place } from '../../core/api/places/place';
 import { PLACES } from '../../utils/Const';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { PlatformUtils } from '../../utils/platform.utils';
+import { CompressImageProvider } from '../../providers/compress-image.provider';
 
 @Component({
     selector: 'app-business-details',
@@ -38,9 +39,10 @@ export class BusinessDetailsPage extends InputFilePage implements OnInit {
                 private camera: Camera,
                 private storageInstance: UserIntentProvider,
                 protected geolocationService: GeolocationService,
+                protected compressImage: CompressImageProvider,
                 private alertController: AlertController,
                 private actionSheetController: ActionSheetController) {
-        super(geolocationService);
+        super(geolocationService, compressImage);
     }
 
     async ngOnInit() {

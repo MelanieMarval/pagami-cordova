@@ -12,6 +12,7 @@ import { AuthService } from '../../../core/api/auth/auth.service';
 import { StorageProvider } from '../../../providers/storage.provider';
 import { ToastProvider } from '../../../providers/toast.provider';
 import { FireStorage } from '../../../core/fire-storage/fire.storage';
+import { CompressImageProvider } from '../../../providers/compress-image.provider';
 
 
 @Component({
@@ -27,6 +28,7 @@ export class ProfileAdminPage extends InputFilePage implements OnInit {
 
     constructor(
         protected geolocationService: GeolocationService,
+        protected compressImage: CompressImageProvider,
         private googleAuthService: GoogleAuthService,
         private router: Router,
         private alertController: AlertController,
@@ -35,7 +37,7 @@ export class ProfileAdminPage extends InputFilePage implements OnInit {
         private storageService: StorageProvider,
         private authService: AuthService,
     ) {
-        super(geolocationService);
+        super(geolocationService, compressImage);
     }
 
     async ngOnInit() {

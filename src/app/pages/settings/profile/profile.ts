@@ -45,15 +45,15 @@ export class ProfilePage extends InputFilePage implements OnInit {
                 private alert: AlertProvider,
                 private toast: ToastProvider,
                 private storageService: StorageProvider,
-                private compressImage: CompressImageProvider,
                 private fireStorage: FireStorage,
                 private googleAuthService: GoogleAuthService,
                 private authService: AuthService,
                 private placesService: PlacesService,
                 private splashScreen: SplashScreen,
                 private modalController: ModalController,
+                protected compressImage: CompressImageProvider,
                 protected geolocationService: GeolocationService) {
-        super(geolocationService);
+        super(geolocationService, compressImage);
     }
 
     async ngOnInit() {
@@ -61,7 +61,9 @@ export class ProfilePage extends InputFilePage implements OnInit {
         this.previewUrl = this.user.photoUrl;
         await this.placesService.getAllCountries().then(value => {
             this.countries = value;
-            this.country = this.countries.find(cc => cc.code === this.user.location.code.toUpperCase());
+            if (this.user.location.code) {
+                this.country = this.countries.find(cc => cc.code === this.user.location.code.toUpperCase());
+            }
         });
     }
 
